@@ -6,11 +6,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var validLocations = []string{
-	"Equipment",
-	"Backpack",
-}
-
 type CharacterInventoryItem struct {
 	ID          int    `gorm:"primary_key" json:"id"`
 	CharacterID int    `gorm:"not null" json:"character_id"`
@@ -35,7 +30,7 @@ func (c *CharacterInventoryItem) BeforeCreate(db *gorm.DB) error {
 		return fmt.Errorf("item with id '%v' not found", c.ItemID)
 	}
 
-	if !utils.SliceContains(validLocations, c.Location) {
+	if !utils.SliceContains(locations, c.Location) {
 		return fmt.Errorf("location '%s' is not valid", c.Location)
 	}
 

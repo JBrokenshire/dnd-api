@@ -6,14 +6,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var validRarities = []string{
-	"Common",
-	"Uncommon",
-	"Rare",
-	"Very Rare",
-	"Legendary",
-}
-
 type Item struct {
 	ID         int     `gorm:"primary_key" json:"id"`
 	Name       string  `gorm:"not null" json:"name"`
@@ -30,7 +22,7 @@ func (i *Item) BeforeCreate(_ *gorm.DB) error {
 		i.Rarity = "Common"
 	}
 
-	if !utils.SliceContains(validRarities, i.Rarity) {
+	if !utils.SliceContains(rarities, i.Rarity) {
 		return fmt.Errorf("rarity '%s' is not valid", i.Rarity)
 	}
 

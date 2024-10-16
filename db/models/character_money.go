@@ -6,14 +6,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var validMoneyTypes = []string{
-	"platinum",
-	"gold",
-	"electrum",
-	"silver",
-	"copper",
-}
-
 type CharacterMoney struct {
 	ID          int    `gorm:"primary_key" json:"id"`
 	CharacterID int    `gorm:"not null" json:"character_id"`
@@ -28,7 +20,7 @@ func (c *CharacterMoney) BeforeCreate(db *gorm.DB) error {
 		return fmt.Errorf("character with id '%v' not found", c.CharacterID)
 	}
 
-	if !utils.SliceContains(validMoneyTypes, c.Money) {
+	if !utils.SliceContains(moneyTypes, c.Money) {
 		return fmt.Errorf("money type '%s' is not valid", c.Money)
 	}
 

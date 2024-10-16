@@ -6,11 +6,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var validWeapons = []string{
-	"Martial Weapons",
-	"Simple Weapons",
-}
-
 type CharacterProficientWeapon struct {
 	ID          int    `gorm:"autoIncrement;primary_key" json:"id"`
 	CharacterID int    `gorm:"not null" json:"character_id"`
@@ -24,7 +19,7 @@ func (c *CharacterProficientWeapon) BeforeCreate(db *gorm.DB) error {
 		return fmt.Errorf("character with id '%v' not found", c.CharacterID)
 	}
 
-	if !utils.SliceContains(validWeapons, c.Weapon) {
+	if !utils.SliceContains(weaponTypes, c.Weapon) {
 		return fmt.Errorf("weapon '%s' is not valid", c.Weapon)
 	}
 

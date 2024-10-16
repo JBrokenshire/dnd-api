@@ -7,23 +7,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var validConditions = []string{
-	"Blinded",
-	"Charmed",
-	"Deafened",
-	"Frightened",
-	"Grappled",
-	"Incapacitated",
-	"Invisible",
-	"Paralysed",
-	"Petrified",
-	"Poisoned",
-	"Prone",
-	"Restrained",
-	"Stunned",
-	"Unconscious",
-}
-
 type CharacterCondition struct {
 	ID            int    `gorm:"primary_key;auto_increment" json:"id"`
 	CharacterID   int    `gorm:"not null" json:"character_id"`
@@ -37,7 +20,7 @@ func (c *CharacterCondition) BeforeCreate(db *gorm.DB) error {
 		return fmt.Errorf("character with id '%v' not found", c.CharacterID)
 	}
 
-	if !utils.SliceContains(validConditions, c.ConditionName) {
+	if !utils.SliceContains(conditions, c.ConditionName) {
 		return errors.New(fmt.Sprintf("condition '%s' is not valid", c.ConditionName))
 	}
 

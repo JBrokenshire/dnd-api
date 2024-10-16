@@ -6,12 +6,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var validDefenseTypes = []string{
-	"Resistance",
-	"Immunity",
-	"Vulnerability",
-}
-
 type CharacterDefense struct {
 	ID          int    `gorm:"primary_key;auto_increment" json:"id"`
 	CharacterID int    `gorm:"not null" json:"character_id"`
@@ -26,7 +20,7 @@ func (c *CharacterDefense) BeforeCreate(db *gorm.DB) error {
 		return fmt.Errorf("character with id '%v' not found", c.CharacterID)
 	}
 
-	if !utils.SliceContains(validDefenseTypes, c.DefenseType) {
+	if !utils.SliceContains(defenseTypes, c.DefenseType) {
 		return fmt.Errorf("defense type '%s' is not valid", c.DefenseType)
 	}
 

@@ -6,12 +6,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var validSenses = []string{
-	"Blindsight",
-	"Darkvision",
-	"Truesight",
-}
-
 type CharacterSense struct {
 	ID          int    `gorm:"autoIncrement;primary_key" json:"id"`
 	CharacterID int    `gorm:"not null" json:"character_id"`
@@ -26,7 +20,7 @@ func (c *CharacterSense) BeforeCreate(db *gorm.DB) error {
 		return fmt.Errorf("character with id '%v' not found", c.CharacterID)
 	}
 
-	if !utils.SliceContains(validSenses, c.SenseName) {
+	if !utils.SliceContains(senses, c.SenseName) {
 		return fmt.Errorf("proficiency type '%s' is not valid", c.SenseName)
 	}
 

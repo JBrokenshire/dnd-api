@@ -6,31 +6,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var validDamageTypes = []string{
-	"Acid",
-	"Bludgeoning",
-	"Cold",
-	"Fire",
-	"Force",
-	"Lightning",
-	"Necrotic",
-	"Piercing",
-	"Poison",
-	"Psychic",
-	"Radiant",
-	"Slashing",
-	"Thunder",
-}
-
-var validAbilities = []string{
-	"STR",
-	"DEX",
-	"CON",
-	"INT",
-	"WIS",
-	"CHA",
-}
-
 type Weapon struct {
 	ItemID     int    `gorm:"primary_key" json:"item_id"`
 	Type       string `json:"type"`
@@ -52,11 +27,11 @@ func (w *Weapon) BeforeCreate(db *gorm.DB) error {
 		return fmt.Errorf("item with id %v not found", w.ItemID)
 	}
 
-	if !utils.SliceContains(validDamageTypes, w.DamageType) {
+	if !utils.SliceContains(damageTypes, w.DamageType) {
 		return fmt.Errorf("damage type '%s' is not valid", w.DamageType)
 	}
 
-	if !utils.SliceContains(validAbilities, w.Ability) {
+	if !utils.SliceContains(abilityAbbreviations, w.Ability) {
 		return fmt.Errorf("ability '%s' is not valid", w.Ability)
 	}
 

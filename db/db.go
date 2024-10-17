@@ -50,10 +50,7 @@ func Init() *gorm.DB {
 	seeder.SetCharactersMoney()
 	seeder.SetArmour()
 	seeder.SetShields()
+	seeder.SetCharacterSkillsAdvantages()
 
-	return db
-}
-
-func DB() *gorm.DB {
 	return db
 }

@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"github.com/jinzhu/gorm"
 )
 
@@ -33,22 +34,42 @@ type Character struct {
 	TempHitPoints        int  `gorm:"not null" json:"temp_hit_points"`
 
 	InitiativeModifier int `gorm:"not null" json:"initiative_modifier"`
+	AttacksPerAction   int `gorm:"not null" json:"attacks_per_action"`
 
-	AttacksPerAction int `gorm:"not null" json:"attacks_per_action"`
+	BackgroundName string `gorm:"not null" json:"background_name"`
 
 	Organisations string `json:"organisations"`
 	Allies        string `json:"allies"`
 	Enemies       string `json:"enemies"`
 	Backstory     string `json:"backstory"`
 
-	Class Class `json:"class"`
-	Race  Race  `json:"race"`
+	Class      Class      `json:"class"`
+	Race       Race       `json:"race"`
+	Background Background `json:"background"`
 }
 
-func (c *Character) BeforeCreate(_ *gorm.DB) error {
-	err := validateStats(c)
+func (c *Character) BeforeCreate(db *gorm.DB) error {
+	var class Class
+	err := db.Where("id = ?", c.ClassID).Find(&class).Error
 	if err != nil {
-		return err
+		return fmt.Errorf("class with id '%v' not found - %v", c.ClassID, err)
+	}
+
+	var race Race
+	err = db.Where("id = ?", c.RaceID).Find(&race).Error
+	if err != nil {
+		return fmt.Errorf("race with id '%v' not found - %v", c.RaceID, err)
+	}
+
+	var background Background
+	err = db.Where("name = ?", c.BackgroundName).Find(&background).Error
+	if err != nil {
+		return fmt.Errorf("background with name '%v' not found - %v", c.BackgroundName, err)
+	}
+
+	err = validateStats(c)
+	if err != nil {
+		return errors.New(fmt.Sprintf("stats validation failed: %v", err))
 	}
 
 	return nil

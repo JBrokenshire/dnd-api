@@ -37,5 +37,7 @@ func getMigrationsList() []gmStore.Migratable {
 		&list.UpdateInventoryItemAddType{},
 		&list.UpdateCharacterAddNotes{},
 		&list.CreateCharacterSkillsAdvantagesTable{},
+		&list.CreateBackgroundsTable{},
+		&list.UpdateCharactersAddBackground{},
 	}
 }

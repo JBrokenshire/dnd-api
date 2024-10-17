@@ -30,6 +30,8 @@ type CharacterRequest struct {
 	BaseArmourClass         int  `json:"base_armour_class"`
 	ArmourClassAddDexterity bool `json:"armour_class_add_dexterity"`
 
+	BackgroundName string `json:"background_name"`
+
 	Organisations string `json:"organisations"`
 	Allies        string `json:"allies"`
 	Enemies       string `json:"enemies"`
@@ -80,6 +82,9 @@ func NewCharacterRequest(cr *CharacterRequest) CharacterRequest {
 	}
 	if cr.AttacksPerAction == 0 {
 		cr.AttacksPerAction = 1
+	}
+	if cr.BackgroundName == "" {
+		cr.BackgroundName = "Outlander"
 	}
 
 	return *cr

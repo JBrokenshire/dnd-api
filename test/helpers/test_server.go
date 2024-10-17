@@ -120,11 +120,19 @@ func (ts *TestServer) SetupDefaultRaces() {
 	ts.seeder.SetRaces()
 }
 
+func (ts *TestServer) SetupDefaultBackgrounds() {
+	ts.ClearTable("characters")
+	ts.ClearTable("backgrounds")
+
+	ts.seeder.SetBackgrounds()
+}
+
 func (ts *TestServer) SetupDefaultCharacters() {
 	ts.ClearTable("characters")
 
 	ts.SetupDefaultClasses()
 	ts.SetupDefaultRaces()
+	ts.SetupDefaultBackgrounds()
 
 	ts.seeder.SetCharacters()
 }

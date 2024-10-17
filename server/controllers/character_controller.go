@@ -147,6 +147,9 @@ func (c *CharacterController) Update(ctx echo.Context) error {
 	if updatedCharacterRequest.AttacksPerAction == 0 {
 		updatedCharacterRequest.AttacksPerAction = existingCharacter.AttacksPerAction
 	}
+	if updatedCharacterRequest.BackgroundName == "" {
+		updatedCharacterRequest.BackgroundName = existingCharacter.BackgroundName
+	}
 	if updatedCharacterRequest.Organisations == "" {
 		updatedCharacterRequest.Organisations = existingCharacter.Organisations
 	}
@@ -190,6 +193,7 @@ func (c *CharacterController) Update(ctx echo.Context) error {
 		MaxHitPoints:           updatedCharacterRequest.MaxHitPoints,
 		TempHitPoints:          updatedCharacterRequest.TempHitPoints,
 		InitiativeModifier:     updatedCharacterRequest.InitiativeModifier,
+		BackgroundName:         updatedCharacterRequest.BackgroundName,
 		Organisations:          updatedCharacterRequest.Organisations,
 		Allies:                 updatedCharacterRequest.Allies,
 		Enemies:                updatedCharacterRequest.Enemies,
@@ -357,6 +361,9 @@ func (c *CharacterController) validateCharacterRequest(request *requests.Charact
 	if !c.Server.Stores.Race.IsValidID(request.RaceID) {
 		return nil, errors.New("invalid character raceID")
 	}
+	if !c.Server.Stores.Background.IsValidName(request.BackgroundName) {
+		return nil, errors.New("invalid character backgroundName")
+	}
 
 	if request.MaxHitPoints <= 0 {
 		return nil, errors.New("invalid character maxHitPoints")
@@ -372,6 +379,9 @@ func (c *CharacterController) validateCharacterRequest(request *requests.Charact
 	}
 	if request.AttacksPerAction < 1 {
 		return nil, errors.New("invalid character attacksPerAction")
+	}
+	if request.BackgroundName == "" {
+		return nil, errors.New("invalid character background name")
 	}
 
 	character.Name = request.Name
@@ -392,6 +402,7 @@ func (c *CharacterController) validateCharacterRequest(request *requests.Charact
 	character.TempHitPoints = request.TempHitPoints
 	character.InitiativeModifier = request.InitiativeModifier
 	character.AttacksPerAction = request.AttacksPerAction
+	character.BackgroundName = request.BackgroundName
 
 	return character, nil
 }

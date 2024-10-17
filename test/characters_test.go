@@ -87,6 +87,7 @@ func TestCreateCharacter(t *testing.T) {
 					fmt.Sprintf(`"temp_hit_points":%v`, characterRequest.TempHitPoints),
 					fmt.Sprintf(`"initiative_modifier":%v`, characterRequest.InitiativeModifier),
 					fmt.Sprintf(`"attacks_per_action":%v`, characterRequest.AttacksPerAction),
+					fmt.Sprintf(`"background_name":"%v"`, characterRequest.BackgroundName),
 				},
 			},
 		},

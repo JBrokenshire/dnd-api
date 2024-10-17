@@ -7,6 +7,7 @@ type Stores struct {
 	Character                 *GormCharacterStore
 	Class                     *GormClassStore
 	Race                      *GormRaceStore
+	Background                *GormBackgroundStore
 	CharacterSkills           *GormCharacterSkillsStore
 	CharacterSenses           *GormCharacterSensesStore
 	CharacterProficiencies    *GormCharacterProficienciesStore
@@ -26,6 +27,7 @@ func NewStores(db *gorm.DB) *Stores {
 		Character:                 NewGormCharacterStore(db),
 		Class:                     NewGormClassStore(db),
 		Race:                      NewGormRaceStore(db),
+		Background:                NewGormBackgroundStore(db),
 		CharacterSkills:           NewGormCharacterSkillsStore(db),
 		CharacterSenses:           NewGormCharacterSensesStore(db),
 		CharacterProficiencies:    NewGormCharacterProficienciesStore(db),

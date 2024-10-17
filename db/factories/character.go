@@ -50,4 +50,7 @@ func fillCharacterDetails(c *models.Character) {
 	if c.AttacksPerAction == 0 {
 		c.AttacksPerAction = 1
 	}
+	if c.BackgroundName == "" {
+		c.BackgroundName = "Outlander"
+	}
 }

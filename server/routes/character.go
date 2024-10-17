@@ -30,6 +30,7 @@ func charactersRoutes(server *server.Server) {
 
 	characters.GET("/:id/proficient-skills", skillsController.GetProficientByCharacterID)
 	characters.GET("/:id/skills-advantages", skillsController.GetAdvantagesByCharacterID)
+	characters.PUT("/:id/skills/:name/disadvantage", skillsController.ToggleCharacterSkillDisadvantage)
 	characters.GET("/:id/senses", sensesController.GetSensesByCharacterID)
 
 	characters.GET("/:id/proficient/armour", proficienciesController.GetCharacterProficientArmourTypes)

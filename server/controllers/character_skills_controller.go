@@ -35,3 +35,26 @@ func (c *CharacterSkillsController) GetAdvantagesByCharacterID(ctx echo.Context)
 
 	return ctx.JSON(http.StatusOK, characterSkillsAdvantages)
 }
+
+func (c *CharacterSkillsController) ToggleCharacterSkillDisadvantage(ctx echo.Context) error {
+	characterID := ctx.Param("id")
+	skillName := ctx.Param("name")
+
+	character, err := c.Server.Stores.Character.Get(characterID)
+	if err != nil || character.ID == 0 {
+		return res.ErrorResponse(ctx, http.StatusNotFound, err)
+	}
+
+	characterSkillAdvantage, err := c.Server.Stores.CharacterSkillsAdvantages.GetByCharacterIDAndSkillName(characterID, skillName)
+	if err != nil {
+		return res.ErrorResponse(ctx, http.StatusNotFound, err)
+	}
+
+	characterSkillAdvantage.Disadvantage = !characterSkillAdvantage.Disadvantage
+	err = c.Server.Stores.CharacterSkillsAdvantages.Update(characterSkillAdvantage)
+	if err != nil {
+		return res.ErrorResponse(ctx, http.StatusInternalServerError, err)
+	}
+
+	return ctx.JSON(http.StatusOK, characterSkillAdvantage)
+}

@@ -147,6 +147,18 @@ func (c *CharacterController) Update(ctx echo.Context) error {
 	if updatedCharacterRequest.AttacksPerAction == 0 {
 		updatedCharacterRequest.AttacksPerAction = existingCharacter.AttacksPerAction
 	}
+	if updatedCharacterRequest.Organisations == "" {
+		updatedCharacterRequest.Organisations = existingCharacter.Organisations
+	}
+	if updatedCharacterRequest.Allies == "" {
+		updatedCharacterRequest.Allies = existingCharacter.Allies
+	}
+	if updatedCharacterRequest.Enemies == "" {
+		updatedCharacterRequest.Enemies = existingCharacter.Enemies
+	}
+	if updatedCharacterRequest.Backstory == "" {
+		updatedCharacterRequest.Backstory = existingCharacter.Backstory
+	}
 
 	_, err = c.validateCharacterRequest(updatedCharacterRequest)
 	if err != nil {
@@ -178,6 +190,10 @@ func (c *CharacterController) Update(ctx echo.Context) error {
 		MaxHitPoints:           updatedCharacterRequest.MaxHitPoints,
 		TempHitPoints:          updatedCharacterRequest.TempHitPoints,
 		InitiativeModifier:     updatedCharacterRequest.InitiativeModifier,
+		Organisations:          updatedCharacterRequest.Organisations,
+		Allies:                 updatedCharacterRequest.Allies,
+		Enemies:                updatedCharacterRequest.Enemies,
+		Backstory:              updatedCharacterRequest.Backstory,
 	}
 
 	// Update the existing character in the stores with the updated information

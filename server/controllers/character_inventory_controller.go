@@ -70,6 +70,23 @@ func (c *CharacterInventoryController) ToggleItemEquipped(ctx echo.Context) erro
 		return ctx.JSON(http.StatusOK, inventoryItem)
 	}
 
+	if inventoryItem.Type == "armour" || inventoryItem.Type == "shield" {
+		characterInventory, err := c.Server.Stores.CharacterInventory.GetInventoryByCharacterID(characterID)
+		if err != nil {
+			return res.ErrorResponse(ctx, http.StatusNotFound, err)
+		}
+
+		for _, item := range characterInventory {
+			if item.Type == inventoryItem.Type {
+				item.Equipped = false
+				err := c.Server.Stores.CharacterInventory.UpdateCharacterInventoryItem(item)
+				if err != nil {
+					return res.ErrorResponse(ctx, http.StatusInternalServerError, err)
+				}
+			}
+		}
+	}
+
 	inventoryItem.Equipped = !inventoryItem.Equipped
 	err = c.Server.Stores.CharacterInventory.UpdateCharacterInventoryItem(inventoryItem)
 	if err != nil {

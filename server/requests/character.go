@@ -30,6 +30,11 @@ type CharacterRequest struct {
 	BaseArmourClass         int  `json:"base_armour_class"`
 	ArmourClassAddDexterity bool `json:"armour_class_add_dexterity"`
 
+	Organisations string `json:"organisations"`
+	Allies        string `json:"allies"`
+	Enemies       string `json:"enemies"`
+	Backstory     string `json:"backstory"`
+
 	AttacksPerAction int `json:"attacks_per_action"`
 }
 

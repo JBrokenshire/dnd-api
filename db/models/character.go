@@ -36,6 +36,11 @@ type Character struct {
 
 	AttacksPerAction int `gorm:"not null" json:"attacks_per_action"`
 
+	Organisations string `json:"organisations"`
+	Allies        string `json:"allies"`
+	Enemies       string `json:"enemies"`
+	Backstory     string `json:"backstory"`
+
 	Class Class `json:"class"`
 	Race  Race  `json:"race"`
 }

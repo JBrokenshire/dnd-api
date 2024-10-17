@@ -13,7 +13,14 @@ type CharacterInventoryController struct {
 }
 
 func (c *CharacterInventoryController) GetCharacterInventory(ctx echo.Context) error {
-	characterInventory, err := c.Server.Stores.CharacterInventory.GetInventoryByCharacterID(ctx.Param("id"))
+	id := ctx.Param("id")
+
+	character, err := c.Server.Stores.Character.Get(id)
+	if err != nil || character.ID == 0 {
+		return res.ErrorResponse(ctx, http.StatusNotFound, err)
+	}
+
+	characterInventory, err := c.Server.Stores.CharacterInventory.GetInventoryByCharacterID(id)
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}

@@ -296,11 +296,10 @@ func (c *CharacterController) GetArmourClass(ctx echo.Context) error {
 	dexterityModifier := (character.Dexterity - 10) / 2
 	armourClass := 10 + dexterityModifier
 
-	if len(equippedArmour) > 0 {
-		armour := equippedArmour[0]
-		armourClass = armour.BaseAC
-		if dexterityModifier > armour.MaxDexterityModifier {
-			armourClass += armour.MaxDexterityModifier
+	if equippedArmour != nil {
+		armourClass = equippedArmour.BaseAC
+		if dexterityModifier > equippedArmour.MaxDexterityModifier {
+			armourClass += equippedArmour.MaxDexterityModifier
 		} else {
 			armourClass += dexterityModifier
 		}

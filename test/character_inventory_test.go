@@ -127,16 +127,16 @@ func TestGetCharacterEquippedWeapons(t *testing.T) {
 	itemFour := &models.Item{ID: 4, Name: "Test Item Four"}
 	factories.NewItem(ts.S.Db, itemFour)
 
-	equippedWeapon := &models.CharacterInventoryItem{CharacterID: characterOne.ID, ItemID: itemOne.ID, Equipped: true}
+	equippedWeapon := &models.CharacterInventoryItem{CharacterID: characterOne.ID, ItemID: itemOne.ID, Equipped: true, Type: "weapon"}
 	factories.NewCharacterInventoryItem(ts.S.Db, equippedWeapon)
 
-	unequippedWeapon := &models.CharacterInventoryItem{CharacterID: characterTwo.ID, ItemID: itemTwo.ID, Equipped: false}
+	unequippedWeapon := &models.CharacterInventoryItem{CharacterID: characterTwo.ID, ItemID: itemTwo.ID, Equipped: false, Type: "weapon"}
 	factories.NewCharacterInventoryItem(ts.S.Db, unequippedWeapon)
 
 	notWeapon := &models.CharacterInventoryItem{CharacterID: characterOne.ID, ItemID: itemFour.ID}
 	factories.NewCharacterInventoryItem(ts.S.Db, notWeapon)
 
-	characterTwoEquippedWeapon := &models.CharacterInventoryItem{CharacterID: characterTwo.ID, ItemID: itemThree.ID, Equipped: true}
+	characterTwoEquippedWeapon := &models.CharacterInventoryItem{CharacterID: characterTwo.ID, ItemID: itemThree.ID, Equipped: true, Type: "weapon"}
 	factories.NewCharacterInventoryItem(ts.S.Db, characterTwoEquippedWeapon)
 
 	cases := []helpers.TestCase{
@@ -204,16 +204,16 @@ func TestGetCharacterEquippedArmour(t *testing.T) {
 	itemFour := &models.Item{ID: 4, Name: "Test Item Four"}
 	factories.NewItem(ts.S.Db, itemFour)
 
-	equippedArmour := &models.CharacterInventoryItem{CharacterID: characterOne.ID, ItemID: itemOne.ID, Equipped: true}
+	equippedArmour := &models.CharacterInventoryItem{CharacterID: characterOne.ID, ItemID: itemOne.ID, Equipped: true, Type: "armour"}
 	factories.NewCharacterInventoryItem(ts.S.Db, equippedArmour)
 
-	unequippedArmour := &models.CharacterInventoryItem{CharacterID: characterTwo.ID, ItemID: itemTwo.ID, Equipped: false}
+	unequippedArmour := &models.CharacterInventoryItem{CharacterID: characterTwo.ID, ItemID: itemTwo.ID, Equipped: false, Type: "armour"}
 	factories.NewCharacterInventoryItem(ts.S.Db, unequippedArmour)
 
 	notArmour := &models.CharacterInventoryItem{CharacterID: characterOne.ID, ItemID: itemFour.ID}
 	factories.NewCharacterInventoryItem(ts.S.Db, notArmour)
 
-	characterTwoEquippedArmour := &models.CharacterInventoryItem{CharacterID: characterTwo.ID, ItemID: itemThree.ID, Equipped: true}
+	characterTwoEquippedArmour := &models.CharacterInventoryItem{CharacterID: characterTwo.ID, ItemID: itemThree.ID, Equipped: true, Type: "armour"}
 	factories.NewCharacterInventoryItem(ts.S.Db, characterTwoEquippedArmour)
 
 	cases := []helpers.TestCase{

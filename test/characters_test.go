@@ -519,6 +519,160 @@ func TestUpdateCharacterHealth(t *testing.T) {
 	}
 }
 
+func TestCharacterArmourClass(t *testing.T) {
+	ts.ClearTable("characters")
+	ts.ClearTable("character_inventory_items")
+	ts.ClearTable("armour")
+	ts.ClearTable("shields")
+	ts.ClearTable("items")
+
+	ts.SetupDefaultClasses()
+	ts.SetupDefaultRaces()
+
+	unarmouredCharacter := models.Character{ID: 1}
+	factories.NewCharacter(ts.S.Db, &unarmouredCharacter)
+
+	dexterityCharacter := models.Character{ID: 2, Dexterity: 20}
+	factories.NewCharacter(ts.S.Db, &dexterityCharacter)
+
+	armourItem := models.Item{ID: 1, Equippable: true}
+	factories.NewItem(ts.S.Db, &armourItem)
+	armour := models.Armour{ItemID: 1, BaseAC: 12, MaxDexterityModifier: 10}
+	factories.NewArmour(ts.S.Db, &armour)
+	armouredCharacter := models.Character{ID: 3}
+	factories.NewCharacter(ts.S.Db, &armouredCharacter)
+	armouredCharacterInventoryItem := models.CharacterInventoryItem{CharacterID: armouredCharacter.ID, ItemID: armourItem.ID, Equipped: true, Location: "Equipment", Type: "armour"}
+	factories.NewCharacterInventoryItem(ts.S.Db, &armouredCharacterInventoryItem)
+
+	shieldItem := models.Item{ID: 2, Equippable: true}
+	factories.NewItem(ts.S.Db, &shieldItem)
+	shield := models.Shield{ItemID: 2, BonusAC: 2}
+	factories.NewShield(ts.S.Db, &shield)
+	shieldCharacter := models.Character{ID: 4, Dexterity: 10}
+	factories.NewCharacter(ts.S.Db, &shieldCharacter)
+	shieldCharacterInventoryItem := models.CharacterInventoryItem{
+		CharacterID: shieldCharacter.ID,
+		ItemID:      shieldItem.ID,
+		Type:        "shield",
+		Equipped:    true,
+		Location:    "Equipment",
+	}
+	factories.NewCharacterInventoryItem(ts.S.Db, &shieldCharacterInventoryItem)
+
+	shieldArmourCharacter := models.Character{ID: 5, Dexterity: 10}
+	factories.NewCharacter(ts.S.Db, &shieldArmourCharacter)
+	shieldArmourCharacterArmour := models.CharacterInventoryItem{
+		CharacterID: shieldArmourCharacter.ID,
+		ItemID:      armourItem.ID,
+		Type:        "armour",
+		Equipped:    true,
+		Location:    "Equipment",
+	}
+	factories.NewCharacterInventoryItem(ts.S.Db, &shieldArmourCharacterArmour)
+	shieldArmourCharacterShield := models.CharacterInventoryItem{
+		CharacterID: shieldArmourCharacter.ID,
+		ItemID:      shieldItem.ID,
+		Type:        "shield",
+		Equipped:    true,
+		Location:    "Equipment",
+	}
+	factories.NewCharacterInventoryItem(ts.S.Db, &shieldArmourCharacterShield)
+
+	maxDexterityItem := models.Item{ID: 3, Equippable: true}
+	factories.NewItem(ts.S.Db, &maxDexterityItem)
+	maxDexterityArmour := models.Armour{
+		ItemID:               3,
+		BaseAC:               12,
+		MaxDexterityModifier: 2,
+	}
+	factories.NewArmour(ts.S.Db, &maxDexterityArmour)
+	maxDexterityCharacter := models.Character{ID: 6, Dexterity: 20}
+	factories.NewCharacter(ts.S.Db, &maxDexterityCharacter)
+	maxDexterityCharacterArmour := models.CharacterInventoryItem{
+		CharacterID: maxDexterityCharacter.ID,
+		ItemID:      maxDexterityItem.ID,
+		Type:        "armour",
+		Equipped:    true,
+		Location:    "Equipment",
+	}
+	factories.NewCharacterInventoryItem(ts.S.Db, &maxDexterityCharacterArmour)
+
+	cases := []helpers.TestCase{
+		{
+			TestName: "Can get armour class for character with no armour and no shield",
+			Request: helpers.Request{
+				Method: http.MethodGet,
+				URL:    fmt.Sprintf("/characters/%v/armour-class", unarmouredCharacter.ID),
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "10",
+			},
+		},
+		{
+			TestName: "Can calculate armour class based on character dexterity",
+			Request: helpers.Request{
+				Method: http.MethodGet,
+				URL:    fmt.Sprintf("/characters/%v/armour-class", dexterityCharacter.ID),
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "15",
+			},
+		},
+		{
+			TestName: "Can get armour class for character with armour",
+			Request: helpers.Request{
+				Method: http.MethodGet,
+				URL:    fmt.Sprintf("/characters/%v/armour-class", armouredCharacter.ID),
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "12",
+			},
+		},
+		{
+			TestName: "Can get armour class for character with shield",
+			Request: helpers.Request{
+				Method: http.MethodGet,
+				URL:    fmt.Sprintf("/characters/%v/armour-class", shieldCharacter.ID),
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "12",
+			},
+		},
+		{
+			TestName: "Can get armour class for character with armour and shield",
+			Request: helpers.Request{
+				Method: http.MethodGet,
+				URL:    fmt.Sprintf("/characters/%v/armour-class", shieldArmourCharacter.ID),
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "14",
+			},
+		},
+		{
+			TestName: "Can get armour class for character with dexterity higher than armour max dexterity",
+			Request: helpers.Request{
+				Method: http.MethodGet,
+				URL:    fmt.Sprintf("/characters/%v/armour-class", maxDexterityCharacter.ID),
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "14",
+			},
+		},
+	}
+
+	for _, test := range cases {
+		t.Run(test.TestName, func(t *testing.T) {
+			RunTestCase(t, test)
+		})
+	}
+}
+
 func TestDeleteCharacter(t *testing.T) {
 	ts.SetupDefaultCharacters()
 

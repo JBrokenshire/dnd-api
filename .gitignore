@@ -25,3 +25,6 @@ go.work.sum
 .env
 
 .idea
+
+# Build file
+/cmd/api/api

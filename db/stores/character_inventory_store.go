@@ -10,7 +10,7 @@ import (
 type CharacterInventoryStore interface {
 	GetInventoryByCharacterID(id interface{}) ([]*models.CharacterInventoryItem, error)
 	GetEquippedWeaponsByCharacterID(id interface{}) ([]*models.Weapon, error)
-	GetEquippedArmourByCharacterID(id interface{}) ([]*models.Armour, error)
+	GetEquippedArmourByCharacterID(id interface{}) (*models.Armour, error)
 	GetEquippedShieldByCharacterID(id interface{}) (*models.Shield, error)
 	GetCharacterInventoryItemByID(characterID interface{}, itemID interface{}) (*models.CharacterInventoryItem, error)
 	UpdateCharacterInventoryItem(characterInventoryItem *models.CharacterInventoryItem) error
@@ -64,49 +64,43 @@ func (g *GormCharacterInventoryStore) GetEquippedWeaponsByCharacterID(id interfa
 	return weapons, nil
 }
 
-func (g *GormCharacterInventoryStore) GetEquippedArmourByCharacterID(id interface{}) ([]*models.Armour, error) {
-	var characterEquippedArmour []*models.CharacterInventoryItem
-	err := g.DB.
+func (g *GormCharacterInventoryStore) GetEquippedArmourByCharacterID(id interface{}) (*models.Armour, error) {
+	var characterEquippedArmour models.CharacterInventoryItem
+	_ = g.DB.
 		Table("character_inventory_items").
 		Where("character_id = ? AND location = 'Equipment' AND equipped = true AND type = 'armour'", id).
-		Find(&characterEquippedArmour).Error
+		First(&characterEquippedArmour).Error
+	if characterEquippedArmour.ID == 0 {
+		return nil, nil
+	}
+
+	var armour models.Armour
+	err := g.DB.
+		Table("armour").
+		Preload("Item").
+		Where("item_id = ?", characterEquippedArmour.ItemID).
+		First(&armour).Error
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("inventory items with character id: %q could not be found", id))
+		return nil, errors.New(fmt.Sprintf("armour with item id: %q could not be found", characterEquippedArmour.ItemID))
 	}
 
-	var armours []*models.Armour
-	for _, equippedArmour := range characterEquippedArmour {
-		var armour models.Armour
-		_ = g.DB.
-			Table("armour").
-			Preload("Item").
-			Where("item_id = ?", equippedArmour.ItemID).
-			First(&armour).Error
-		if armour.ItemID != 0 {
-			armours = append(armours, &armour)
-		}
-	}
-
-	return armours, nil
+	return &armour, nil
 }
 
 func (g *GormCharacterInventoryStore) GetEquippedShieldByCharacterID(id interface{}) (*models.Shield, error) {
-	var characterEquippedShield []models.CharacterInventoryItem
-	err := g.DB.
+	var characterEquippedShield models.CharacterInventoryItem
+	_ = g.DB.
 		Table("character_inventory_items").
 		Where("character_id = ? AND location = 'Equipment' AND equipped = true AND type = 'shield'", id).
-		Find(&characterEquippedShield).Error
-	if err != nil {
-		return nil, errors.New(fmt.Sprintf("inventory items with character id: %q could not be found", id))
-	}
-	if len(characterEquippedShield) == 0 {
+		First(&characterEquippedShield).Error
+	if characterEquippedShield.ID == 0 {
 		return nil, nil
 	}
 
 	var shield models.Shield
-	err = g.DB.
+	err := g.DB.
 		Preload("Item").
-		Where("item_id = ?", characterEquippedShield[0].ItemID).
+		Where("item_id = ?", characterEquippedShield.ItemID).
 		First(&shield).Error
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("shield with item id: %q could not be found", id))

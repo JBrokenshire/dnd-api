@@ -39,5 +39,6 @@ func getMigrationsList() []gmStore.Migratable {
 		&list.CreateCharacterSkillsAdvantagesTable{},
 		&list.CreateBackgroundsTable{},
 		&list.UpdateCharactersAddBackground{},
+		&list.UpdateCharactersAddCharacteristics{},
 	}
 }

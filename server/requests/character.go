@@ -31,6 +31,16 @@ type CharacterRequest struct {
 	ArmourClassAddDexterity bool `json:"armour_class_add_dexterity"`
 
 	BackgroundName string `json:"background_name"`
+	Alignment      string `json:"alignment"`
+	Gender         string `json:"gender"`
+	Eyes           string `json:"eyes"`
+	Size           string `json:"size"`
+	Height         string `json:"height"`
+	Faith          string `json:"faith"`
+	Hair           string `json:"hair"`
+	Skin           string `json:"skin"`
+	Age            int    `json:"age"`
+	Weight         int    `json:"weight"`
 
 	Organisations string `json:"organisations"`
 	Allies        string `json:"allies"`
@@ -85,6 +95,12 @@ func NewCharacterRequest(cr *CharacterRequest) CharacterRequest {
 	}
 	if cr.BackgroundName == "" {
 		cr.BackgroundName = "Outlander"
+	}
+	if cr.Size == "" {
+		cr.Size = "Medium"
+	}
+	if cr.Alignment == "" {
+		cr.Alignment = "Lawful Good"
 	}
 
 	return *cr

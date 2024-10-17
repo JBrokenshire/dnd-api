@@ -1,6 +1,7 @@
 package models
 
 import (
+	"dnd-api/utils"
 	"errors"
 	"fmt"
 	"github.com/jinzhu/gorm"
@@ -37,6 +38,16 @@ type Character struct {
 	AttacksPerAction   int `gorm:"not null" json:"attacks_per_action"`
 
 	BackgroundName string `gorm:"not null" json:"background_name"`
+	Alignment      string `json:"alignment"`
+	Gender         string `json:"gender"`
+	Eyes           string `json:"eyes"`
+	Size           string `json:"size"`
+	Height         string `json:"height"`
+	Faith          string `json:"faith"`
+	Hair           string `json:"hair"`
+	Skin           string `json:"skin"`
+	Age            int    `json:"age"`
+	Weight         int    `json:"weight"`
 
 	Organisations string `json:"organisations"`
 	Allies        string `json:"allies"`
@@ -65,6 +76,13 @@ func (c *Character) BeforeCreate(db *gorm.DB) error {
 	err = db.Where("name = ?", c.BackgroundName).Find(&background).Error
 	if err != nil {
 		return fmt.Errorf("background with name '%v' not found - %v", c.BackgroundName, err)
+	}
+
+	if !utils.SliceContains(alignments, c.Alignment) {
+		return fmt.Errorf("invalid alignment '%v'", c.Alignment)
+	}
+	if !utils.SliceContains(sizes, c.Size) {
+		return fmt.Errorf("invalid size '%v'", c.Size)
 	}
 
 	err = validateStats(c)

@@ -149,3 +149,24 @@ var itemTypes = []string{
 	"armour",
 	"shield",
 }
+
+var alignments = []string{
+	"Lawful Good",
+	"Neutral Good",
+	"Chaotic Good",
+	"Lawful Neutral",
+	"True Neutral",
+	"Chaotic Neutral",
+	"Lawful Evil",
+	"Neutral Evil",
+	"Chaotic Evil",
+}
+
+var sizes = []string{
+	"Tiny",
+	"Small",
+	"Medium",
+	"Large",
+	"Huge",
+	"Gargantuan",
+}

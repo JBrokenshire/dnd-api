@@ -53,4 +53,10 @@ func fillCharacterDetails(c *models.Character) {
 	if c.BackgroundName == "" {
 		c.BackgroundName = "Outlander"
 	}
+	if c.Alignment == "" {
+		c.Alignment = "Lawful Neutral"
+	}
+	if c.Size == "" {
+		c.Size = "Medium"
+	}
 }

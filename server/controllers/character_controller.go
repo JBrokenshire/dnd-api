@@ -162,6 +162,36 @@ func (c *CharacterController) Update(ctx echo.Context) error {
 	if updatedCharacterRequest.Backstory == "" {
 		updatedCharacterRequest.Backstory = existingCharacter.Backstory
 	}
+	if updatedCharacterRequest.Alignment == "" {
+		updatedCharacterRequest.Alignment = existingCharacter.Alignment
+	}
+	if updatedCharacterRequest.Gender == "" {
+		updatedCharacterRequest.Gender = existingCharacter.Gender
+	}
+	if updatedCharacterRequest.Eyes == "" {
+		updatedCharacterRequest.Eyes = existingCharacter.Eyes
+	}
+	if updatedCharacterRequest.Size == "" {
+		updatedCharacterRequest.Size = existingCharacter.Size
+	}
+	if updatedCharacterRequest.Height == "" {
+		updatedCharacterRequest.Height = existingCharacter.Height
+	}
+	if updatedCharacterRequest.Faith == "" {
+		updatedCharacterRequest.Faith = existingCharacter.Faith
+	}
+	if updatedCharacterRequest.Hair == "" {
+		updatedCharacterRequest.Hair = existingCharacter.Hair
+	}
+	if updatedCharacterRequest.Skin == "" {
+		updatedCharacterRequest.Skin = existingCharacter.Skin
+	}
+	if updatedCharacterRequest.Age == 0 {
+		updatedCharacterRequest.Age = existingCharacter.Age
+	}
+	if updatedCharacterRequest.Weight == 0 {
+		updatedCharacterRequest.Weight = existingCharacter.Weight
+	}
 
 	_, err = c.validateCharacterRequest(updatedCharacterRequest)
 	if err != nil {
@@ -198,6 +228,16 @@ func (c *CharacterController) Update(ctx echo.Context) error {
 		Allies:                 updatedCharacterRequest.Allies,
 		Enemies:                updatedCharacterRequest.Enemies,
 		Backstory:              updatedCharacterRequest.Backstory,
+		Alignment:              updatedCharacterRequest.Alignment,
+		Size:                   updatedCharacterRequest.Size,
+		Gender:                 updatedCharacterRequest.Gender,
+		Eyes:                   updatedCharacterRequest.Eyes,
+		Height:                 updatedCharacterRequest.Height,
+		Faith:                  updatedCharacterRequest.Faith,
+		Hair:                   updatedCharacterRequest.Hair,
+		Skin:                   updatedCharacterRequest.Skin,
+		Age:                    updatedCharacterRequest.Age,
+		Weight:                 updatedCharacterRequest.Weight,
 	}
 
 	// Update the existing character in the stores with the updated information
@@ -380,8 +420,11 @@ func (c *CharacterController) validateCharacterRequest(request *requests.Charact
 	if request.AttacksPerAction < 1 {
 		return nil, errors.New("invalid character attacksPerAction")
 	}
-	if request.BackgroundName == "" {
-		return nil, errors.New("invalid character background name")
+	if request.Alignment == "" {
+		return nil, errors.New("invalid character alignment")
+	}
+	if request.Size == "" {
+		return nil, errors.New("invalid character size")
 	}
 
 	character.Name = request.Name
@@ -403,6 +446,16 @@ func (c *CharacterController) validateCharacterRequest(request *requests.Charact
 	character.InitiativeModifier = request.InitiativeModifier
 	character.AttacksPerAction = request.AttacksPerAction
 	character.BackgroundName = request.BackgroundName
+	character.Alignment = request.Alignment
+	character.Gender = request.Gender
+	character.Eyes = request.Eyes
+	character.Size = request.Size
+	character.Height = request.Height
+	character.Faith = request.Faith
+	character.Hair = request.Hair
+	character.Skin = request.Skin
+	character.Age = request.Age
+	character.Weight = request.Weight
 
 	return character, nil
 }

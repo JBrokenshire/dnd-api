@@ -1,20 +1,19 @@
 package controllers
 
 import (
-	"dnd-api/db/stores"
+	"dnd-api/server"
 	res "dnd-api/server/responses"
 	"errors"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
 
 type CharacterInventoryController struct {
-	Store stores.CharacterInventoryStore
+	server.Server
 }
 
 func (c *CharacterInventoryController) GetCharacterInventory(ctx echo.Context) error {
-	characterInventory, err := c.Store.GetInventoryByCharacterID(ctx.Param("id"))
+	characterInventory, err := c.Server.Stores.CharacterInventory.GetInventoryByCharacterID(ctx.Param("id"))
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}
@@ -23,7 +22,14 @@ func (c *CharacterInventoryController) GetCharacterInventory(ctx echo.Context) e
 }
 
 func (c *CharacterInventoryController) GetCharacterEquippedWeapons(ctx echo.Context) error {
-	characterEquippedWeapons, err := c.Store.GetEquippedWeaponsByCharacterID(ctx.Param("id"))
+	characterID := ctx.Param("id")
+
+	character, err := c.Server.Stores.Character.Get(characterID)
+	if err != nil || character.ID == 0 {
+		return res.ErrorResponse(ctx, http.StatusNotFound, err)
+	}
+
+	characterEquippedWeapons, err := c.Server.Stores.CharacterInventory.GetEquippedWeaponsByCharacterID(characterID)
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}
@@ -31,8 +37,20 @@ func (c *CharacterInventoryController) GetCharacterEquippedWeapons(ctx echo.Cont
 	return ctx.JSON(http.StatusOK, characterEquippedWeapons)
 }
 
+func (c *CharacterInventoryController) GetCharacterEquippedArmour(ctx echo.Context) error {
+	characterEquippedArmour, err := c.Server.Stores.CharacterInventory.GetEquippedArmourByCharacterID(ctx.Param("id"))
+	if err != nil {
+		return res.ErrorResponse(ctx, http.StatusNotFound, err)
+	}
+
+	return ctx.JSON(http.StatusOK, characterEquippedArmour)
+}
+
 func (c *CharacterInventoryController) ToggleItemEquipped(ctx echo.Context) error {
-	inventoryItem, err := c.Store.GetCharacterInventoryItemByID(ctx.Param("characterID"), ctx.Param("itemID"))
+	characterID := ctx.Param("characterID")
+	itemID := ctx.Param("itemID")
+
+	inventoryItem, err := c.Server.Stores.CharacterInventory.GetCharacterInventoryItemByID(characterID, itemID)
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}
@@ -45,10 +63,8 @@ func (c *CharacterInventoryController) ToggleItemEquipped(ctx echo.Context) erro
 		return ctx.JSON(http.StatusOK, inventoryItem)
 	}
 
-	fmt.Println(">>> ", inventoryItem)
-
 	inventoryItem.Equipped = !inventoryItem.Equipped
-	err = c.Store.UpdateCharacterInventoryItem(inventoryItem)
+	err = c.Server.Stores.CharacterInventory.UpdateCharacterInventoryItem(inventoryItem)
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusInternalServerError, err)
 	}

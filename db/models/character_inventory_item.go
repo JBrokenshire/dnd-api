@@ -10,6 +10,7 @@ type CharacterInventoryItem struct {
 	ID          int    `gorm:"primary_key" json:"id"`
 	CharacterID int    `gorm:"not null" json:"character_id"`
 	ItemID      int    `gorm:"not null" json:"item_id"`
+	Type        string `gorm:"not null" json:"type"`
 	Equipped    bool   `json:"equipped"`
 	Quantity    int    `json:"quantity"`
 	Location    string `gorm:"not null" json:"location"`
@@ -28,6 +29,14 @@ func (c *CharacterInventoryItem) BeforeCreate(db *gorm.DB) error {
 	err = db.Where("id = ?", c.ItemID).Find(&item).Error
 	if err != nil {
 		return fmt.Errorf("item with id '%v' not found", c.ItemID)
+	}
+
+	if c.Type == "" {
+		c.Type = "item"
+	}
+
+	if !utils.SliceContains(itemTypes, c.Type) {
+		return fmt.Errorf("item type '%v' is not a valid type", c.ItemID)
 	}
 
 	if !utils.SliceContains(locations, c.Location) {

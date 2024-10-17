@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"dnd-api/db/models"
-	"dnd-api/db/stores"
+	"dnd-api/server"
 	"dnd-api/server/requests"
 	res "dnd-api/server/responses"
 	"errors"
@@ -12,9 +12,7 @@ import (
 )
 
 type CharacterController struct {
-	CharacterStore stores.CharacterStore
-	ClassStore     stores.ClassStore
-	RaceStore      stores.RaceStore
+	server.Server
 }
 
 func (c *CharacterController) Create(ctx echo.Context) error {
@@ -30,7 +28,7 @@ func (c *CharacterController) Create(ctx echo.Context) error {
 	}
 
 	// Create new character in the character stores
-	err = c.CharacterStore.Create(newCharacter)
+	err = c.Server.Stores.Character.Create(newCharacter)
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusInternalServerError, err)
 	}
@@ -40,7 +38,7 @@ func (c *CharacterController) Create(ctx echo.Context) error {
 }
 
 func (c *CharacterController) GetAll(ctx echo.Context) error {
-	characters, err := c.CharacterStore.GetAll()
+	characters, err := c.Server.Stores.Character.GetAll()
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusInternalServerError, err)
 	}
@@ -50,7 +48,7 @@ func (c *CharacterController) GetAll(ctx echo.Context) error {
 
 func (c *CharacterController) Get(ctx echo.Context) error {
 	// Get character using that ID
-	character, err := c.CharacterStore.Get(ctx.Param("id"))
+	character, err := c.Server.Stores.Character.Get(ctx.Param("id"))
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}
@@ -59,7 +57,7 @@ func (c *CharacterController) Get(ctx echo.Context) error {
 }
 
 func (c *CharacterController) Update(ctx echo.Context) error {
-	existingCharacter, err := c.CharacterStore.Get(ctx.Param("id"))
+	existingCharacter, err := c.Server.Stores.Character.Get(ctx.Param("id"))
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}
@@ -146,12 +144,6 @@ func (c *CharacterController) Update(ctx echo.Context) error {
 	if updatedCharacterRequest.InitiativeModifier == 0 {
 		updatedCharacterRequest.InitiativeModifier = existingCharacter.InitiativeModifier
 	}
-	if updatedCharacterRequest.BaseArmourClass == 0 {
-		updatedCharacterRequest.BaseArmourClass = existingCharacter.BaseArmourClass
-	}
-	if updatedCharacterRequest.ArmourClassAddDexterity == false {
-		updatedCharacterRequest.ArmourClassAddDexterity = existingCharacter.ArmourClassAddDexterity
-	}
 	if updatedCharacterRequest.AttacksPerAction == 0 {
 		updatedCharacterRequest.AttacksPerAction = existingCharacter.AttacksPerAction
 	}
@@ -162,36 +154,34 @@ func (c *CharacterController) Update(ctx echo.Context) error {
 	}
 
 	existingCharacter = &models.Character{
-		ID:                      existingCharacter.ID,
-		Name:                    updatedCharacterRequest.Name,
-		Level:                   updatedCharacterRequest.Level,
-		ProfilePictureURL:       updatedCharacterRequest.ProfilePictureURL,
-		ClassID:                 updatedCharacterRequest.ClassID,
-		RaceID:                  updatedCharacterRequest.RaceID,
-		Strength:                updatedCharacterRequest.Strength,
-		Dexterity:               updatedCharacterRequest.Dexterity,
-		Constitution:            updatedCharacterRequest.Constitution,
-		Intelligence:            updatedCharacterRequest.Intelligence,
-		Wisdom:                  updatedCharacterRequest.Wisdom,
-		Charisma:                updatedCharacterRequest.Charisma,
-		ProficientStrength:      updatedCharacterRequest.ProficientStrength,
-		ProficientDexterity:     updatedCharacterRequest.ProficientDexterity,
-		ProficientConstitution:  updatedCharacterRequest.ProficientConstitution,
-		ProficientIntelligence:  updatedCharacterRequest.ProficientIntelligence,
-		ProficientWisdom:        updatedCharacterRequest.ProficientWisdom,
-		ProficientCharisma:      updatedCharacterRequest.ProficientCharisma,
-		WalkingSpeedModifier:    updatedCharacterRequest.WalkingSpeedModifier,
-		Inspiration:             updatedCharacterRequest.Inspiration,
-		CurrentHitPoints:        updatedCharacterRequest.CurrentHitPoints,
-		MaxHitPoints:            updatedCharacterRequest.MaxHitPoints,
-		TempHitPoints:           updatedCharacterRequest.TempHitPoints,
-		InitiativeModifier:      updatedCharacterRequest.InitiativeModifier,
-		BaseArmourClass:         updatedCharacterRequest.BaseArmourClass,
-		ArmourClassAddDexterity: updatedCharacterRequest.ArmourClassAddDexterity,
+		ID:                     existingCharacter.ID,
+		Name:                   updatedCharacterRequest.Name,
+		Level:                  updatedCharacterRequest.Level,
+		ProfilePictureURL:      updatedCharacterRequest.ProfilePictureURL,
+		ClassID:                updatedCharacterRequest.ClassID,
+		RaceID:                 updatedCharacterRequest.RaceID,
+		Strength:               updatedCharacterRequest.Strength,
+		Dexterity:              updatedCharacterRequest.Dexterity,
+		Constitution:           updatedCharacterRequest.Constitution,
+		Intelligence:           updatedCharacterRequest.Intelligence,
+		Wisdom:                 updatedCharacterRequest.Wisdom,
+		Charisma:               updatedCharacterRequest.Charisma,
+		ProficientStrength:     updatedCharacterRequest.ProficientStrength,
+		ProficientDexterity:    updatedCharacterRequest.ProficientDexterity,
+		ProficientConstitution: updatedCharacterRequest.ProficientConstitution,
+		ProficientIntelligence: updatedCharacterRequest.ProficientIntelligence,
+		ProficientWisdom:       updatedCharacterRequest.ProficientWisdom,
+		ProficientCharisma:     updatedCharacterRequest.ProficientCharisma,
+		WalkingSpeedModifier:   updatedCharacterRequest.WalkingSpeedModifier,
+		Inspiration:            updatedCharacterRequest.Inspiration,
+		CurrentHitPoints:       updatedCharacterRequest.CurrentHitPoints,
+		MaxHitPoints:           updatedCharacterRequest.MaxHitPoints,
+		TempHitPoints:          updatedCharacterRequest.TempHitPoints,
+		InitiativeModifier:     updatedCharacterRequest.InitiativeModifier,
 	}
 
 	// Update the existing character in the stores with the updated information
-	err = c.CharacterStore.Update(existingCharacter)
+	err = c.Server.Stores.Character.Update(existingCharacter)
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusInternalServerError, err)
 	}
@@ -200,14 +190,14 @@ func (c *CharacterController) Update(ctx echo.Context) error {
 }
 
 func (c *CharacterController) LevelUp(ctx echo.Context) error {
-	character, err := c.CharacterStore.Get(ctx.Param("id"))
+	character, err := c.Server.Stores.Character.Get(ctx.Param("id"))
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}
 
 	character.Level++
 
-	err = c.CharacterStore.Update(character)
+	err = c.Server.Stores.Character.Update(character)
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusInternalServerError, err)
 	}
@@ -216,14 +206,14 @@ func (c *CharacterController) LevelUp(ctx echo.Context) error {
 }
 
 func (c *CharacterController) ToggleInspiration(ctx echo.Context) error {
-	character, err := c.CharacterStore.Get(ctx.Param("id"))
+	character, err := c.Server.Stores.Character.Get(ctx.Param("id"))
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}
 
 	character.Inspiration = !character.Inspiration
 
-	err = c.CharacterStore.Update(character)
+	err = c.Server.Stores.Character.Update(character)
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusInternalServerError, err)
 	}
@@ -232,7 +222,7 @@ func (c *CharacterController) ToggleInspiration(ctx echo.Context) error {
 }
 
 func (c *CharacterController) Heal(ctx echo.Context) error {
-	character, err := c.CharacterStore.Get(ctx.Param("id"))
+	character, err := c.Server.Stores.Character.Get(ctx.Param("id"))
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}
@@ -250,7 +240,7 @@ func (c *CharacterController) Heal(ctx echo.Context) error {
 		character.CurrentHitPoints = character.MaxHitPoints
 	}
 
-	err = c.CharacterStore.Update(character)
+	err = c.Server.Stores.Character.Update(character)
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusInternalServerError, err)
 	}
@@ -259,7 +249,7 @@ func (c *CharacterController) Heal(ctx echo.Context) error {
 }
 
 func (c *CharacterController) Damage(ctx echo.Context) error {
-	character, err := c.CharacterStore.Get(ctx.Param("id"))
+	character, err := c.Server.Stores.Character.Get(ctx.Param("id"))
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}
@@ -277,7 +267,7 @@ func (c *CharacterController) Damage(ctx echo.Context) error {
 		character.CurrentHitPoints = 0
 	}
 
-	err = c.CharacterStore.Update(character)
+	err = c.Server.Stores.Character.Update(character)
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusInternalServerError, err)
 	}
@@ -285,8 +275,46 @@ func (c *CharacterController) Damage(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, character)
 }
 
+func (c *CharacterController) GetArmourClass(ctx echo.Context) error {
+	characterID := ctx.Param("id")
+
+	character, err := c.Server.Stores.Character.Get(characterID)
+	if err != nil || character.ID == 0 {
+		return res.ErrorResponse(ctx, http.StatusNotFound, err)
+	}
+
+	equippedArmour, err := c.Server.Stores.CharacterInventory.GetEquippedArmourByCharacterID(characterID)
+	if err != nil {
+		return res.ErrorResponse(ctx, http.StatusNotFound, err)
+	}
+
+	equippedShield, err := c.Server.Stores.CharacterInventory.GetEquippedShieldByCharacterID(characterID)
+	if err != nil {
+		return res.ErrorResponse(ctx, http.StatusNotFound, err)
+	}
+
+	dexterityModifier := (character.Dexterity - 10) / 2
+	armourClass := 10 + dexterityModifier
+
+	if len(equippedArmour) > 0 {
+		armour := equippedArmour[0]
+		armourClass = armour.BaseAC
+		if dexterityModifier > armour.MaxDexterityModifier {
+			armourClass += armour.MaxDexterityModifier
+		} else {
+			armourClass += dexterityModifier
+		}
+	}
+
+	if equippedShield != nil {
+		armourClass += equippedShield.BonusAC
+	}
+
+	return ctx.JSON(http.StatusOK, armourClass)
+}
+
 func (c *CharacterController) Delete(ctx echo.Context) error {
-	err := c.CharacterStore.Delete(ctx.Param("id"))
+	err := c.Server.Stores.Character.Delete(ctx.Param("id"))
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}
@@ -308,10 +336,10 @@ func (c *CharacterController) validateCharacterRequest(request *requests.Charact
 			return nil, errors.New("invalid character level")
 		}
 	}
-	if !c.ClassStore.IsValidID(request.ClassID) {
+	if !c.Server.Stores.Class.IsValidID(request.ClassID) {
 		return nil, errors.New("invalid character classID")
 	}
-	if !c.RaceStore.IsValidID(request.RaceID) {
+	if !c.Server.Stores.Race.IsValidID(request.RaceID) {
 		return nil, errors.New("invalid character raceID")
 	}
 
@@ -348,8 +376,6 @@ func (c *CharacterController) validateCharacterRequest(request *requests.Charact
 	character.MaxHitPoints = request.MaxHitPoints
 	character.TempHitPoints = request.TempHitPoints
 	character.InitiativeModifier = request.InitiativeModifier
-	character.BaseArmourClass = request.BaseArmourClass
-	character.ArmourClassAddDexterity = request.ArmourClassAddDexterity
 	character.AttacksPerAction = request.AttacksPerAction
 
 	return character, nil

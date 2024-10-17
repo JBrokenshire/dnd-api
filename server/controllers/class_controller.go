@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"dnd-api/db/models"
-	"dnd-api/db/stores"
+	"dnd-api/server"
 	"dnd-api/server/requests"
 	res "dnd-api/server/responses"
 	"errors"
@@ -11,11 +11,11 @@ import (
 )
 
 type ClassController struct {
-	Store stores.ClassStore
+	server.Server
 }
 
 func (c *ClassController) GetAll(ctx echo.Context) error {
-	classes, err := c.Store.GetAll()
+	classes, err := c.Server.Stores.Class.GetAll()
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusInternalServerError, err)
 	}
@@ -24,7 +24,7 @@ func (c *ClassController) GetAll(ctx echo.Context) error {
 }
 
 func (c *ClassController) Get(ctx echo.Context) error {
-	class, err := c.Store.Get(ctx.Param("id"))
+	class, err := c.Server.Stores.Class.Get(ctx.Param("id"))
 
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
@@ -34,7 +34,7 @@ func (c *ClassController) Get(ctx echo.Context) error {
 }
 
 func (c *ClassController) Update(ctx echo.Context) error {
-	existingClass, err := c.Store.Get(ctx.Param("id"))
+	existingClass, err := c.Server.Stores.Class.Get(ctx.Param("id"))
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}
@@ -64,7 +64,7 @@ func (c *ClassController) Update(ctx echo.Context) error {
 		LongDescription:  updatedClassRequest.LongDescription,
 	}
 
-	err = c.Store.Update(updatedClass)
+	err = c.Server.Stores.Class.Update(updatedClass)
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}

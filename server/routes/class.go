@@ -6,7 +6,7 @@ import (
 )
 
 func classRoutes(server *server.Server) {
-	classController := controllers.ClassController{Store: server.Stores.Class}
+	classController := controllers.ClassController{Server: *server}
 
 	classes := server.Echo.Group("/classes")
 	classes.GET("", classController.GetAll)

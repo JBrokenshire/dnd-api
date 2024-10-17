@@ -142,3 +142,10 @@ var damageTypes = []string{
 	"Slashing",
 	"Thunder",
 }
+
+var itemTypes = []string{
+	"item",
+	"weapon",
+	"armour",
+	"shield",
+}

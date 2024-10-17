@@ -1,18 +1,18 @@
 package controllers
 
 import (
-	"dnd-api/db/stores"
+	"dnd-api/server"
 	res "dnd-api/server/responses"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
 
 type CharacterConditionsController struct {
-	CharacterConditionsStore stores.CharacterConditionsStore
+	server.Server
 }
 
 func (c *CharacterConditionsController) GetCharacterConditions(ctx echo.Context) error {
-	characterConditions, err := c.CharacterConditionsStore.GetConditionsByCharacterID(ctx.Param("id"))
+	characterConditions, err := c.Server.Stores.CharacterConditions.GetConditionsByCharacterID(ctx.Param("id"))
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}

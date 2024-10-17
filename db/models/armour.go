@@ -7,13 +7,12 @@ import (
 )
 
 type Armour struct {
-	ItemID              int    `gorm:"primary_key" json:"item_id"`
-	Type                string `json:"type"`
-	BaseAC              int    `json:"base_ac"`
-	BonusAC             int    `json:"bonus_ac"`
-	MaxDexModifier      int    `json:"max_dex_modifier"`
-	StrengthRequirement int    `json:"strength_requirement"`
-	StealthDisadvantage int    `json:"stealth_disadvantage"`
+	ItemID               int    `gorm:"primary_key" json:"item_id"`
+	Type                 string `json:"type"`
+	BaseAC               int    `json:"base_ac"`
+	MaxDexterityModifier int    `json:"max_dex_modifier"`
+	StrengthRequirement  int    `json:"strength_requirement"`
+	StealthDisadvantage  bool   `json:"stealth_disadvantage"`
 
 	Item Item `json:"item"`
 }

@@ -6,7 +6,7 @@ import (
 )
 
 func raceRoutes(server *server.Server) {
-	raceController := controllers.RaceController{Store: server.Stores.Race}
+	raceController := controllers.RaceController{Server: *server}
 
 	races := server.Echo.Group("/races")
 	races.GET("", raceController.GetAll)

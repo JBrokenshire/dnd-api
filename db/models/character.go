@@ -32,9 +32,7 @@ type Character struct {
 	MaxHitPoints         int  `gorm:"not null" json:"max_hit_points"`
 	TempHitPoints        int  `gorm:"not null" json:"temp_hit_points"`
 
-	InitiativeModifier      int  `gorm:"not null" json:"initiative_modifier"`
-	BaseArmourClass         int  `gorm:"not null" json:"base_armour_class"`
-	ArmourClassAddDexterity bool `gorm:"not null" json:"armour_class_add_dexterity"`
+	InitiativeModifier int `gorm:"not null" json:"initiative_modifier"`
 
 	AttacksPerAction int `gorm:"not null" json:"attacks_per_action"`
 

@@ -6,18 +6,14 @@ import (
 )
 
 func itemRoutes(server *server.Server) {
-	itemController := controllers.ItemController{
-		Store: server.Stores.ItemStore,
-	}
+	itemController := controllers.ItemController{Server: *server}
 
 	items := server.Echo.Group("/items")
 	items.GET("", itemController.GetAll)
 }
 
 func weaponRoutes(server *server.Server) {
-	weaponController := controllers.WeaponController{
-		Store: server.Stores.WeaponStore,
-	}
+	weaponController := controllers.WeaponController{Server: *server}
 
 	weapons := server.Echo.Group("/items/weapons")
 	weapons.GET("", weaponController.GetAll)

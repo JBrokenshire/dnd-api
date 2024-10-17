@@ -1,18 +1,18 @@
 package controllers
 
 import (
-	"dnd-api/db/stores"
+	"dnd-api/server"
 	res "dnd-api/server/responses"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
 
 type WeaponController struct {
-	Store stores.WeaponStore
+	server.Server
 }
 
 func (w *WeaponController) GetAll(ctx echo.Context) error {
-	weapons, err := w.Store.GetAll()
+	weapons, err := w.Server.Stores.Weapon.GetAll()
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}

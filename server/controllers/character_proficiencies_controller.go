@@ -1,18 +1,18 @@
 package controllers
 
 import (
-	"dnd-api/db/stores"
+	"dnd-api/server"
 	res "dnd-api/server/responses"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
 
 type CharacterProficienciesController struct {
-	CharacterProficienciesStore stores.CharacterProficienciesStore
+	server.Server
 }
 
 func (c *CharacterProficienciesController) GetCharacterProficientArmourTypes(ctx echo.Context) error {
-	characterProficientArmourTypes, err := c.CharacterProficienciesStore.GetProficientArmourTypesByCharacterID(ctx.Param("id"))
+	characterProficientArmourTypes, err := c.Server.Stores.CharacterProficiencies.GetProficientArmourTypesByCharacterID(ctx.Param("id"))
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}
@@ -26,7 +26,7 @@ func (c *CharacterProficienciesController) GetCharacterProficientArmourTypes(ctx
 }
 
 func (c *CharacterProficienciesController) GetCharacterProficientWeapons(ctx echo.Context) error {
-	characterProficientWeapons, err := c.CharacterProficienciesStore.GetProficientWeaponsByCharacterID(ctx.Param("id"))
+	characterProficientWeapons, err := c.Server.Stores.CharacterProficiencies.GetProficientWeaponsByCharacterID(ctx.Param("id"))
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}
@@ -40,7 +40,7 @@ func (c *CharacterProficienciesController) GetCharacterProficientWeapons(ctx ech
 }
 
 func (c *CharacterProficienciesController) GetCharacterProficientTools(ctx echo.Context) error {
-	characterProficientTools, err := c.CharacterProficienciesStore.GetProficientToolsByCharacterID(ctx.Param("id"))
+	characterProficientTools, err := c.Server.Stores.CharacterProficiencies.GetProficientToolsByCharacterID(ctx.Param("id"))
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}
@@ -54,7 +54,7 @@ func (c *CharacterProficienciesController) GetCharacterProficientTools(ctx echo.
 }
 
 func (c *CharacterProficienciesController) GetCharacterLanguages(ctx echo.Context) error {
-	characterLanguages, err := c.CharacterProficienciesStore.GetLanguagesByCharacterID(ctx.Param("id"))
+	characterLanguages, err := c.Server.Stores.CharacterProficiencies.GetLanguagesByCharacterID(ctx.Param("id"))
 	if err != nil {
 		return res.ErrorResponse(ctx, http.StatusNotFound, err)
 	}

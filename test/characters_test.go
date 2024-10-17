@@ -86,8 +86,6 @@ func TestCreateCharacter(t *testing.T) {
 					fmt.Sprintf(`"max_hit_points":%v`, characterRequest.MaxHitPoints),
 					fmt.Sprintf(`"temp_hit_points":%v`, characterRequest.TempHitPoints),
 					fmt.Sprintf(`"initiative_modifier":%v`, characterRequest.InitiativeModifier),
-					fmt.Sprintf(`"base_armour_class":%v`, characterRequest.BaseArmourClass),
-					fmt.Sprintf(`"armour_class_add_dexterity":%v`, characterRequest.ArmourClassAddDexterity),
 					fmt.Sprintf(`"attacks_per_action":%v`, characterRequest.AttacksPerAction),
 				},
 			},

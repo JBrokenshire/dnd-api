@@ -13,6 +13,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      17,
 			Equipped:    true,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          2,
@@ -35,6 +36,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      3,
 			Equipped:    true,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          5,
@@ -42,6 +44,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      1,
 			Equipped:    true,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          6,
@@ -49,6 +52,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      1,
 			Equipped:    false,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          7,
@@ -70,6 +74,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      4,
 			Equipped:    true,
 			Location:    "Equipment",
+			Type:        "armour",
 		},
 		{
 			ID:          10,
@@ -126,6 +131,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      18,
 			Equipped:    true,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          18,
@@ -133,6 +139,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      18,
 			Equipped:    true,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          19,
@@ -140,6 +147,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      18,
 			Equipped:    false,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          20,
@@ -147,6 +155,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      18,
 			Equipped:    false,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          21,
@@ -154,6 +163,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      19,
 			Equipped:    true,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          22,
@@ -175,6 +185,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      22,
 			Equipped:    true,
 			Location:    "Equipment",
+			Type:        "armour",
 		},
 		{
 			ID:          25,
@@ -252,6 +263,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      1,
 			Equipped:    true,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          36,
@@ -259,6 +271,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      24,
 			Equipped:    true,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          37,
@@ -266,6 +279,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      25,
 			Equipped:    true,
 			Location:    "Equipment",
+			Type:        "armour",
 		},
 		{
 			ID:          38,
@@ -280,6 +294,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      27,
 			Equipped:    false,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          40,
@@ -343,6 +358,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      30,
 			Equipped:    true,
 			Location:    "Equipment",
+			Type:        "armour",
 		},
 		{
 			ID:          49,
@@ -357,6 +373,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      2,
 			Equipped:    true,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          51,
@@ -364,6 +381,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      36,
 			Equipped:    true,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          52,
@@ -371,6 +389,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      36,
 			Equipped:    false,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          53,
@@ -378,6 +397,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      31,
 			Equipped:    true,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          54,
@@ -385,6 +405,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      31,
 			Equipped:    false,
 			Location:    "Equipment",
+			Type:        "weapon",
 		},
 		{
 			ID:          55,
@@ -413,6 +434,7 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      34,
 			Quantity:    1,
 			Location:    "Backpack",
+			Type:        "weapon",
 		},
 		{
 			ID:          59,
@@ -455,6 +477,14 @@ func (s *Seeder) SetCharactersInventory() {
 			ItemID:      16,
 			Quantity:    1,
 			Location:    "Backpack",
+		},
+		{
+			ID:          65,
+			CharacterID: 1,
+			ItemID:      37,
+			Location:    "Equipment",
+			Equipped:    true,
+			Type:        "shield",
 		},
 	}
 

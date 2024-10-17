@@ -97,6 +97,7 @@ func TestGetCharacterInventory(t *testing.T) {
 func TestGetCharacterEquippedWeapons(t *testing.T) {
 	ts.ClearTable("character_inventory_items")
 	ts.ClearTable("characters")
+	ts.ClearTable("weapons")
 	ts.ClearTable("items")
 
 	characterOne := &models.Character{ID: 1}
@@ -144,6 +145,83 @@ func TestGetCharacterEquippedWeapons(t *testing.T) {
 			Request: helpers.Request{
 				Method: http.MethodGet,
 				URL:    "/characters/1/inventory/equipped-weapons",
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyParts: []string{
+					fmt.Sprintf(`"name":"%s"`, itemOne.Name),
+					fmt.Sprintf(`"item_id":%v`, itemOne.ID),
+				},
+				BodyPartsMissing: []string{
+					fmt.Sprintf(`"name":"%s"`, itemTwo.Name),
+					fmt.Sprintf(`"name":"%s"`, itemThree.Name),
+					fmt.Sprintf(`"name":"%s"`, itemFour.Name),
+				},
+			},
+		},
+	}
+
+	for _, test := range cases {
+		t.Run(test.TestName, func(t *testing.T) {
+			RunTestCase(t, test)
+		})
+	}
+}
+
+func TestGetCharacterEquippedArmour(t *testing.T) {
+	ts.ClearTable("character_inventory_items")
+	ts.ClearTable("characters")
+	ts.ClearTable("armour")
+	ts.ClearTable("items")
+
+	ts.SetupDefaultClasses()
+	ts.SetupDefaultRaces()
+
+	characterOne := &models.Character{ID: 1}
+	factories.NewCharacter(ts.S.Db, characterOne)
+
+	characterTwo := &models.Character{ID: 2}
+	factories.NewCharacter(ts.S.Db, characterTwo)
+
+	characterThree := &models.Character{ID: 3}
+	factories.NewCharacter(ts.S.Db, characterThree)
+
+	itemOne := &models.Item{ID: 1, Name: "Test Item One"}
+	factories.NewItem(ts.S.Db, itemOne)
+	armourOne := &models.Armour{ItemID: 1}
+	factories.NewArmour(ts.S.Db, armourOne)
+
+	itemTwo := &models.Item{ID: 2, Name: "Test Item Two"}
+	factories.NewItem(ts.S.Db, itemTwo)
+	armourTwo := &models.Armour{ItemID: 2}
+	factories.NewArmour(ts.S.Db, armourTwo)
+
+	itemThree := &models.Item{ID: 3, Name: "Test Item Three"}
+	factories.NewItem(ts.S.Db, itemThree)
+	armourThree := &models.Armour{ItemID: 3}
+	factories.NewArmour(ts.S.Db, armourThree)
+
+	itemFour := &models.Item{ID: 4, Name: "Test Item Four"}
+	factories.NewItem(ts.S.Db, itemFour)
+
+	equippedArmour := &models.CharacterInventoryItem{CharacterID: characterOne.ID, ItemID: itemOne.ID, Equipped: true}
+	factories.NewCharacterInventoryItem(ts.S.Db, equippedArmour)
+
+	unequippedArmour := &models.CharacterInventoryItem{CharacterID: characterTwo.ID, ItemID: itemTwo.ID, Equipped: false}
+	factories.NewCharacterInventoryItem(ts.S.Db, unequippedArmour)
+
+	notArmour := &models.CharacterInventoryItem{CharacterID: characterOne.ID, ItemID: itemFour.ID}
+	factories.NewCharacterInventoryItem(ts.S.Db, notArmour)
+
+	characterTwoEquippedArmour := &models.CharacterInventoryItem{CharacterID: characterTwo.ID, ItemID: itemThree.ID, Equipped: true}
+	factories.NewCharacterInventoryItem(ts.S.Db, characterTwoEquippedArmour)
+
+	cases := []helpers.TestCase{
+		{
+			TestName: "Can get equipped weapons for character - not unequipped, non-weapons or other characters",
+			Request: helpers.Request{
+				Method: http.MethodGet,
+				URL:    "/characters/1/inventory/equipped-armour",
 			},
 			Expected: helpers.ExpectedResponse{
 				StatusCode: http.StatusOK,

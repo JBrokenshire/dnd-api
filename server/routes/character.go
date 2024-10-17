@@ -6,18 +6,14 @@ import (
 )
 
 func charactersRoutes(server *server.Server) {
-	characterController := controllers.CharacterController{
-		CharacterStore: server.Stores.Character,
-		ClassStore:     server.Stores.Class,
-		RaceStore:      server.Stores.Race,
-	}
-	skillsController := controllers.CharacterSkillsController{CharacterSkillsStore: server.Stores.CharacterSkills}
-	sensesController := controllers.CharacterSensesController{CharacterSensesStore: server.Stores.CharacterSenses}
-	proficienciesController := controllers.CharacterProficienciesController{CharacterProficienciesStore: server.Stores.CharacterProficiencies}
-	defensesController := controllers.CharacterDefensesController{CharacterDefensesStore: server.Stores.CharacterDefensesStore}
-	conditionsController := controllers.CharacterConditionsController{CharacterConditionsStore: server.Stores.CharacterConditionsStore}
-	inventoryController := controllers.CharacterInventoryController{Store: server.Stores.CharacterInventoryStore}
-	moneyController := controllers.CharacterMoneyController{Store: server.Stores.CharacterMoneyStore}
+	characterController := controllers.CharacterController{Server: *server}
+	skillsController := controllers.CharacterSkillsController{Server: *server}
+	sensesController := controllers.CharacterSensesController{Server: *server}
+	proficienciesController := controllers.CharacterProficienciesController{Server: *server}
+	defensesController := controllers.CharacterDefensesController{Server: *server}
+	conditionsController := controllers.CharacterConditionsController{Server: *server}
+	inventoryController := controllers.CharacterInventoryController{Server: *server}
+	moneyController := controllers.CharacterMoneyController{Server: *server}
 
 	characters := server.Echo.Group("/characters")
 	characters.GET("", characterController.GetAll)
@@ -30,6 +26,7 @@ func charactersRoutes(server *server.Server) {
 	characters.GET("/:id/level-up", characterController.LevelUp)
 	characters.PUT("/:id/heal/:value", characterController.Heal)
 	characters.PUT("/:id/damage/:value", characterController.Damage)
+	characters.GET("/:id/armour-class", characterController.GetArmourClass)
 
 	characters.GET("/:id/proficient-skills", skillsController.GetProficientByCharacterID)
 	characters.GET("/:id/senses", sensesController.GetSensesByCharacterID)
@@ -44,6 +41,7 @@ func charactersRoutes(server *server.Server) {
 
 	characters.GET("/:id/inventory", inventoryController.GetCharacterInventory)
 	characters.GET("/:id/inventory/equipped-weapons", inventoryController.GetCharacterEquippedWeapons)
+	characters.GET("/:id/inventory/equipped-armour", inventoryController.GetCharacterEquippedArmour)
 	characters.GET("/:id/inventory/money", moneyController.GetCharacterMoney)
 	characters.PUT("/:characterID/inventory/:itemID", inventoryController.ToggleItemEquipped)
 }

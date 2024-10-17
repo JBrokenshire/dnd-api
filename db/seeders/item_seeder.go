@@ -300,6 +300,15 @@ func (s *Seeder) SetItems() {
 			Notes:      "Simple, Light, Thrown, Range(20/60)",
 			Equippable: true,
 		},
+		{
+			ID:         37,
+			Name:       "Shield",
+			Meta:       "Shield",
+			Cost:       10,
+			Weight:     6,
+			Notes:      "+2 AC",
+			Equippable: true,
+		},
 	}
 
 	for _, item := range items {

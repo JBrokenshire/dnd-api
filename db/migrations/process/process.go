@@ -41,5 +41,7 @@ func getMigrationsList() []gmStore.Migratable {
 		&list.UpdateCharactersAddBackground{},
 		&list.UpdateCharactersAddCharacteristics{},
 		&list.UpdateClassesAddSpellcastingAbility{},
+		&list.CreateSpellsTable{},
+		&list.CreateCharacterSpellsTable{},
 	}
 }

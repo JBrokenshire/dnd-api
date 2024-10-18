@@ -52,6 +52,8 @@ func Init() *gorm.DB {
 	seeder.SetArmour()
 	seeder.SetShields()
 	seeder.SetCharacterSkillsAdvantages()
+	seeder.SetSpells()
+	seeder.SetCharacterSpells()
 
 	return db
 }

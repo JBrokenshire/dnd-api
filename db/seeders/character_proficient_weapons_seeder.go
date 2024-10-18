@@ -39,6 +39,10 @@ func (s *Seeder) SetCharactersProficientWeapons() {
 			CharacterID: 4,
 			Weapon:      "Simple Weapons",
 		},
+		{
+			CharacterID: 5,
+			Weapon:      "Simple Weapons",
+		},
 	}
 
 	for _, characterProficientWeapon := range charactersProficientWeapons {

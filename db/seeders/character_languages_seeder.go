@@ -31,6 +31,18 @@ func (s *Seeder) SetCharactersLanguages() {
 			CharacterID: 4,
 			Language:    "Draconic",
 		},
+		{
+			CharacterID: 5,
+			Language:    "Deep Speech",
+		},
+		{
+			CharacterID: 5,
+			Language:    "Halfling",
+		},
+		{
+			CharacterID: 5,
+			Language:    "Infernal",
+		},
 	}
 
 	for _, language := range charactersLanguages {

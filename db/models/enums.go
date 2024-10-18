@@ -170,3 +170,9 @@ var sizes = []string{
 	"Huge",
 	"Gargantuan",
 }
+
+var spellcastingAbilities = []string{
+	"Intelligence",
+	"Wisdom",
+	"Charisma",
+}

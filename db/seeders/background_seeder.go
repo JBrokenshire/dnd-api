@@ -22,6 +22,11 @@ func (s *Seeder) SetBackgrounds() {
 			Feature:     "Ear to the Ground",
 			Description: "You are in frequent contact with people in the segment of society that your chosen quarries move through. These people might be associated with the criminal underworld, the rough-and-tumble folk of the streets, or members of high society. This connection comes in the form of a contact in any city you visit, a person who provides information about the people and places of the local area.",
 		},
+		{
+			Name:        "Haunted One",
+			Feature:     "Heart of Darkness",
+			Description: "Those who look into your eyes can see that you have faced unimaginable horror and that you are no stranger to darkness. Though they might fear you, commoners will extend you every courtesy and do their utmost to help you. Unless you have shown yourself to be a danger to them, they will even take up arms to fight alongside you, should you find yourself facing an enemy alone.",
+		},
 	}
 
 	for _, background := range backgrounds {

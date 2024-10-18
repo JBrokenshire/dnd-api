@@ -85,6 +85,12 @@ func (s *Seeder) SetCharactersMoney() {
 			Money:       "copper",
 			Amount:      2,
 		},
+		{
+			ID:          14,
+			CharacterID: 5,
+			Money:       "gold",
+			Amount:      30,
+		},
 	}
 
 	for _, money := range characterMoney {

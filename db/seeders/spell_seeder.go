@@ -13,6 +13,7 @@ func (s *Seeder) SetSpells() {
 	effectBuff := "Buff"
 	effectWarding := "Warding"
 	effectShapechanging := "Shapechanging"
+	effectAttack := "Attack"
 
 	damage1d12 := "1d12"
 	damage1d10 := "1d10"
@@ -21,7 +22,7 @@ func (s *Seeder) SetSpells() {
 	damageTypePoison := "Poison"
 	damageTypeLightning := "Lightning"
 	damageTypeThunder := "Thunder"
-	damageTypeCold := "Cold"
+	damageTypePiercing := "Piercing"
 
 	saveWisdom := "WIS"
 
@@ -47,6 +48,7 @@ func (s *Seeder) SetSpells() {
 			Name:        "Poison Spray",
 			CastingTime: "1A",
 			Distance:    "30",
+			Effect:      &effectAttack,
 			Damage:      &damage1d12,
 			DamageType:  &damageTypePoison,
 			Notes:       "V/S",
@@ -64,6 +66,7 @@ func (s *Seeder) SetSpells() {
 			Name:        "Shocking Grasp",
 			CastingTime: "1A",
 			Distance:    "Touch",
+			Effect:      &effectAttack,
 			Damage:      &damage1d8,
 			DamageType:  &damageTypeLightning,
 			Notes:       "V/S",
@@ -101,8 +104,9 @@ func (s *Seeder) SetSpells() {
 			Level:       1,
 			CastingTime: "1A",
 			Distance:    "60",
+			Effect:      &effectAttack,
 			Damage:      &damage1d10,
-			DamageType:  &damageTypeCold,
+			DamageType:  &damageTypePiercing,
 			Notes:       "5ft. Sphere, S/M",
 		},
 		{

@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jinzhu/gorm"
-	"reflect"
 )
 
 type CharacterStore interface {
@@ -43,10 +42,6 @@ func (g *GormCharacterStore) GetAll() ([]*models.Character, error) {
 }
 
 func (g *GormCharacterStore) Get(id interface{}) (*models.Character, error) {
-	if reflect.TypeOf(id).Kind() != reflect.String && reflect.TypeOf(id).Kind() != reflect.Int {
-		return nil, errors.New("id should be a string or int")
-	}
-
 	var character models.Character
 	if err := g.DB.
 		Preload("Class").

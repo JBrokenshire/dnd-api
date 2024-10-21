@@ -11,7 +11,7 @@ type Spell struct {
 	Name        string  `json:"name"`
 	Level       int     `json:"level"`
 	CastingTime string  `json:"casting_time"`
-	Distance    string  `json:"range"`
+	Distance    string  `json:"distance"`
 	Effect      *string `json:"effect"`
 	Damage      *string `json:"damage"`
 	DamageType  *string `json:"damage_type"`

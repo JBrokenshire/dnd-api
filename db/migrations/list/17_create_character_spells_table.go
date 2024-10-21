@@ -18,6 +18,7 @@ func (m *CreateCharacterSpellsTable) Up(con *sqlx.DB) {
 	table.ForeignKey("character_id").Reference("characters").On("id").OnUpdate("cascade").OnDelete("cascade")
 	table.Integer("spell_id").NotNull()
 	table.ForeignKey("spell_id").Reference("spells").On("id").OnUpdate("cascade").OnDelete("cascade")
+	table.Column("origin").Type("MEDIUMTEXT").NotNull()
 	table.MustExec()
 }
 

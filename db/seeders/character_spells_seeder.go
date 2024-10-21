@@ -91,6 +91,18 @@ func (s *Seeder) SetCharacterSpells() {
 			SpellID:     14,
 			Origin:      "Aberrant Dragonmark",
 		},
+		{
+			ID:          15,
+			CharacterID: 5,
+			SpellID:     15,
+			Origin:      "Sorcerer",
+		},
+		{
+			ID:          16,
+			CharacterID: 5,
+			SpellID:     16,
+			Origin:      "Sorcerer",
+		},
 	}
 
 	for _, characterSpell := range characterSpells {

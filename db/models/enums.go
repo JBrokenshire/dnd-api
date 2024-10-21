@@ -176,3 +176,14 @@ var spellcastingAbilities = []string{
 	"Wisdom",
 	"Charisma",
 }
+
+var magicSchools = []string{
+	"Abjuration",
+	"Conjuration",
+	"Divination",
+	"Enchantment",
+	"Evocation",
+	"Illusion",
+	"Necromancy",
+	"Transmutation",
+}

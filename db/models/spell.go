@@ -10,6 +10,7 @@ type Spell struct {
 	ID          int     `gorm:"primary_key" json:"id"`
 	Name        string  `json:"name"`
 	Level       int     `json:"level"`
+	School      string  `json:"school"`
 	CastingTime string  `json:"casting_time"`
 	Distance    string  `json:"distance"`
 	Effect      *string `json:"effect"`
@@ -30,6 +31,10 @@ func (s *Spell) BeforeCreate(_ *gorm.DB) error {
 		if !utils.SliceContains(damageTypes, *s.DamageType) {
 			return fmt.Errorf("spell damage type %q is not valid", *s.DamageType)
 		}
+	}
+
+	if !utils.SliceContains(magicSchools, s.School) {
+		return fmt.Errorf("magic school %q is not valid", s.School)
 	}
 
 	return nil

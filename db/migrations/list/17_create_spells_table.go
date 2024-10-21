@@ -16,6 +16,7 @@ func (m *CreateSpellsTable) Up(con *sqlx.DB) {
 	table.PrimaryKey("id")
 	table.String("name", 128).NotNull()
 	table.Integer("level").NotNull()
+	table.Column("school").Type("ENUM('Abjuration', 'Conjuration', 'Divination', 'Enchantment', 'Evocation', 'Illusion', 'Necromancy', 'Transmutation')")
 	table.String("casting_time", 8).NotNull()
 	table.String("distance", 32).NotNull()
 	table.String("effect", 32).Nullable()

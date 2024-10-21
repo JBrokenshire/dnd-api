@@ -14,6 +14,8 @@ func (s *Seeder) SetSpells() {
 	effectWarding := "Warding"
 	effectShapechanging := "Shapechanging"
 	effectAttack := "Attack"
+	effectNegation := "Negation"
+	effectFrightened := "Frightened"
 
 	damage1d12 := "1d12"
 	damage1d10 := "1d10"
@@ -25,11 +27,13 @@ func (s *Seeder) SetSpells() {
 	damageTypePiercing := "Piercing"
 
 	saveWisdom := "WIS"
+	saveConstitution := "CON"
 
 	spells := []models.Spell{
 		{
 			ID:          1,
 			Name:        "Dancing Lights",
+			School:      "Illusion",
 			CastingTime: "1A",
 			Distance:    "120",
 			Effect:      &effectUtility,
@@ -38,6 +42,7 @@ func (s *Seeder) SetSpells() {
 		{
 			ID:          2,
 			Name:        "Message",
+			School:      "Transmutation",
 			CastingTime: "1A",
 			Distance:    "120",
 			Effect:      &effectCommunication,
@@ -46,6 +51,7 @@ func (s *Seeder) SetSpells() {
 		{
 			ID:          3,
 			Name:        "Poison Spray",
+			School:      "Necromancy",
 			CastingTime: "1A",
 			Distance:    "30",
 			Effect:      &effectAttack,
@@ -56,6 +62,7 @@ func (s *Seeder) SetSpells() {
 		{
 			ID:          4,
 			Name:        "Shape Water",
+			School:      "Transmutation",
 			CastingTime: "1A",
 			Distance:    "30",
 			Effect:      &effectControl,
@@ -64,6 +71,7 @@ func (s *Seeder) SetSpells() {
 		{
 			ID:          5,
 			Name:        "Shocking Grasp",
+			School:      "Evocation",
 			CastingTime: "1A",
 			Distance:    "Touch",
 			Effect:      &effectAttack,
@@ -74,6 +82,7 @@ func (s *Seeder) SetSpells() {
 		{
 			ID:          6,
 			Name:        "Booming Blade",
+			School:      "Evocation",
 			CastingTime: "1A",
 			Distance:    "Self",
 			Damage:      &damage1d8,
@@ -83,6 +92,7 @@ func (s *Seeder) SetSpells() {
 		{
 			ID:          7,
 			Name:        "Comprehend Languages",
+			School:      "Divination",
 			Level:       1,
 			CastingTime: "1A",
 			Distance:    "Self",
@@ -92,6 +102,7 @@ func (s *Seeder) SetSpells() {
 		{
 			ID:          8,
 			Name:        "Feather Fall",
+			School:      "Transmutation",
 			Level:       1,
 			CastingTime: "1R",
 			Distance:    "60",
@@ -101,6 +112,7 @@ func (s *Seeder) SetSpells() {
 		{
 			ID:          9,
 			Name:        "Ice Knife",
+			School:      "Conjuration",
 			Level:       1,
 			CastingTime: "1A",
 			Distance:    "60",
@@ -112,6 +124,7 @@ func (s *Seeder) SetSpells() {
 		{
 			ID:          10,
 			Name:        "Mage Armour",
+			School:      "Abjuration",
 			Level:       1,
 			CastingTime: "1A",
 			Distance:    "Touch",
@@ -121,6 +134,7 @@ func (s *Seeder) SetSpells() {
 		{
 			ID:          11,
 			Name:        "Shield",
+			School:      "Abjuration",
 			Level:       1,
 			CastingTime: "1R",
 			Distance:    "Self",
@@ -130,6 +144,7 @@ func (s *Seeder) SetSpells() {
 		{
 			ID:          12,
 			Name:        "Alter Self",
+			School:      "Transmutation",
 			Level:       2,
 			CastingTime: "1A",
 			Distance:    "Self",
@@ -139,6 +154,7 @@ func (s *Seeder) SetSpells() {
 		{
 			ID:          13,
 			Name:        "Suggestion",
+			School:      "Enchantment",
 			Level:       2,
 			CastingTime: "1A",
 			Distance:    "30",
@@ -149,11 +165,34 @@ func (s *Seeder) SetSpells() {
 		{
 			ID:          14,
 			Name:        "Fog Cloud",
+			School:      "Conjuration",
 			Level:       1,
 			CastingTime: "1A",
 			Distance:    "120",
 			Effect:      &effectControl,
 			Notes:       "D: 1hr, 20ft. Sphere, V/S",
+		},
+		{
+			ID:          15,
+			Name:        "Counterspell",
+			School:      "Abjuration",
+			Level:       3,
+			CastingTime: "1R",
+			Distance:    "60",
+			Effect:      &effectNegation,
+			Save:        &saveConstitution,
+			Notes:       "S",
+		},
+		{
+			ID:          16,
+			Name:        "Fear",
+			School:      "Illusion",
+			Level:       3,
+			CastingTime: "1A",
+			Distance:    "Self",
+			Effect:      &effectFrightened,
+			Save:        &saveWisdom,
+			Notes:       "D: 1m, 30ft. Cone, V/S/M",
 		},
 	}
 

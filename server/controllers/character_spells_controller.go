@@ -42,3 +42,19 @@ func (c *CharacterSpellsController) GetCharacterSpells(ctx echo.Context) error {
 
 	return ctx.JSON(http.StatusOK, spells)
 }
+
+func (c *CharacterSpellsController) GetCharacterAttackSpells(ctx echo.Context) error {
+	characterID := ctx.Param("id")
+
+	character, err := c.Server.Stores.Character.Get(characterID)
+	if err != nil || character.ID == 0 {
+		return res.ErrorResponse(ctx, http.StatusNotFound, err)
+	}
+
+	attackSpells, err := c.Server.Stores.CharacterSpells.GetAttackSpellsByCharacterID(characterID)
+	if err != nil {
+		return res.ErrorResponse(ctx, http.StatusNotFound, err)
+	}
+
+	return ctx.JSON(http.StatusOK, attackSpells)
+}

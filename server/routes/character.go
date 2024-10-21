@@ -43,6 +43,7 @@ func charactersRoutes(server *server.Server) {
 	characters.GET("/:id/conditions", conditionsController.GetCharacterConditions)
 
 	characters.GET("/:id/spells", spellsController.GetCharacterSpells)
+	characters.GET("/:id/spells/attack", spellsController.GetCharacterAttackSpells)
 	characters.GET("/:id/has-spells", spellsController.CharacterHasSpells)
 
 	characters.GET("/:id/inventory", inventoryController.GetCharacterInventory)

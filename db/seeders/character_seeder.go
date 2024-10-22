@@ -138,7 +138,7 @@ func (s *Seeder) SetCharacters() {
 			ID:                     5,
 			Name:                   "Eldon Fengrove",
 			Level:                  4,
-			ProfilePictureURL:      "https://files.oaiusercontent.com/file-eBHiwxNA297v95B445MmDjTD?se=2024-10-18T09%3A12%3A25Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3Dcbd99f61-24fb-497f-bda7-65aa83481aae.webp&sig=LYDMBnvuMgHV6giHNjnh2yqG/%2BmSKvb8iSwvqicOzSw%3D",
+			ProfilePictureURL:      "https://www.dndbeyond.com/avatars/45072/429/1581111423-134718316.jpeg?width=150&height=150&fit=crop&quality=95&auto=webp",
 			ClassID:                11,
 			RaceID:                 17,
 			Strength:               7,

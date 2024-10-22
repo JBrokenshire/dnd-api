@@ -52,6 +52,15 @@ func (g *GormCharacterStore) Get(id interface{}) (*models.Character, error) {
 		return nil, errors.New(fmt.Sprintf("character with id %q not found", id))
 	}
 
+	if character.SubclassID != nil {
+		var subclass models.Subclass
+		err := g.DB.Where("id = ?", character.SubclassID).First(&subclass).Error
+		if err != nil {
+			return nil, errors.New(fmt.Sprintf("error getting subclass for character %v", character.ID))
+		}
+		character.Subclass = &subclass
+	}
+
 	return &character, nil
 }
 

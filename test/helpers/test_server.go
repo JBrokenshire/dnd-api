@@ -113,6 +113,14 @@ func (ts *TestServer) SetupDefaultClasses() {
 	ts.seeder.SetClasses()
 }
 
+func (ts *TestServer) SetupDefaultSubclasses() {
+	ts.ClearTable("characters")
+	ts.ClearTable("subclass_features")
+	ts.ClearTable("subclasses")
+
+	ts.seeder.SetSubclasses()
+}
+
 func (ts *TestServer) SetupDefaultRaces() {
 	ts.ClearTable("characters")
 	ts.ClearTable("races")
@@ -131,6 +139,7 @@ func (ts *TestServer) SetupDefaultCharacters() {
 	ts.ClearTable("characters")
 
 	ts.SetupDefaultClasses()
+	ts.SetupDefaultSubclasses()
 	ts.SetupDefaultRaces()
 	ts.SetupDefaultBackgrounds()
 

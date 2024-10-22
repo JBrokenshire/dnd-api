@@ -6,6 +6,8 @@ import (
 )
 
 func (s *Seeder) SetCharacters() {
+	subclassIDs := []int{1, 2, 3, 4, 5}
+
 	characters := []models.Character{
 		{
 			ID:                     1,
@@ -13,6 +15,7 @@ func (s *Seeder) SetCharacters() {
 			ProfilePictureURL:      "https://www.dndbeyond.com/avatars/40171/941/1581111423-117906084.jpeg?width=150&height=150&fit=crop&quality=95&auto=webp",
 			Level:                  3,
 			ClassID:                3,
+			SubclassID:             &subclassIDs[1],
 			RaceID:                 18,
 			Strength:               12,
 			Dexterity:              16,
@@ -44,6 +47,7 @@ func (s *Seeder) SetCharacters() {
 			Level:                  5,
 			ProfilePictureURL:      "https://www.dndbeyond.com/avatars/17/969/636378926856690034.png?width=150&height=150&fit=crop&quality=95&auto=webp",
 			ClassID:                1,
+			SubclassID:             &subclassIDs[0],
 			RaceID:                 3,
 			Strength:               16,
 			Dexterity:              14,
@@ -75,6 +79,7 @@ func (s *Seeder) SetCharacters() {
 			Name:                   "Iratham Veomakute",
 			Level:                  3,
 			ClassID:                3,
+			SubclassID:             &subclassIDs[2],
 			RaceID:                 14,
 			ProfilePictureURL:      "https://www.dndbeyond.com/avatars/36645/678/1581111423-94761552.jpeg?width=150&height=150&fit=crop&quality=95&auto=webp",
 			Strength:               18,
@@ -106,6 +111,7 @@ func (s *Seeder) SetCharacters() {
 			Name:                   "Kael Drakeshield",
 			Level:                  4,
 			ClassID:                6,
+			SubclassID:             &subclassIDs[3],
 			RaceID:                 2,
 			ProfilePictureURL:      "https://www.dndbeyond.com/avatars/42817/335/1581111423-124892113.jpeg?width=150&height=150&fit=crop&quality=95&auto=webp",
 			Strength:               19,
@@ -140,6 +146,7 @@ func (s *Seeder) SetCharacters() {
 			Level:                  4,
 			ProfilePictureURL:      "https://www.dndbeyond.com/avatars/45072/429/1581111423-134718316.jpeg?width=150&height=150&fit=crop&quality=95&auto=webp",
 			ClassID:                11,
+			SubclassID:             &subclassIDs[4],
 			RaceID:                 17,
 			Strength:               7,
 			Dexterity:              17,

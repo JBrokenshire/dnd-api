@@ -14,6 +14,7 @@ type Character struct {
 	ProfilePictureURL string `json:"profile_picture_url"`
 	ClassID           int    `json:"class_id"`
 	RaceID            int    `json:"race_id"`
+	SubclassID        *int   `json:"subclass_id"`
 
 	Strength               int  `gorm:"not null" json:"strength"`
 	Dexterity              int  `gorm:"not null" json:"dexterity"`
@@ -56,6 +57,7 @@ type Character struct {
 
 	Class      Class      `json:"class"`
 	Race       Race       `json:"race"`
+	Subclass   *Subclass  `json:"subclass"`
 	Background Background `json:"background"`
 }
 
@@ -70,6 +72,18 @@ func (c *Character) BeforeCreate(db *gorm.DB) error {
 	err = db.Where("id = ?", c.RaceID).Find(&race).Error
 	if err != nil {
 		return fmt.Errorf("race with id '%v' not found - %v", c.RaceID, err)
+	}
+
+	if c.Subclass != nil {
+		var subclass Subclass
+		err = db.Where("id = ?", c.Subclass.ID).Find(&subclass).Error
+		if err != nil {
+			return fmt.Errorf("subclass with id '%v' not found - %v", c.Subclass.ID, err)
+		}
+
+		if subclass.ClassID != c.ClassID {
+			return fmt.Errorf("can not assign subclass (id: %v) with class id %v to character (id: %v) with class id %v", subclass.ID, subclass.ClassID, c.ID, c.ClassID)
+		}
 	}
 
 	var background Background

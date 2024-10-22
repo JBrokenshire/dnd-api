@@ -35,6 +35,7 @@ func Init() *gorm.DB {
 
 	seeder := seeders.NewSeeder(db)
 	seeder.SetClasses()
+	seeder.SetSubclasses()
 	seeder.SetRaces()
 	seeder.SetBackgrounds()
 	seeder.SetCharacters()
@@ -58,6 +59,7 @@ func Init() *gorm.DB {
 	seeder.SetRaceTraits()
 	seeder.SetFeatures()
 	seeder.SetClassFeatures()
+	seeder.SetSubclassFeatures()
 
 	return db
 }

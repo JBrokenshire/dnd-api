@@ -383,6 +383,11 @@ func (s *Seeder) SetCharacterSkillsAdvantages() {
 			CharacterID: 4,
 			SkillName:   "Survival",
 		},
+		{
+			ID:          73,
+			CharacterID: 3,
+			SkillName:   "History",
+		},
 	}
 
 	for _, advantage := range characterSkillsAdvantages {

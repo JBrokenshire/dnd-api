@@ -1,7 +1,10 @@
 package test
 
 import (
+	"dnd-api/db/factories"
+	"dnd-api/db/models"
 	"dnd-api/test/helpers"
+	"fmt"
 	"net/http"
 	"testing"
 )
@@ -70,6 +73,63 @@ func TestGetRace(t *testing.T) {
 			Request: helpers.Request{
 				Method: http.MethodGet,
 				URL:    "/races/100",
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+			},
+		},
+	}
+
+	for _, test := range cases {
+		t.Run(test.TestName, func(t *testing.T) {
+			RunTestCase(t, test)
+		})
+	}
+}
+
+func TestGetRaceTraits(t *testing.T) {
+	ts.ClearTable("race_traits")
+	ts.ClearTable("races")
+	ts.ClearTable("traits")
+
+	raceOne := &models.Race{}
+	factories.NewRace(ts.S.Db, raceOne)
+	traitOne := &models.Trait{}
+	factories.NewTrait(ts.S.Db, traitOne)
+	raceTraitOne := &models.RaceTrait{RaceID: raceOne.ID, TraitID: traitOne.ID}
+	factories.NewRaceTrait(ts.S.Db, raceTraitOne)
+
+	noTraits := &models.Race{}
+	factories.NewRace(ts.S.Db, noTraits)
+
+	cases := []helpers.TestCase{
+		{
+			TestName: "Can get traits for race",
+			Request: helpers.Request{
+				Method: http.MethodGet,
+				URL:    fmt.Sprintf("/races/%v/traits", raceOne.ID),
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   fmt.Sprintf(`"name":"%v"`, traitOne.Name),
+			},
+		},
+		{
+			TestName: "Can get empty response for race with no traits",
+			Request: helpers.Request{
+				Method: http.MethodGet,
+				URL:    fmt.Sprintf("/races/%v/traits", noTraits.ID),
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "[]",
+			},
+		},
+		{
+			TestName: "Can get 404 for invalid race id",
+			Request: helpers.Request{
+				Method: http.MethodGet,
+				URL:    "/races/invalid-id/traits",
 			},
 			Expected: helpers.ExpectedResponse{
 				StatusCode: http.StatusNotFound,

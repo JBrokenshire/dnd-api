@@ -187,3 +187,6 @@ var magicSchools = []string{
 	"Necromancy",
 	"Transmutation",
 }
+
+var actionTypes = []string{"Action", "Bonus Action", "Reaction"}
+var rests = []string{"Short Rest", "Long Rest"}

@@ -68,6 +68,7 @@ func (s *Seeder) SetCharacters() {
 			Skin:                   "White",
 			Age:                    193,
 			Weight:                 190,
+			Allies:                 "Foxy Bingo",
 		},
 		{
 			ID:                     3,

@@ -28,3 +28,19 @@ func (r *RaceController) Get(ctx echo.Context) error {
 
 	return ctx.JSON(http.StatusOK, race)
 }
+
+func (r *RaceController) GetTraits(ctx echo.Context) error {
+	raceID := ctx.Param("id")
+
+	race, err := r.Server.Stores.Race.Get(raceID)
+	if err != nil || race.ID == 0 {
+		return res.ErrorResponse(ctx, http.StatusNotFound, err)
+	}
+
+	traits, err := r.Server.Stores.Race.GetTraits(raceID)
+	if err != nil {
+		return res.ErrorResponse(ctx, http.StatusNotFound, err)
+	}
+
+	return ctx.JSON(http.StatusOK, traits)
+}

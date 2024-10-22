@@ -10,6 +10,7 @@ import (
 type RaceStore interface {
 	GetAll() ([]*models.Race, error)
 	Get(id interface{}) (*models.Race, error)
+	GetTraits(id interface{}) ([]*models.Trait, error)
 	IsValidID(id interface{}) bool
 }
 
@@ -42,6 +43,19 @@ func (s *GormRaceStore) Get(id interface{}) (*models.Race, error) {
 		return nil, err
 	}
 	return &race, nil
+}
+
+func (s *GormRaceStore) GetTraits(id interface{}) ([]*models.Trait, error) {
+	var traits []*models.Trait
+	err := s.DB.
+		Joins("JOIN race_traits ON race_traits.trait_id = traits.id").
+		Where("race_traits.race_id = ?", id).
+		Find(&traits).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return traits, nil
 }
 
 func (s *GormRaceStore) IsValidID(id interface{}) bool {

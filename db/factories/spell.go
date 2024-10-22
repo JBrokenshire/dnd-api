@@ -15,4 +15,7 @@ func fillSpellDetails(s *models.Spell) {
 	if s.Name == "" {
 		s.Name = random.String(16)
 	}
+	if s.School == "" {
+		s.School = "Abjuration"
+	}
 }

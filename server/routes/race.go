@@ -11,4 +11,5 @@ func raceRoutes(server *server.Server) {
 	races := server.Echo.Group("/races")
 	races.GET("", raceController.GetAll)
 	races.GET("/:id", raceController.Get)
+	races.GET("/:id/traits", raceController.GetTraits)
 }

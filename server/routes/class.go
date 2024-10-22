@@ -12,4 +12,5 @@ func classRoutes(server *server.Server) {
 	classes.GET("", classController.GetAll)
 	classes.GET("/:id", classController.Get)
 	classes.PUT("/:id", classController.Update)
+	classes.GET("/:id/features", classController.GetFeatures)
 }

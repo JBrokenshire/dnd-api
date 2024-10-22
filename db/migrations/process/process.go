@@ -45,5 +45,7 @@ func getMigrationsList() []gmStore.Migratable {
 		&list.CreateCharacterSpellsTable{},
 		&list.CreateTraitsTable{},
 		&list.CreateRaceTraitsTable{},
+		&list.CreateFeaturesTable{},
+		&list.CreateClassFeaturesTable{},
 	}
 }

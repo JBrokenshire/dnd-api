@@ -50,5 +50,7 @@ func getMigrationsList() []gmStore.Migratable {
 		&list.CreateSubclassesTable{},
 		&list.CreateSubclassFeaturesTable{},
 		&list.UpdateCharactersAddSubclassID{},
+		&list.UpdateClassFeaturesAddLevel{},
+		&list.UpdateSubclassFeaturesAddLevel{},
 	}
 }

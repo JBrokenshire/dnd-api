@@ -33,22 +33,6 @@ func (c *ClassController) Get(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, *class)
 }
 
-func (c *ClassController) GetFeatures(ctx echo.Context) error {
-	classID := ctx.Param("id")
-
-	class, err := c.Server.Stores.Class.Get(classID)
-	if err != nil || class.ID == 0 {
-		return res.ErrorResponse(ctx, http.StatusNotFound, err)
-	}
-
-	classFeatures, err := c.Server.Stores.Class.GetFeatures(classID)
-	if err != nil {
-		return res.ErrorResponse(ctx, http.StatusNotFound, err)
-	}
-
-	return ctx.JSON(http.StatusOK, classFeatures)
-}
-
 func (c *ClassController) Update(ctx echo.Context) error {
 	existingClass, err := c.Server.Stores.Class.Get(ctx.Param("id"))
 	if err != nil {

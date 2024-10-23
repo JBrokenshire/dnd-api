@@ -1,11 +1,8 @@
 package test
 
 import (
-	"dnd-api/db/factories"
-	"dnd-api/db/models"
 	"dnd-api/server/requests"
 	"dnd-api/test/helpers"
-	"fmt"
 	"net/http"
 	"testing"
 )
@@ -70,63 +67,6 @@ func TestGetClass(t *testing.T) {
 			Expected: helpers.ExpectedResponse{
 				StatusCode: http.StatusNotFound,
 				BodyPart:   "record not found",
-			},
-		},
-	}
-
-	for _, test := range cases {
-		t.Run(test.TestName, func(t *testing.T) {
-			RunTestCase(t, test)
-		})
-	}
-}
-
-func TestGetClassFeatures(t *testing.T) {
-	ts.ClearTable("class_features")
-	ts.ClearTable("classes")
-	ts.ClearTable("features")
-
-	classOne := &models.Class{}
-	factories.NewClass(ts.S.Db, classOne)
-	featureOne := &models.Feature{}
-	factories.NewFeature(ts.S.Db, featureOne)
-	classFeatureOne := &models.ClassFeature{ClassID: classOne.ID, FeatureID: featureOne.ID}
-	factories.NewClassFeature(ts.S.Db, classFeatureOne)
-
-	noFeatures := &models.Class{}
-	factories.NewClass(ts.S.Db, noFeatures)
-
-	cases := []helpers.TestCase{
-		{
-			TestName: "Can get features for class",
-			Request: helpers.Request{
-				Method: http.MethodGet,
-				URL:    fmt.Sprintf("/classes/%v/features", classOne.ID),
-			},
-			Expected: helpers.ExpectedResponse{
-				StatusCode: http.StatusOK,
-				BodyPart:   fmt.Sprintf(`"name":"%v"`, featureOne.Name),
-			},
-		},
-		{
-			TestName: "Can get empty response for class with no features",
-			Request: helpers.Request{
-				Method: http.MethodGet,
-				URL:    fmt.Sprintf("/classes/%v/features", noFeatures.ID),
-			},
-			Expected: helpers.ExpectedResponse{
-				StatusCode: http.StatusOK,
-				BodyPart:   "[]",
-			},
-		},
-		{
-			TestName: "Can get 404 response for invalid class id",
-			Request: helpers.Request{
-				Method: http.MethodGet,
-				URL:    "/classes/invalid-id/features",
-			},
-			Expected: helpers.ExpectedResponse{
-				StatusCode: http.StatusNotFound,
 			},
 		},
 	}

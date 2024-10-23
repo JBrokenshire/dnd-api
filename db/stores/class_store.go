@@ -10,7 +10,6 @@ import (
 type ClassStore interface {
 	GetAll() ([]*models.Class, error)
 	Get(id interface{}) (*models.Class, error)
-	GetFeatures(id interface{}) ([]*models.Feature, error)
 	Update(class *models.Class) error
 	IsValidID(id interface{}) bool
 }
@@ -43,18 +42,6 @@ func (s *GormClassStore) Get(id interface{}) (*models.Class, error) {
 	}
 
 	return &class, nil
-}
-
-func (s *GormClassStore) GetFeatures(id interface{}) ([]*models.Feature, error) {
-	var features []*models.Feature
-	err := s.db.
-		Joins("JOIN class_features ON class_features.feature_id = features.id").
-		Where("class_features.class_id = ?", id).
-		Find(&features).Error
-	if err != nil {
-		return nil, err
-	}
-	return features, nil
 }
 
 func (s *GormClassStore) Update(class *models.Class) error {

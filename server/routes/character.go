@@ -15,6 +15,7 @@ func charactersRoutes(server *server.Server) {
 	inventoryController := controllers.CharacterInventoryController{Server: *server}
 	moneyController := controllers.CharacterMoneyController{Server: *server}
 	spellsController := controllers.CharacterSpellsController{Server: *server}
+	featuresController := controllers.CharacterFeaturesController{Server: *server}
 
 	characters := server.Echo.Group("/characters")
 	characters.GET("", characterController.GetAll)
@@ -51,4 +52,6 @@ func charactersRoutes(server *server.Server) {
 	characters.GET("/:id/inventory/equipped-armour", inventoryController.GetCharacterEquippedArmour)
 	characters.GET("/:id/inventory/money", moneyController.GetCharacterMoney)
 	characters.PUT("/:characterID/inventory/:itemID", inventoryController.ToggleItemEquipped)
+
+	characters.GET("/:id/features", featuresController.GetFeatures)
 }

@@ -109,7 +109,7 @@ func (s *Seeder) SetCharacters() {
 		{
 			ID:                     4,
 			Name:                   "Kael Drakeshield",
-			Level:                  4,
+			Level:                  5,
 			ClassID:                6,
 			SubclassID:             &subclassIDs[3],
 			RaceID:                 2,

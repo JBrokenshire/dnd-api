@@ -21,6 +21,7 @@ type Stores struct {
 	Armour                    *GormArmourStore
 	CharacterSkillsAdvantages *GormCharacterSkillsAdvantagesStore
 	CharacterSpells           *GormCharacterSpellsStore
+	CharacterFeatures         *GormCharacterFeaturesStore
 }
 
 func NewStores(db *gorm.DB) *Stores {
@@ -43,5 +44,6 @@ func NewStores(db *gorm.DB) *Stores {
 		Armour:                    NewGormArmourStore(db),
 		CharacterSkillsAdvantages: NewGormCharacterSkillsAdvantagesStore(db),
 		CharacterSpells:           NewGormCharacterSpellsStore(db),
+		CharacterFeatures:         NewGormCharacterFeaturesStore(db),
 	}
 }

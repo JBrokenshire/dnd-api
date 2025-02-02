@@ -1,0 +1,44 @@
+services:
+  dnd_app:
+    container_name: dnd_app
+    build: ./docker/dev/api
+    ports:
+      - ${EXPOSE_PORT}:${PORT}
+    restart: on-failure
+    volumes:
+      - ./:/app/
+    depends_on:
+      - dnd_mysql
+    env_file:
+      - .env
+    environment:
+      - DB_CONNECTION=${DB_HOST}:${DB_PORT}
+      - WAIT_HOSTS=${DB_HOST}:${DB_PORT}
+      - WAIT_BEFORE_HOSTS=7
+      - WAIT_SLEEP_INTERVAL=3
+    networks:
+      - dnd-stack
+
+  dnd_mysql:
+    image: mysql:5.7
+    platform: linux/x86_64
+    container_name: dnd_db
+    ports:
+      - ${EXPOSE_DB_PORT}:${DB_PORT}
+    environment:
+      - MYSQL_ROOT_HOST=${DB_HOST}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - database_mysql:/var/lib/mysql
+    networks:
+      - dnd-stack
+
+volumes:
+  database_mysql:
+
+networks:
+  dnd-stack:
+    driver: bridge

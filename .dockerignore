@@ -1,0 +1,8 @@
+.git
+docker/deploy
+!docker/deploy/api/.env.prod
+!docker/deploy/sso/.env.prod
+!docker/deploy/scheduler/.env.prod
+!docker/deploy/ws/.env.prod
+files/development
+files

@@ -1,0 +1,14 @@
+main
+.env
+.env.testing
+.idea
+!docs
+!docs/docs.go
+docs/*
+docker/deploy/google-creds.json
+docker/deploy/api/.env.migration
+docker/deploy/api/.env.*
+cover.out
+cmd/api/api
+assets/files/
+.config/*

@@ -7,17 +7,17 @@ import (
 )
 
 type ApiKey struct {
-	ID           uint        `json:"-" gorm:"primary_key"`
-	Uid          string      `json:"uid"`
-	IpRanges     string      `json:"ip_ranges"`
-	Label        string      `json:"label"`
-	Enabled      bool        `json:"enabled"`
-	CreatedAt    time.Time   `json:"created_at"`
-	UpdatedAt    time.Time   `json:"updated_at"`
-	DeletedAt    *time.Time  `json:"deleted_at"`
-	PolicyId     uint        `json:"policy_id"`
-	Policy       *EapiPolicy `json:"-" gorm:"foreignKey:PolicyId;references:PolicyId"`
-	AppBlacklist string      `json:"app_blacklist"` // csv list of app packages to block
+	ID        uint       `json:"-" gorm:"primary_key"`
+	Uid       string     `json:"uid"`
+	IpRanges  string     `json:"ip_ranges"`
+	Label     string     `json:"label"`
+	Enabled   bool       `json:"enabled"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `json:"deleted_at"`
+	PolicyId  uint       `json:"policy_id"`
+
+	Policy *EapiPolicy `json:"-" gorm:"foreignKey:PolicyId;references:PolicyId"`
 }
 
 // BeforeCreate will set UUID rather than numeric ID.

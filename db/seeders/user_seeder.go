@@ -6,11 +6,12 @@ func (s *Seeder) SetUsers() {
 	users := []models.User{
 		{
 			ID:       1,
-			Email:    "matt@purplevisits.com",
-			Name:     "Matt Nelson",
+			Email:    "jbrokenshire0306@gmail.com",
+			Name:     "Jared Brokenshire",
 			Password: "$2a$10$1p7pUkeUIemFrJwgMX3.t.b4YZKk6ZvWlqBOug52ksrZ.ybZKtY.S", // Abcd1234$
 		},
 	}
+
 	for _, user := range users {
 		result := s.DB.Where("id = ?", user.ID).FirstOrCreate(&user)
 		if result.RowsAffected == 1 {

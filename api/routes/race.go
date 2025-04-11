@@ -3,6 +3,8 @@ package routes
 import (
 	s "dnd-api/api"
 	"dnd-api/api/handlers"
+	m "dnd-api/db/models"
+	mw "dnd-api/pkg/middleware"
 )
 
 func raceRoutes(server *s.Server) {
@@ -10,9 +12,9 @@ func raceRoutes(server *s.Server) {
 
 	races := server.Echo.Group("/races")
 
-	races.GET("", raceHandler.List)
-	races.GET("/:id", raceHandler.Get)
-	races.POST("", raceHandler.Create)
-	races.PUT("/:id", raceHandler.Update)
-	races.DELETE("/:id", raceHandler.Delete)
+	races.GET("", raceHandler.List, mw.HasPermission(m.SubjectRace, m.ActionRead))
+	races.GET("/:id", raceHandler.Get, mw.HasPermission(m.SubjectRace, m.ActionRead))
+	races.POST("", raceHandler.Create, mw.HasPermission(m.SubjectRace, m.ActionCreate))
+	races.PUT("/:id", raceHandler.Update, mw.HasPermission(m.SubjectRace, m.ActionUpdate))
+	races.DELETE("/:id", raceHandler.Delete, mw.HasPermission(m.SubjectRace, m.ActionDelete))
 }

@@ -3,6 +3,7 @@ package routes
 import (
 	s "dnd-api/api"
 	"dnd-api/pkg/jwt_service"
+	mw "dnd-api/pkg/middleware"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"os"
@@ -19,7 +20,7 @@ func ConfigureRoutes(server *s.Server) {
 		Claims:     &jwt_service.JwtCustomClaims{},
 		SigningKey: []byte(os.Getenv("ACCESS_SECRET")),
 	}
-	userJwtMiddleware = jwt_service.JWTWithConfig(config)
+	userJwtMiddleware := jwt_service.JWTWithConfig(config)
 
 	// Configure CORS
 	server.Echo.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -40,6 +41,12 @@ func ConfigureRoutes(server *s.Server) {
 			return false
 		},
 	}))
+
+	// Add additional headers
+	server.Echo.Use(mw.ServerHeader)
+
+	// Auth Routes
+	authRoutes(server)
 
 	// Class routes
 	classRoutes(server)

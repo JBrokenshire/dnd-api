@@ -5,7 +5,9 @@ import (
 	"dnd-api/api"
 	"dnd-api/api/routes"
 	"dnd-api/db/migrations/process"
+	m "dnd-api/db/models"
 	"dnd-api/db/repositories"
+	"dnd-api/pkg/jwt_service"
 	"dnd-api/pkg/validation"
 	"encoding/json"
 	"fmt"
@@ -17,11 +19,28 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"time"
 )
 
 type TestServer struct {
-	S *api.Server
+	S                 *api.Server
+	AdminUser         *m.User
+	AdminToken        string
+	AdminRefreshToken string
+	TestUser          *m.User
+	TestToken         string
 }
+
+const (
+	AdminEmail                  = "jbrokenshire0306@gmail.com"
+	AdminPassword               = "Abcd1234$"
+	AdminUid                    = "4758ad4a-73ea-4d91-b6bb-eca1fd12f015"
+	DefaultPasswordHash         = "$2a$04$VownpTI87qYPnFKzXCy1vO.76A3LnHkADRlO/rm4bmuo9Ze7SkalW" // Abcd1234$
+	TestPassword                = "Abcd1234$"
+	TestClientSecretHash        = "$2a$04$mH3cYi8E4oiKXWz7QiZ63.g5lOlq0kH9C.inhtXGkZ8701SXk7xmW" // Nw8OP16TYSNkwua9bBXAiRczvLmStu5CVKxycssfrZLncCJF3aHGQKt-X4jjmgXXnVdDqwkm
+	TestClientSecret            = "Nw8OP16TYSNkwua9bBXAiRczvLmStu5CVKxycssfrZLncCJF3aHGQKt-X4jjmgXXnVdDqwkm"
+	RefreshTokenDurationMinutes = 10080 // 7 days
+)
 
 func NewTestServer(envFileLocation string) *TestServer {
 	err := godotenv.Load(envFileLocation)
@@ -100,6 +119,61 @@ func (ts *TestServer) ClearTable(tableName string) {
 	if err != nil {
 		log.Fatalf("Error clearing table %v: %v", tableName, err.Error())
 	}
+}
+
+// SetupDefaultUsers Clear the users table and create the Admin and Test User
+func (ts *TestServer) SetupDefaultUsers() {
+	ts.ClearTable("users")
+	ts.ClearTable("user_roles")
+	// Create an admin user so that we have some basic credentials in the database
+	ts.CreateAdminUser()
+	ts.CreateTestUser()
+}
+
+// CreateAdminUser creates an admin user and an auth token.
+func (ts *TestServer) CreateAdminUser() {
+	user := &m.User{
+		ID:         1,
+		Uid:        AdminUid,
+		Email:      AdminEmail,
+		Name:       "Jared Brokenshire",
+		Pronouns:   "He/Him",
+		Password:   DefaultPasswordHash, // Abcd1234$
+		SuperAdmin: true,
+	}
+	// Save in the user table () We have ot omit the roles here so it doesn't upsert the data into the table.
+	ts.S.Db.Create(user)
+
+	// Give this user the admin role
+	ts.S.Db.Model(&m.User{ID: user.ID}).Association("Roles").Append([]m.Role{{ID: 1}})
+	ts.AdminUser = user
+
+	// Create a usable token and refresh token. NOTE: authenticated set to True automatically bypassing 2FA
+	tokenService := jwt_service.TokenService{}
+	access, _, _ := tokenService.CreateUserAccessToken(user, true)
+	ts.AdminToken = access
+	refreshToken, _, _ := tokenService.CreateUserRefreshToken(user, uint(10*time.Minute))
+	ts.AdminRefreshToken = refreshToken
+
+}
+
+// CreateTestUser creates an test user and an auth token.
+func (ts *TestServer) CreateTestUser() {
+	user := &m.User{
+		ID:       2,
+		Uid:      "bdd72004-0786-4605-88b3-3d297c1f7b42",
+		Email:    "testing@email.com",
+		Password: DefaultPasswordHash, // Abcd1234$
+		Name:     "Test User",
+	}
+	// Save in the user table () We have ot omit the roles here so it doesn't upsert the data into the table.
+	ts.S.Db.Create(user)
+	ts.TestUser = user
+
+	// Create a usable token.
+	tokenService := jwt_service.TokenService{}
+	access, _, _ := tokenService.CreateUserAccessToken(user, true)
+	ts.TestToken = access
 }
 
 func (ts *TestServer) SetDefaultTestHeaders(req *http.Request) {

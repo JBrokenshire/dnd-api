@@ -15,22 +15,18 @@ type RefreshRequest struct {
 
 type CreateUserRequest struct {
 	Email string `json:"email" validate:"required,email,max=200" example:"example@email.com"`
-	Name  string `json:"name" validate:"required,max=500" example:"Matt Nelson"`
-	Roles []uint `json:"roles" validate:"required" example:"1,2"`
+	Name  string `json:"name" validate:"required,max=500" example:"Jared Brokenshire"`
 }
 
 type UpdateUserRequest struct {
 	Email    string `json:"email" validate:"required,email,max=200" example:"example@email.com"`
-	Name     string `json:"name" validate:"required,max=500" example:"Matt Nelson"`
-	Roles    []uint `json:"roles" validate:"required" example:"1,2"`
-	JobTitle string `json:"job_title" validate:"max=500" example:"Junior Developer"`
+	Name     string `json:"name" validate:"required,max=500" example:"Jared Brokenshire"`
 	Pronouns string `json:"pronouns" validate:"max=500" example:"he/him"`
 }
 
 type UpdateSelfRequest struct {
 	Email    string `json:"email" validate:"required,email,max=200" example:"example@email.com"`
-	Name     string `json:"name" validate:"required,max=500" example:"Matt Nelson"`
-	JobTitle string `json:"job_title" validate:"max=500" example:"Junior Developer"`
+	Name     string `json:"name" validate:"required,max=500" example:"Jared Brokenshire"`
 	Pronouns string `json:"pronouns" validate:"max=500" example:"he/him"`
 }
 

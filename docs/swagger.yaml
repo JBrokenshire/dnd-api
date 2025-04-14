@@ -1,0 +1,75 @@
+basePath: /
+definitions:
+  requests.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  responses.Error:
+    properties:
+      code:
+        type: integer
+      error:
+        type: string
+    type: object
+  responses.LoginResponse:
+    properties:
+      accessToken:
+        type: string
+      authorised:
+        type: boolean
+      enabled:
+        description: Does the user have 2FA enabled?
+        type: boolean
+      exp:
+        type: integer
+    type: object
+info:
+  contact:
+    email: jbrokenshire0306@gmail.com
+    name: Jared Brokenshire
+  description: A management solution for Dungeons & Dragons character sheet information
+  title: D&D Character Dashboard
+  version: 0.0.1
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Log a user in
+      operationId: auth-login
+      parameters:
+      - description: User's credentials
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: User Login
+      tags:
+      - Auth Actions
+swagger: "2.0"

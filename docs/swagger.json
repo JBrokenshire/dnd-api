@@ -142,6 +142,235 @@
                 }
             }
         },
+        "/characters": {
+            "get": {
+                "description": "List characters (paginated)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Character Actions"
+                ],
+                "summary": "List characters",
+                "operationId": "characters-list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search characters by name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "The page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "The numbers of items to return. Max 100",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CharacterPaginatedResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create character",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Character Actions"
+                ],
+                "summary": "Create character",
+                "operationId": "characters-create",
+                "parameters": [
+                    {
+                        "description": "Character information",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CreateCharacterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CharacterResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/characters/{id}": {
+            "get": {
+                "description": "Get character by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Character Actions"
+                ],
+                "summary": "Get character by ID",
+                "operationId": "characters-get",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Character ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CharacterResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update character",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Character Actions"
+                ],
+                "summary": "Update character",
+                "operationId": "characters-update",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Character ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Character information",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.UpdateCharacterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CharacterResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete character",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Character Actions"
+                ],
+                "summary": "Delete character",
+                "operationId": "characters-delete",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Character ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/classes": {
             "get": {
                 "description": "List classes (paginated)",
@@ -602,6 +831,26 @@
         }
     },
     "definitions": {
+        "requests.CreateCharacterRequest": {
+            "type": "object",
+            "required": [
+                "class_id",
+                "name",
+                "race_id"
+            ],
+            "properties": {
+                "class_id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 200
+                },
+                "race_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "requests.CreateClassRequest": {
             "type": "object",
             "required": [
@@ -643,6 +892,26 @@
                 }
             }
         },
+        "requests.UpdateCharacterRequest": {
+            "type": "object",
+            "required": [
+                "class_id",
+                "name",
+                "race_id"
+            ],
+            "properties": {
+                "class_id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 200
+                },
+                "race_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "requests.UpdateClassRequest": {
             "type": "object",
             "required": [
@@ -666,6 +935,46 @@
                     "type": "string",
                     "maxLength": 200,
                     "example": "Barbarian"
+                }
+            }
+        },
+        "responses.CharacterPaginatedResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.CharacterResponse"
+                    }
+                },
+                "meta": {
+                    "$ref": "#/definitions/responses.ResponseMeta"
+                }
+            }
+        },
+        "responses.CharacterResponse": {
+            "type": "object",
+            "properties": {
+                "class": {
+                    "$ref": "#/definitions/responses.ClassResponse"
+                },
+                "class_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "race": {
+                    "$ref": "#/definitions/responses.RaceResponse"
+                },
+                "race_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },

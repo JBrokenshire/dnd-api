@@ -1,5 +1,19 @@
 basePath: /
 definitions:
+  requests.CreateCharacterRequest:
+    properties:
+      class_id:
+        type: integer
+      name:
+        maxLength: 200
+        type: string
+      race_id:
+        type: integer
+    required:
+    - class_id
+    - name
+    - race_id
+    type: object
   requests.CreateClassRequest:
     properties:
       name:
@@ -28,6 +42,20 @@ definitions:
     - password
     - username
     type: object
+  requests.UpdateCharacterRequest:
+    properties:
+      class_id:
+        type: integer
+      name:
+        maxLength: 200
+        type: string
+      race_id:
+        type: integer
+    required:
+    - class_id
+    - name
+    - race_id
+    type: object
   requests.UpdateClassRequest:
     properties:
       name:
@@ -45,6 +73,32 @@ definitions:
         type: string
     required:
     - name
+    type: object
+  responses.CharacterPaginatedResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/responses.CharacterResponse'
+        type: array
+      meta:
+        $ref: '#/definitions/responses.ResponseMeta'
+    type: object
+  responses.CharacterResponse:
+    properties:
+      class:
+        $ref: '#/definitions/responses.ClassResponse'
+      class_id:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      race:
+        $ref: '#/definitions/responses.RaceResponse'
+      race_id:
+        type: integer
+      user_id:
+        type: integer
     type: object
   responses.ClassPaginatedResponse:
     properties:
@@ -227,6 +281,159 @@ paths:
       summary: Refresh access token
       tags:
       - Auth Actions
+  /characters:
+    get:
+      consumes:
+      - application/json
+      description: List characters (paginated)
+      operationId: characters-list
+      parameters:
+      - description: Search characters by name
+        in: query
+        name: search
+        type: string
+      - description: The page number
+        in: query
+        name: page
+        type: integer
+      - description: The numbers of items to return. Max 100
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.CharacterPaginatedResponse'
+      summary: List characters
+      tags:
+      - Character Actions
+    post:
+      consumes:
+      - application/json
+      description: Create character
+      operationId: characters-create
+      parameters:
+      - description: Character information
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CreateCharacterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.CharacterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Create character
+      tags:
+      - Character Actions
+  /characters/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete character
+      operationId: characters-delete
+      parameters:
+      - description: Character ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Delete character
+      tags:
+      - Character Actions
+    get:
+      consumes:
+      - application/json
+      description: Get character by ID
+      operationId: characters-get
+      parameters:
+      - description: Character ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.CharacterResponse'
+      summary: Get character by ID
+      tags:
+      - Character Actions
+    put:
+      consumes:
+      - application/json
+      description: Update character
+      operationId: characters-update
+      parameters:
+      - description: Character ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Character information
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.UpdateCharacterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.CharacterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Update character
+      tags:
+      - Character Actions
   /classes:
     get:
       consumes:

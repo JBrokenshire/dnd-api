@@ -55,6 +55,9 @@ func ConfigureRoutes(server *s.Server) {
 	// Race Routes
 	raceRoutes(server)
 
+	// Character Routes
+	characterRoutes(server)
+
 }
 
 func restrictedRouteGroup(server *s.Server, prefix string) *echo.Group {

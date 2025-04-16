@@ -16,7 +16,7 @@ func (m *CreateUsersTable) Up(con *sqlx.DB) {
 	table.Column("id").Type("int unsigned").NotNull().Autoincrement()
 	table.PrimaryKey("id")
 	table.String("username", 200).NotNull().Unique()
-	table.String("password", 1000).NotNull()
+	table.String("password", 72).NotNull()
 	table.Column("last_seen").Type("datetime").Nullable()
 	table.Column("admin").Type("boolean").Default("0")
 	table.Column("deleted_at").Type("datetime").Nullable()

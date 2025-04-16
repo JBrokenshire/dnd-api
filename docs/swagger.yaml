@@ -32,6 +32,22 @@ definitions:
     required:
     - name
     type: object
+  requests.CreateUserRequest:
+    properties:
+      confirm_password:
+        maxLength: 72
+        type: string
+      password:
+        maxLength: 72
+        type: string
+      username:
+        maxLength: 200
+        type: string
+    required:
+    - confirm_password
+    - password
+    - username
+    type: object
   requests.LoginRequest:
     properties:
       password:
@@ -740,4 +756,35 @@ paths:
       summary: Update race
       tags:
       - Race Actions
+  /users:
+    post:
+      consumes:
+      - application/json
+      description: Create user
+      operationId: users-create
+      parameters:
+      - description: User information
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.LoginUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Create user
+      tags:
+      - User Auth Actions
 swagger: "2.0"

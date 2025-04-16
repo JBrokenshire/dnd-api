@@ -101,7 +101,7 @@ func (h *AuthHandler) RefreshToken(c echo.Context) error {
 	// Get the refresh Token if it exists from the "refresh" cookie
 	cookie, err := c.Cookie("refresh")
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, "No refresh cookie provided")
+		return responses.ErrorResponse(c, http.StatusUnauthorized, "No refresh cookie provided")
 	}
 
 	token, err := jwt.Parse(cookie.Value, func(token *jwt.Token) (interface{}, error) {

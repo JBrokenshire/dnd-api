@@ -48,13 +48,12 @@ func ConfigureRoutes(server *s.Server) {
 
 	// Auth Routes
 	authRoutes(server)
-
+	// User Routes
+	userRoutes(server)
 	// Class Routes
 	classRoutes(server)
-
 	// Race Routes
 	raceRoutes(server)
-
 	// Character Routes
 	characterRoutes(server)
 

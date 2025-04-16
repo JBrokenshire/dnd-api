@@ -40,9 +40,8 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-func RunNoAuthenticationAndPermissionTests(t *testing.T, method string, url string) {
+func RunNoAuthenticationTests(t *testing.T, method string, url string) {
 	RunNotAuthenticatedTest(t, method, url)
-	RunNoPermissionTest(t, method, url)
 }
 
 func RunNoAuthenticationAndNotAdminTests(t *testing.T, method string, url string) {
@@ -60,22 +59,6 @@ func RunNotAuthenticatedTest(t *testing.T, method string, url string) {
 
 		assert.Equal(t, http.StatusBadRequest, res.Code)
 		assert.Contains(t, res.Body.String(), "missing or malformed jwt")
-	})
-}
-
-func RunNoPermissionTest(t *testing.T, method string, url string) {
-
-	testName := fmt.Sprintf("Cannot access %v if user doesnt have permission", strings.Replace(url, "/", "", -1))
-
-	t.Run(testName, func(t *testing.T) {
-		req, _ := http.NewRequest(method, url, nil)
-
-		ts.SetDefaultUserAgent(req)
-
-		res := ts.ExecuteTestUserRequest(req)
-
-		assert.Equal(t, http.StatusForbidden, res.Code)
-		assert.Contains(t, res.Body.String(), "Missing Required Permission")
 	})
 }
 

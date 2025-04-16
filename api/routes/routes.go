@@ -49,4 +49,17 @@ func ConfigureRoutes(server *s.Server) {
 	// Auth Routes
 	authRoutes(server)
 
+	// Class Routes
+	classRoutes(server)
+
+}
+
+func restrictedRouteGroup(server *s.Server, prefix string) *echo.Group {
+	// Secure Endpoints under restricted group with JWT protection
+	restricted := server.Echo.Group(prefix)
+	restricted.Use(userJwtMiddleware)
+	restricted.Use(mw.Security(false))
+	restricted.Use(mw.LoadUser(server.Db)) // Check user with Database. Add user to context
+	restricted.Use(mw.Authorised)          //Make sure the JWT token Authorised Flag is True
+	return restricted
 }

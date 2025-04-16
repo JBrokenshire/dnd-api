@@ -18,16 +18,15 @@ func LoadUser(db *gorm.DB) echo.MiddlewareFunc {
 
 			user := c.Get("user").(*jwt.Token)
 			claims := user.Claims.(*jwt_service.JwtCustomClaims)
-			uid := claims.ID
+			id := claims.ID
 
-			// Pull the user and make sure they have the enterprise_uid set
-			if uid == 0 {
+			if id == 0 {
 				return errForbidden("Missing UserId in request")
 			}
 
 			// Pull the user out of the database
 			var currentUser models.User
-			err := db.Preload("Roles.Permissions").Where("uid = ?", uid).First(&currentUser).Error
+			err := db.Where("id = ?", id).First(&currentUser).Error
 			if err != nil {
 				log.Printf("Error finding user: %v", err)
 				return errForbidden("Invalid UserId in request")
@@ -41,7 +40,6 @@ func LoadUser(db *gorm.DB) echo.MiddlewareFunc {
 				}
 			}
 
-			c.Set("uid", uid)
 			c.Set("currentUser", &currentUser)
 			return next(c)
 		}

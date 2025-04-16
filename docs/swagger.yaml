@@ -1,5 +1,14 @@
 basePath: /
 definitions:
+  requests.CreateClassRequest:
+    properties:
+      name:
+        example: Barbarian
+        maxLength: 200
+        type: string
+    required:
+    - name
+    type: object
   requests.LoginRequest:
     properties:
       password:
@@ -9,6 +18,31 @@ definitions:
     required:
     - password
     - username
+    type: object
+  requests.UpdateClassRequest:
+    properties:
+      name:
+        example: Barbarian
+        maxLength: 200
+        type: string
+    required:
+    - name
+    type: object
+  responses.ClassPaginatedResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/responses.ClassResponse'
+        type: array
+      meta:
+        $ref: '#/definitions/responses.ResponseMeta'
+    type: object
+  responses.ClassResponse:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
     type: object
   responses.Data:
     properties:
@@ -51,6 +85,18 @@ definitions:
         type: integer
       user_data:
         $ref: '#/definitions/responses.LoginUserResponse'
+    type: object
+  responses.ResponseMeta:
+    properties:
+      page:
+        example: 3
+        type: integer
+      page_size:
+        example: 25
+        type: integer
+      total_count:
+        example: 300
+        type: integer
     type: object
 info:
   contact:
@@ -147,4 +193,157 @@ paths:
       summary: Refresh access token
       tags:
       - Auth Actions
+  /classes:
+    get:
+      consumes:
+      - application/json
+      description: List classes (paginated)
+      operationId: classes-list
+      parameters:
+      - description: Search classes by name
+        in: query
+        name: search
+        type: string
+      - description: The page number
+        in: query
+        name: page
+        type: integer
+      - description: The numbers of items to return. Max 100
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ClassPaginatedResponse'
+      summary: List classes
+      tags:
+      - Class Actions
+    post:
+      consumes:
+      - application/json
+      description: Create class
+      operationId: classes-create
+      parameters:
+      - description: Class information
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CreateClassRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.ClassResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Create class
+      tags:
+      - Class Actions
+  /classes/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete class
+      operationId: classes-delete
+      parameters:
+      - description: Class ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Delete class
+      tags:
+      - Class Actions
+    get:
+      consumes:
+      - application/json
+      description: Get class by ID
+      operationId: classes-get
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ClassResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Get class by ID
+      tags:
+      - Class Actions
+    put:
+      consumes:
+      - application/json
+      description: Update class
+      operationId: classes-update
+      parameters:
+      - description: Class ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Class information
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.UpdateClassRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ClassResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Update class
+      tags:
+      - Class Actions
 swagger: "2.0"

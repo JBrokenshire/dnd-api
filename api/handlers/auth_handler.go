@@ -6,10 +6,13 @@ import (
 	"dnd-api/api/responses"
 	"dnd-api/config"
 	"dnd-api/services/jwt_service"
+	"fmt"
+	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -78,4 +81,84 @@ func (h *AuthHandler) Login(c echo.Context) error {
 
 	res := responses.NewLoginResponse(accessToken, exp, true, false)
 	return responses.Response(c, http.StatusOK, res)
+}
+
+// RefreshToken Refresh godoc
+// @Summary Refresh access token
+// @Description Perform refresh access token
+// @ID auth-refresh
+// @Tags Auth Actions
+// @Accept json
+// @Produce json
+// @Success 200 {object} responses.RefreshResponse
+// @Failure 400 {object} responses.Error
+// @Failure 401 {object} responses.Error
+// @Failure 404 {object} responses.Error
+// @Failure 500 {object} responses.Error
+// @Router /auth/refresh [get]
+func (h *AuthHandler) RefreshToken(c echo.Context) error {
+
+	// Get the refresh Token if it exists from the "refresh" cookie
+	cookie, err := c.Cookie("refresh")
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, "No refresh cookie provided")
+	}
+
+	token, err := jwt.Parse(cookie.Value, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(os.Getenv("REFRESH_SECRET")), nil
+	})
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusUnauthorized, "Invalid token: "+err.Error())
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok && !token.Valid {
+		return responses.ErrorResponse(c, http.StatusUnauthorized, "Invalid token")
+	}
+
+	// Check user exists
+	user := h.server.Repos.User.GetById(claims["id"])
+	if user.ID == 0 {
+		return responses.ErrorResponse(c, http.StatusNotFound, "User not found")
+	}
+
+	// Create access token
+	tokenService := jwt_service.NewTokenService()
+	accessToken, exp, err := tokenService.CreateUserAccessToken(user, true)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "There was a problem creating the access token")
+	}
+
+	// Create refresh token
+	refreshToken, refreshExpiry, err := tokenService.CreateUserRefreshToken(user)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "There was a problem creating the refresh token")
+	}
+
+	// Attach refresh cookie
+	tokenService.AttachRefreshCookie(c, refreshToken, *refreshExpiry)
+
+	res := responses.NewRefreshResponse(user, accessToken, exp)
+	return responses.Response(c, http.StatusOK, res)
+}
+
+// Logout godoc
+// @Summary Log User Out
+// @Description Set's the refresh cookie to an expired date and clears token.
+// @ID auth-logout
+// @Tags Auth Actions
+// @Accept json
+// @Produce json
+// @Success 200 {object} responses.Data
+// @Failure 401 {object} responses.Error
+// @Router /auth/logout [get]
+func (h *AuthHandler) Logout(c echo.Context) error {
+
+	tokenService := jwt_service.NewTokenService()
+	tokenService.AttachRefreshCookie(c, "LOGGED-OUT", time.Unix(0, 0))
+
+	return responses.Response(c, http.StatusOK, "Logged Out")
 }

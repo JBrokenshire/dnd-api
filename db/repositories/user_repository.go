@@ -18,6 +18,12 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	}
 }
 
+func (r *UserRepository) GetById(id interface{}) *m.User {
+	user := &m.User{}
+	r.Db.Where("id = ?", id).Find(user)
+	return user
+}
+
 func (r *UserRepository) GetByUsername(username string) *m.User {
 	user := m.User{}
 	r.Db.Where("username = ?", username).Find(&user)

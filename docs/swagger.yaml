@@ -10,6 +10,13 @@ definitions:
     - password
     - username
     type: object
+  responses.Data:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
   responses.Error:
     properties:
       code:
@@ -28,6 +35,22 @@ definitions:
         type: boolean
       exp:
         type: integer
+    type: object
+  responses.LoginUserResponse:
+    properties:
+      id:
+        type: integer
+      username:
+        type: string
+    type: object
+  responses.RefreshResponse:
+    properties:
+      access_token:
+        type: string
+      exp:
+        type: integer
+      user_data:
+        $ref: '#/definitions/responses.LoginUserResponse'
     type: object
 info:
   contact:
@@ -70,6 +93,58 @@ paths:
           schema:
             $ref: '#/definitions/responses.Error'
       summary: User Login
+      tags:
+      - Auth Actions
+  /auth/logout:
+    get:
+      consumes:
+      - application/json
+      description: Set's the refresh cookie to an expired date and clears token.
+      operationId: auth-logout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Log User Out
+      tags:
+      - Auth Actions
+  /auth/refresh:
+    get:
+      consumes:
+      - application/json
+      description: Perform refresh access token
+      operationId: auth-refresh
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.RefreshResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Refresh access token
       tags:
       - Auth Actions
 swagger: "2.0"

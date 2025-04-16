@@ -124,7 +124,7 @@ func (h *ClassHandler) Create(c echo.Context) error {
 func (h *ClassHandler) Update(c echo.Context) error {
 	id := c.Param("id")
 
-	request := new(requests.CreateClassRequest)
+	request := new(requests.UpdateClassRequest)
 	if err := c.Bind(request); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, err.Error())
 	}

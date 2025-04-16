@@ -9,6 +9,15 @@ definitions:
     required:
     - name
     type: object
+  requests.CreateRaceRequest:
+    properties:
+      name:
+        example: Barbarian
+        maxLength: 200
+        type: string
+    required:
+    - name
+    type: object
   requests.LoginRequest:
     properties:
       password:
@@ -20,6 +29,15 @@ definitions:
     - username
     type: object
   requests.UpdateClassRequest:
+    properties:
+      name:
+        example: Barbarian
+        maxLength: 200
+        type: string
+    required:
+    - name
+    type: object
+  requests.UpdateRaceRequest:
     properties:
       name:
         example: Barbarian
@@ -75,6 +93,22 @@ definitions:
       id:
         type: integer
       username:
+        type: string
+    type: object
+  responses.RacePaginatedResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/responses.RaceResponse'
+        type: array
+      meta:
+        $ref: '#/definitions/responses.ResponseMeta'
+    type: object
+  responses.RaceResponse:
+    properties:
+      id:
+        type: integer
+      name:
         type: string
     type: object
   responses.RefreshResponse:
@@ -346,4 +380,157 @@ paths:
       summary: Update class
       tags:
       - Class Actions
+  /races:
+    get:
+      consumes:
+      - application/json
+      description: List races (paginated)
+      operationId: races-list
+      parameters:
+      - description: Search races by name
+        in: query
+        name: search
+        type: string
+      - description: The page number
+        in: query
+        name: page
+        type: integer
+      - description: The numbers of items to return. Max 100
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.RacePaginatedResponse'
+      summary: List races
+      tags:
+      - Race Actions
+    post:
+      consumes:
+      - application/json
+      description: Create race
+      operationId: races-create
+      parameters:
+      - description: Race information
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CreateRaceRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.RaceResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Create race
+      tags:
+      - Race Actions
+  /races/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete race
+      operationId: races-delete
+      parameters:
+      - description: Race ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Delete race
+      tags:
+      - Race Actions
+    get:
+      consumes:
+      - application/json
+      description: Get race by ID
+      operationId: races-get
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.RaceResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Get race by ID
+      tags:
+      - Race Actions
+    put:
+      consumes:
+      - application/json
+      description: Update race
+      operationId: races-update
+      parameters:
+      - description: Race ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Race information
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.UpdateRaceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.RaceResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Update race
+      tags:
+      - Race Actions
 swagger: "2.0"

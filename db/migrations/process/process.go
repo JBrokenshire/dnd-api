@@ -15,5 +15,6 @@ func getMigrationsList() []store.Migratable {
 		&list.CreateUsersTable{},
 		&list.CreateFailedLoginsTable{},
 		&list.CreateClassesTable{},
+		&list.CreateRacesTable{},
 	}
 }

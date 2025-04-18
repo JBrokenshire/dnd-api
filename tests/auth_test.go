@@ -110,7 +110,7 @@ func TestAuth_RefreshToken(t *testing.T) {
 			Request:        request,
 			RequestCookies: []*http.Cookie{},
 			Expected: helpers.ExpectedResponse{
-				StatusCode: http.StatusBadRequest,
+				StatusCode: http.StatusUnauthorized,
 				BodyPart:   "No refresh cookie provided",
 			},
 		},

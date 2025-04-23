@@ -12,14 +12,20 @@ import (
 
 func TestClass_List(t *testing.T) {
 	ts.ClearTable("classes")
+	ts.ClearTable("files")
 	ts.SetupDefaultUsers()
 
+	// Create classes
 	class := &m.Class{}
 	factories.NewClass(ts.S.Db, class)
 	class2 := &m.Class{}
 	factories.NewClass(ts.S.Db, class2)
 	namedClass := &m.Class{Name: "Test Class"}
 	factories.NewClass(ts.S.Db, namedClass)
+
+	// Create images
+	image := &m.File{Model: m.FileModelClassImage, ModelId: class.ID}
+	factories.NewFile(ts.S.Db, image)
 
 	getRequest := func(query string) helpers.Request {
 		return helpers.Request{
@@ -39,6 +45,7 @@ func TestClass_List(t *testing.T) {
 				StatusCode: http.StatusOK,
 				BodyParts: []string{
 					fmt.Sprintf(`"name":"%v"`, class.Name),
+					fmt.Sprintf(`"filename":"%v"`, image.Filename),
 					fmt.Sprintf(`"name":"%v"`, class2.Name),
 					fmt.Sprintf(`"name":"%v"`, namedClass.Name),
 					`"total_count":3`,
@@ -52,6 +59,7 @@ func TestClass_List(t *testing.T) {
 				StatusCode: http.StatusOK,
 				BodyParts: []string{
 					fmt.Sprintf(`"name":"%v"`, class.Name),
+					fmt.Sprintf(`"filename":"%v"`, image.Filename),
 					`"total_count":3`,
 				},
 				BodyPartsMissing: []string{
@@ -71,6 +79,7 @@ func TestClass_List(t *testing.T) {
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, class.Name),
+					fmt.Sprintf(`"filename":"%v"`, image.Filename),
 					fmt.Sprintf(`"name":"%v"`, namedClass.Name),
 				},
 			},
@@ -86,6 +95,7 @@ func TestClass_List(t *testing.T) {
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, class.Name),
+					fmt.Sprintf(`"filename":"%v"`, image.Filename),
 					fmt.Sprintf(`"name":"%v"`, class2.Name),
 				},
 			},
@@ -101,12 +111,18 @@ func TestClass_List(t *testing.T) {
 
 func TestClass_Get(t *testing.T) {
 	ts.ClearTable("classes")
+	ts.ClearTable("files")
 	ts.SetupDefaultUsers()
 
+	// Create classes
 	class := &m.Class{}
 	factories.NewClass(ts.S.Db, class)
 	class2 := &m.Class{}
 	factories.NewClass(ts.S.Db, class2)
+
+	// Create images
+	image := &m.File{Model: m.FileModelClassImage, ModelId: class.ID}
+	factories.NewFile(ts.S.Db, image)
 
 	getRequest := func(id interface{}) helpers.Request {
 		return helpers.Request{
@@ -142,6 +158,7 @@ func TestClass_Get(t *testing.T) {
 				StatusCode: http.StatusOK,
 				BodyParts: []string{
 					fmt.Sprintf(`"name":"%v"`, class.Name),
+					fmt.Sprintf(`"filename":"%v"`, image.Filename),
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, class2.Name),
@@ -378,4 +395,138 @@ func TestClass_Delete(t *testing.T) {
 			RunAuthorisedTestCase(t, test)
 		})
 	}
+}
+
+func TestClass_UploadImage(t *testing.T) {
+	ts.ClearTable("classes")
+	ts.ClearTable("files")
+	ts.SetupDefaultUsers()
+
+	setup := func(test *helpers.TestCase) {
+		ts.ClearTable("files")
+	}
+
+	// Create class
+	class := &m.Class{}
+	factories.NewClass(ts.S.Db, class)
+
+	// PNG file
+	pngBody, pngMw := createMultipartFile(t, "file", "../assets/example.png")
+	// JPG file
+	jpgBody, jpgMw := createMultipartFile(t, "file", "../assets/example.jpg")
+	// WEBP file
+	webpBody, webpMw := createMultipartFile(t, "file", "../assets/example.webp")
+	// PDF file
+	pdfBody, pdfMw := createMultipartFile(t, "file", "../assets/example.pdf")
+
+	getRequest := func(id interface{}) helpers.Request {
+		return helpers.Request{
+			Method: http.MethodPost,
+			Url:    fmt.Sprintf("/classes/%v/upload", id),
+		}
+	}
+
+	permissionRequest := getRequest(class.ID)
+	RunNoAuthenticationTests(t, permissionRequest.Method, permissionRequest.Url)
+
+	cases := []helpers.TestCase{
+		{
+			Name:    "Can't upload image for class that doesn't exist",
+			Request: getRequest(1000),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Class not found",
+			},
+		},
+		{
+			Name:    "Can't upload image for class with invalid id",
+			Request: getRequest("invalid-id"),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Class not found",
+			},
+		},
+		{
+			Name:    "Can't upload image for class if no file is provided",
+			Request: getRequest(class.ID),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusBadRequest,
+				BodyPart:   "Unable to read file",
+			},
+		},
+		{
+			Name:               "Can't upload image for class with invalid file type",
+			Request:            getRequest(class.ID),
+			RequestReader:      pdfBody,
+			RequestContentType: pdfMw.FormDataContentType(),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusBadRequest,
+				BodyPart:   "Invalid file type",
+			},
+		},
+		{
+			Name:               "Can upload png",
+			Setup:              setup,
+			Request:            getRequest(class.ID),
+			RequestReader:      pngBody,
+			RequestContentType: pngMw.FormDataContentType(),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "File uploaded",
+				DatabaseCheck: &helpers.DatabaseCheck{
+					Name: "File was uploaded",
+					Model: m.File{
+						Model:   m.FileModelClassImage,
+						ModelId: class.ID,
+					},
+					CountExpected: 1,
+				},
+			},
+		},
+		{
+			Name:               "Can upload jpg",
+			Setup:              setup,
+			Request:            getRequest(class.ID),
+			RequestReader:      jpgBody,
+			RequestContentType: jpgMw.FormDataContentType(),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "File uploaded",
+				DatabaseCheck: &helpers.DatabaseCheck{
+					Name: "File was uploaded",
+					Model: m.File{
+						Model:   m.FileModelClassImage,
+						ModelId: class.ID,
+					},
+					CountExpected: 1,
+				},
+			},
+		},
+		{
+			Name:               "Can upload webp",
+			Setup:              setup,
+			Request:            getRequest(class.ID),
+			RequestReader:      webpBody,
+			RequestContentType: webpMw.FormDataContentType(),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "File uploaded",
+				DatabaseCheck: &helpers.DatabaseCheck{
+					Name: "File was uploaded",
+					Model: m.File{
+						Model:   m.FileModelClassImage,
+						ModelId: class.ID,
+					},
+					CountExpected: 1,
+				},
+			},
+		},
+	}
+
+	for _, test := range cases {
+		t.Run(test.Name, func(t *testing.T) {
+			RunAuthorisedTestCase(t, test)
+		})
+	}
+
 }

@@ -607,6 +607,51 @@ const docTemplate = `{
                 }
             }
         },
+        "/classes/{id}/upload": {
+            "delete": {
+                "description": "Uploade class image",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Class File Actions"
+                ],
+                "summary": "Upload class image",
+                "operationId": "classes-upload-image",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/races": {
             "get": {
                 "description": "List races (paginated)",
@@ -1074,6 +1119,9 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "image": {
+                    "$ref": "#/definitions/responses.FileResponse"
+                },
                 "name": {
                     "type": "string"
                 }
@@ -1097,6 +1145,36 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.FileResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "enterprise_uid": {
+                    "type": "string"
+                },
+                "file_location": {
+                    "type": "string"
+                },
+                "filename": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "model": {
+                    "type": "string"
+                },
+                "model_id": {
+                    "type": "integer"
+                },
+                "updated_at": {
                     "type": "string"
                 }
             }

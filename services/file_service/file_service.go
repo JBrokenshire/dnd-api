@@ -11,23 +11,17 @@ import (
 
 type FilesAccess string
 
-var (
-	FilesAccessRead      FilesAccess = "R"
-	FilesAccessReadWrite FilesAccess = "RW"
-)
-
-type FilesService struct {
+type FileService struct {
 	Db *gorm.DB
 }
 
-func NewFilesService(db *gorm.DB) *FilesService {
-	return &FilesService{
+func NewFileService(db *gorm.DB) *FileService {
+	return &FileService{
 		Db: db,
 	}
 }
 
-func (s *FilesService) ReadFileInfo(c echo.Context) (string, string, error) {
-
+func (s *FileService) ReadFileInfo(c echo.Context) (string, string, error) {
 	r := c.Request()
 	w := c.Response()
 	if err := r.ParseMultipartForm(10485); err != nil {
@@ -64,7 +58,7 @@ func (s *FilesService) ReadFileInfo(c echo.Context) (string, string, error) {
 	return multipartFileHeader.Filename, http.DetectContentType(fileHeader), nil
 }
 
-func (s *FilesService) FileExtensionAllowed(fileName string, extensions []string) bool {
+func (s *FileService) FileExtensionAllowed(fileName string, extensions []string) bool {
 	for _, extension := range extensions {
 		if strings.HasSuffix(fileName, extension) {
 			return true
@@ -73,6 +67,6 @@ func (s *FilesService) FileExtensionAllowed(fileName string, extensions []string
 	return false
 }
 
-func (s *FilesService) MIMETypeAllowed(mimeType string, allowedTypes []string) bool {
+func (s *FileService) MIMETypeAllowed(mimeType string, allowedTypes []string) bool {
 	return slices.Contains(allowedTypes, mimeType)
 }

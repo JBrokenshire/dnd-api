@@ -5,6 +5,8 @@ import m "dnd-api/db/models"
 type ClassResponse struct {
 	ID   uint   `json:"id"`
 	Name string `json:"name"`
+
+	Image FileResponse `json:"image"`
 }
 
 type ClassPaginatedResponse struct {
@@ -13,10 +15,16 @@ type ClassPaginatedResponse struct {
 }
 
 func NewClassResponse(class *m.Class) *ClassResponse {
-	return &ClassResponse{
+	res := &ClassResponse{
 		ID:   class.ID,
 		Name: class.Name,
 	}
+
+	if class.Image.ID != 0 {
+		res.Image = *NewFileResponse(&class.Image)
+	}
+
+	return res
 }
 
 func NewClassResponses(classes []*m.Class) []ClassResponse {

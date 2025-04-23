@@ -8,6 +8,7 @@ import (
 	"dnd-api/db/migrations/process"
 	m "dnd-api/db/models"
 	"dnd-api/db/repositories"
+	"dnd-api/pkg/dependencies"
 	"dnd-api/pkg/validation"
 	"dnd-api/services/jwt_service"
 	"encoding/json"
@@ -60,9 +61,10 @@ func NewTestServer(envFileLoc string) *TestServer {
 
 	ts := &TestServer{
 		S: &api.Server{
-			Echo:  echo.New(),
-			Db:    db,
-			Repos: repositories.NewRepos(db),
+			Echo:         echo.New(),
+			Db:           db,
+			Repos:        repositories.NewRepos(db),
+			Dependencies: dependencies.NewDependencyService(db),
 		},
 	}
 

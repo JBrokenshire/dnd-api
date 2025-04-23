@@ -5,10 +5,14 @@ import (
 	"dnd-api/api/requests"
 	"dnd-api/api/responses"
 	"dnd-api/db/models"
+	"dnd-api/pkg/closer"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/random"
+	"log"
 	"net/http"
+	"path/filepath"
 )
 
 type ClassHandler struct {
@@ -174,4 +178,80 @@ func (h *ClassHandler) Delete(c echo.Context) error {
 	}
 
 	return responses.MessageResponse(c, http.StatusOK, "Class deleted successfully")
+}
+
+// UploadImage godoc
+// @Summary Upload class image
+// @Description Upload class image
+// @ID classes-upload-image
+// @Tags Class File Actions
+// @Accept json
+// @Produce json
+// @Param id path string true "Class ID"
+// @Success 200 {object} responses.Data
+// @Failure 400 {object} responses.Error
+// @Failure 404 {object} responses.Error
+// @Failure 500 {object} responses.Error
+// @Router /classes/{id}/upload [post]
+func (h *ClassHandler) UploadImage(c echo.Context) error {
+	id := c.Param("id")
+
+	class := h.server.Repos.Class.GetById(id)
+	if class.ID == 0 {
+		return responses.ErrorResponse(c, http.StatusNotFound, "Class not found")
+	}
+
+	// Check the file mimetype - We only want to accept images
+	fileName, fileMimeType, err := h.server.Dependencies.GetFileService().ReadFileInfo(c)
+	if err != nil {
+		log.Printf("Error reading file info: %v", err)
+		return responses.ErrorResponse(c, http.StatusBadRequest, "Unable to read file")
+	}
+	fileExtension := filepath.Ext(fileName)
+	allowedFileExtensions := []string{"jpg", "png", "webp"}
+	if !h.server.Dependencies.GetFileService().FileExtensionAllowed(fileExtension, allowedFileExtensions) {
+		return responses.ErrorResponse(c, http.StatusBadRequest, "Invalid file type")
+	}
+
+	allowedMIMEs := []string{"image/jpeg", "image/png", "image/webp"}
+	if !h.server.Dependencies.GetFileService().MIMETypeAllowed(fileMimeType, allowedMIMEs) {
+		return responses.ErrorResponse(c, http.StatusBadRequest, "Invalid file content type")
+	}
+
+	// Get file from request
+	file, err := c.FormFile("file")
+	if err != nil {
+		log.Printf("Error getting file from form: %v", err)
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error getting file from request")
+	}
+
+	// Change the file name
+	newFilename := random.String(32)
+	if fileExtension != "" {
+		newFilename += fileExtension
+	}
+	file.Filename = newFilename
+
+	// Upload file
+	src, err := file.Open()
+	if err != nil {
+		log.Printf("Error opening file: %v", err)
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error opening file")
+	}
+	defer closer.Close(src)
+
+	// Create file record
+	path := fmt.Sprintf("classes/%v/%v", class.ID, newFilename)
+	jobFile := &models.File{
+		Model:        models.FileModelClassImage,
+		ModelId:      class.ID,
+		Filename:     newFilename,
+		FileLocation: path,
+	}
+	if err := h.server.Repos.File.Create(jobFile); err != nil {
+		log.Printf("Error creating file record: %v", err)
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error creating file record")
+	}
+
+	return responses.MessageResponse(c, http.StatusOK, "File uploaded")
 }

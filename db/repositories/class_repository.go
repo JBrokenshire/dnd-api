@@ -26,6 +26,12 @@ func (r *ClassRepository) GetClasses(c echo.Context, scopes Scopes) ([]*m.Class,
 		Scopes(paginateFunc).
 		Scopes(scopes...).
 		Find(&classes)
+
+	// Load on images
+	for i := range classes {
+		r.Db.Where("model = ?", m.FileModelClassImage).Where("model_id = ?", classes[i].ID).Take(&classes[i].Image)
+	}
+
 	return classes, page, pageSize
 }
 
@@ -41,5 +47,8 @@ func (r *ClassRepository) CountClasses(scopes Scopes) int {
 func (r *ClassRepository) GetById(id interface{}) *m.Class {
 	var class m.Class
 	r.Db.Where("id = ?", id).First(&class)
+
+	// Load image
+	r.Db.Where("model = ?", m.FileModelClassImage).Where("model_id = ?", class.ID).Take(&class.Image)
 	return &class
 }

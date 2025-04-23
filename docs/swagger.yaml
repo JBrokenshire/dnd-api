@@ -129,6 +129,8 @@ definitions:
     properties:
       id:
         type: integer
+      image:
+        $ref: '#/definitions/responses.FileResponse'
       name:
         type: string
     type: object
@@ -144,6 +146,26 @@ definitions:
       code:
         type: integer
       error:
+        type: string
+    type: object
+  responses.FileResponse:
+    properties:
+      created_at:
+        type: string
+      enterprise_uid:
+        type: string
+      file_location:
+        type: string
+      filename:
+        type: string
+      id:
+        example: 1
+        type: integer
+      model:
+        type: string
+      model_id:
+        type: integer
+      updated_at:
         type: string
     type: object
   responses.LoginResponse:
@@ -603,6 +625,36 @@ paths:
       summary: Update class
       tags:
       - Class Actions
+  /classes/{id}/upload:
+    delete:
+      consumes:
+      - application/json
+      description: Uploade class image
+      operationId: classes-upload-image
+      parameters:
+      - description: Class ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Upload class image
+      tags:
+      - Class File Actions
   /races:
     get:
       consumes:

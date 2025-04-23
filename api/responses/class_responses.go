@@ -8,8 +8,8 @@ type ClassResponse struct {
 }
 
 type ClassPaginatedResponse struct {
-	Data []ClassResponse
-	Meta ResponseMeta
+	Data []ClassResponse `json:"data" `
+	Meta ResponseMeta    `json:"meta"`
 }
 
 func NewClassResponse(class *m.Class) *ClassResponse {

@@ -9,6 +9,9 @@
 *.dylib
 .idea
 
+# Binary in cmd/api
+/cmd/api/api
+
 # Test binary, built with `go test -c`
 *.test
 

@@ -8,8 +8,8 @@ type RaceResponse struct {
 }
 
 type RacePaginatedResponse struct {
-	Data []RaceResponse
-	Meta ResponseMeta
+	Data []RaceResponse `json:"data"`
+	Meta ResponseMeta   `json:"meta"`
 }
 
 func NewRaceResponse(race *m.Race) *RaceResponse {

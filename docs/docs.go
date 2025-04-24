@@ -607,9 +607,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/classes/{id}/upload": {
-            "delete": {
-                "description": "Uploade class image",
+        "/classes/{id}/upload/logo": {
+            "post": {
+                "description": "Upload class logo",
                 "consumes": [
                     "application/json"
                 ],
@@ -619,7 +619,7 @@ const docTemplate = `{
                 "tags": [
                     "Class File Actions"
                 ],
-                "summary": "Upload class image",
+                "summary": "Upload class logo",
                 "operationId": "classes-upload-image",
                 "parameters": [
                     {
@@ -637,6 +637,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/responses.Data"
                         }
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
                     "404": {
                         "description": "Not Found",
                         "schema": {
@@ -645,6 +651,47 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/files/{filepath}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get file with authenticated routes",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "Files Actions"
+                ],
+                "summary": "Get file",
+                "operationId": "files-get",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "filepath",
+                        "name": "filepath",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.Error"
                         }
@@ -1119,7 +1166,7 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "image": {
+                "logo": {
                     "$ref": "#/definitions/responses.FileResponse"
                 },
                 "name": {

@@ -31,6 +31,9 @@ func ConfigureRoutes(server *s.Server) {
 		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 		AllowCredentials: true,
 	}))
+	
+	// File Routes
+	fileRoutes(server)
 
 	// Make sure none of the queries are cached.
 	server.Echo.Use(mw.NoCacheWithConfig(mw.NoCacheConfig{

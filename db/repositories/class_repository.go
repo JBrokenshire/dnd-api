@@ -29,7 +29,7 @@ func (r *ClassRepository) GetClasses(c echo.Context, scopes Scopes) ([]*m.Class,
 
 	// Load on images
 	for i := range classes {
-		r.Db.Where("model = ?", m.FileModelClassImage).Where("model_id = ?", classes[i].ID).Take(&classes[i].Image)
+		r.Db.Where("model = ?", m.FileModelClassLogo).Where("model_id = ?", classes[i].ID).Take(&classes[i].Logo)
 	}
 
 	return classes, page, pageSize
@@ -49,6 +49,6 @@ func (r *ClassRepository) GetById(id interface{}) *m.Class {
 	r.Db.Where("id = ?", id).First(&class)
 
 	// Load image
-	r.Db.Where("model = ?", m.FileModelClassImage).Where("model_id = ?", class.ID).Take(&class.Image)
+	r.Db.Where("model = ?", m.FileModelClassLogo).Where("model_id = ?", class.ID).Take(&class.Logo)
 	return &class
 }

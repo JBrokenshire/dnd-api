@@ -3,7 +3,7 @@ package models
 import "time"
 
 const (
-	FileModelClassImage = "ClassImage"
+	FileModelClassLogo = "ClassLogo"
 )
 
 type File struct {

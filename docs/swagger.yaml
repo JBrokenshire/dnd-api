@@ -129,7 +129,7 @@ definitions:
     properties:
       id:
         type: integer
-      image:
+      logo:
         $ref: '#/definitions/responses.FileResponse'
       name:
         type: string
@@ -625,11 +625,11 @@ paths:
       summary: Update class
       tags:
       - Class Actions
-  /classes/{id}/upload:
-    delete:
+  /classes/{id}/upload/logo:
+    post:
       consumes:
       - application/json
-      description: Uploade class image
+      description: Upload class logo
       operationId: classes-upload-image
       parameters:
       - description: Class ID
@@ -644,6 +644,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
         "404":
           description: Not Found
           schema:
@@ -652,9 +656,35 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/responses.Error'
-      summary: Upload class image
+      summary: Upload class logo
       tags:
       - Class File Actions
+  /files/{filepath}:
+    get:
+      description: Get file with authenticated routes
+      operationId: files-get
+      parameters:
+      - description: filepath
+        in: path
+        name: filepath
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Get file
+      tags:
+      - Files Actions
   /races:
     get:
       consumes:

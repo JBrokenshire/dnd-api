@@ -5,8 +5,11 @@ import (
 	"dnd-api/db/factories"
 	m "dnd-api/db/models"
 	"dnd-api/tests/helpers"
+	"dnd-api/tests/mocks"
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 )
 
@@ -24,8 +27,8 @@ func TestClass_List(t *testing.T) {
 	factories.NewClass(ts.S.Db, namedClass)
 
 	// Create images
-	image := &m.File{Model: m.FileModelClassImage, ModelId: class.ID}
-	factories.NewFile(ts.S.Db, image)
+	logo := &m.File{Model: m.FileModelClassLogo, ModelId: class.ID}
+	factories.NewFile(ts.S.Db, logo)
 
 	getRequest := func(query string) helpers.Request {
 		return helpers.Request{
@@ -45,7 +48,7 @@ func TestClass_List(t *testing.T) {
 				StatusCode: http.StatusOK,
 				BodyParts: []string{
 					fmt.Sprintf(`"name":"%v"`, class.Name),
-					fmt.Sprintf(`"filename":"%v"`, image.Filename),
+					fmt.Sprintf(`"filename":"%v"`, logo.Filename),
 					fmt.Sprintf(`"name":"%v"`, class2.Name),
 					fmt.Sprintf(`"name":"%v"`, namedClass.Name),
 					`"total_count":3`,
@@ -59,7 +62,7 @@ func TestClass_List(t *testing.T) {
 				StatusCode: http.StatusOK,
 				BodyParts: []string{
 					fmt.Sprintf(`"name":"%v"`, class.Name),
-					fmt.Sprintf(`"filename":"%v"`, image.Filename),
+					fmt.Sprintf(`"filename":"%v"`, logo.Filename),
 					`"total_count":3`,
 				},
 				BodyPartsMissing: []string{
@@ -79,7 +82,7 @@ func TestClass_List(t *testing.T) {
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, class.Name),
-					fmt.Sprintf(`"filename":"%v"`, image.Filename),
+					fmt.Sprintf(`"filename":"%v"`, logo.Filename),
 					fmt.Sprintf(`"name":"%v"`, namedClass.Name),
 				},
 			},
@@ -95,7 +98,7 @@ func TestClass_List(t *testing.T) {
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, class.Name),
-					fmt.Sprintf(`"filename":"%v"`, image.Filename),
+					fmt.Sprintf(`"filename":"%v"`, logo.Filename),
 					fmt.Sprintf(`"name":"%v"`, class2.Name),
 				},
 			},
@@ -121,8 +124,8 @@ func TestClass_Get(t *testing.T) {
 	factories.NewClass(ts.S.Db, class2)
 
 	// Create images
-	image := &m.File{Model: m.FileModelClassImage, ModelId: class.ID}
-	factories.NewFile(ts.S.Db, image)
+	logo := &m.File{Model: m.FileModelClassLogo, ModelId: class.ID}
+	factories.NewFile(ts.S.Db, logo)
 
 	getRequest := func(id interface{}) helpers.Request {
 		return helpers.Request{
@@ -158,7 +161,7 @@ func TestClass_Get(t *testing.T) {
 				StatusCode: http.StatusOK,
 				BodyParts: []string{
 					fmt.Sprintf(`"name":"%v"`, class.Name),
-					fmt.Sprintf(`"filename":"%v"`, image.Filename),
+					fmt.Sprintf(`"filename":"%v"`, logo.Filename),
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, class2.Name),
@@ -397,13 +400,18 @@ func TestClass_Delete(t *testing.T) {
 	}
 }
 
-func TestClass_UploadImage(t *testing.T) {
+func TestClass_UploadLogo(t *testing.T) {
 	ts.ClearTable("classes")
 	ts.ClearTable("files")
 	ts.SetupDefaultUsers()
 
+	// Set mocks
+	fileStoreMock := mocks.NewFileStoreMock()
+	ts.S.Dependencies.SetFileStore(fileStoreMock)
+
 	setup := func(test *helpers.TestCase) {
 		ts.ClearTable("files")
+		fileStoreMock.Reset()
 	}
 
 	// Create class
@@ -414,6 +422,8 @@ func TestClass_UploadImage(t *testing.T) {
 	pngBody, pngMw := createMultipartFile(t, "file", "../assets/example.png")
 	// JPG file
 	jpgBody, jpgMw := createMultipartFile(t, "file", "../assets/example.jpg")
+	// JPEG file
+	jpegBody, jpegMw := createMultipartFile(t, "file", "../assets/example.jpeg")
 	// WEBP file
 	webpBody, webpMw := createMultipartFile(t, "file", "../assets/example.webp")
 	// PDF file
@@ -422,7 +432,7 @@ func TestClass_UploadImage(t *testing.T) {
 	getRequest := func(id interface{}) helpers.Request {
 		return helpers.Request{
 			Method: http.MethodPost,
-			Url:    fmt.Sprintf("/classes/%v/upload", id),
+			Url:    fmt.Sprintf("/classes/%v/upload/logo", id),
 		}
 	}
 
@@ -476,10 +486,16 @@ func TestClass_UploadImage(t *testing.T) {
 				DatabaseCheck: &helpers.DatabaseCheck{
 					Name: "File was uploaded",
 					Model: m.File{
-						Model:   m.FileModelClassImage,
+						Model:   m.FileModelClassLogo,
 						ModelId: class.ID,
 					},
 					CountExpected: 1,
+				},
+				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
+					// Ensure file store was called correctly
+					assert.Equal(t, 1, len(fileStoreMock.SaveCalls))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].Path, fmt.Sprintf("classes/%v", class.ID))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].FileName, ".png")
 				},
 			},
 		},
@@ -495,10 +511,41 @@ func TestClass_UploadImage(t *testing.T) {
 				DatabaseCheck: &helpers.DatabaseCheck{
 					Name: "File was uploaded",
 					Model: m.File{
-						Model:   m.FileModelClassImage,
+						Model:   m.FileModelClassLogo,
 						ModelId: class.ID,
 					},
 					CountExpected: 1,
+				},
+				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
+					// Ensure file store was called correctly
+					assert.Equal(t, 1, len(fileStoreMock.SaveCalls))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].Path, fmt.Sprintf("classes/%v", class.ID))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].FileName, ".jpg")
+				},
+			},
+		},
+		{
+			Name:               "Can upload jpeg",
+			Setup:              setup,
+			Request:            getRequest(class.ID),
+			RequestReader:      jpegBody,
+			RequestContentType: jpegMw.FormDataContentType(),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "File uploaded",
+				DatabaseCheck: &helpers.DatabaseCheck{
+					Name: "File was uploaded",
+					Model: m.File{
+						Model:   m.FileModelClassLogo,
+						ModelId: class.ID,
+					},
+					CountExpected: 1,
+				},
+				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
+					// Ensure file store was called correctly
+					assert.Equal(t, 1, len(fileStoreMock.SaveCalls))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].Path, fmt.Sprintf("classes/%v", class.ID))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].FileName, ".jpeg")
 				},
 			},
 		},
@@ -514,10 +561,16 @@ func TestClass_UploadImage(t *testing.T) {
 				DatabaseCheck: &helpers.DatabaseCheck{
 					Name: "File was uploaded",
 					Model: m.File{
-						Model:   m.FileModelClassImage,
+						Model:   m.FileModelClassLogo,
 						ModelId: class.ID,
 					},
 					CountExpected: 1,
+				},
+				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
+					// Ensure file store was called correctly
+					assert.Equal(t, 1, len(fileStoreMock.SaveCalls))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].Path, fmt.Sprintf("classes/%v", class.ID))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].FileName, ".webp")
 				},
 			},
 		},

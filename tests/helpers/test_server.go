@@ -11,6 +11,7 @@ import (
 	"dnd-api/pkg/dependencies"
 	"dnd-api/pkg/validation"
 	"dnd-api/services/jwt_service"
+	"dnd-api/tests/mocks"
 	"encoding/json"
 	"fmt"
 	"github.com/go-playground/validator/v10"
@@ -61,10 +62,9 @@ func NewTestServer(envFileLoc string) *TestServer {
 
 	ts := &TestServer{
 		S: &api.Server{
-			Echo:         echo.New(),
-			Db:           db,
-			Repos:        repositories.NewRepos(db),
-			Dependencies: dependencies.NewDependencyService(db),
+			Echo:  echo.New(),
+			Db:    db,
+			Repos: repositories.NewRepos(db),
 		},
 	}
 
@@ -74,6 +74,10 @@ func NewTestServer(envFileLoc string) *TestServer {
 	conf.BruteForceLimit = 3
 	conf.LogMiddleware = false
 	conf.LoginRateLimit = 1000
+
+	// Set mock dependencies
+	ts.S.Dependencies = dependencies.NewDependencyService(db)
+	ts.S.Dependencies.SetFileStore(mocks.NewFileStoreMock())
 
 	ts.migrateDatabase()
 	ts.S.Echo.Validator = validation.NewCustomValidator(validator.New())

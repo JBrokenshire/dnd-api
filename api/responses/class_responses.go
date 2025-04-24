@@ -1,12 +1,14 @@
 package responses
 
-import m "dnd-api/db/models"
+import (
+	m "dnd-api/db/models"
+)
 
 type ClassResponse struct {
 	ID   uint   `json:"id"`
 	Name string `json:"name"`
 
-	Image FileResponse `json:"image"`
+	Logo *FileResponse `json:"logo"`
 }
 
 type ClassPaginatedResponse struct {
@@ -20,8 +22,8 @@ func NewClassResponse(class *m.Class) *ClassResponse {
 		Name: class.Name,
 	}
 
-	if class.Image.ID != 0 {
-		res.Image = *NewFileResponse(&class.Image)
+	if class.Logo.ID != 0 {
+		res.Logo = NewFileResponse(&class.Logo)
 	}
 
 	return res

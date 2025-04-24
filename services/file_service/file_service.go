@@ -11,6 +11,11 @@ import (
 
 type FilesAccess string
 
+var (
+	FilesAccessRead      FilesAccess = "R"
+	FilesAccessReadWrite FilesAccess = "RW"
+)
+
 type FileService struct {
 	Db *gorm.DB
 }

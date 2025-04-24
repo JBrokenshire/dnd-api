@@ -15,5 +15,5 @@ func classRoutes(server *api.Server) {
 	class.POST("", classHandler.Create)
 	class.PUT("/:id", classHandler.Update)
 	class.DELETE("/:id", classHandler.Delete)
-	class.POST("/:id/upload", classHandler.UploadImage)
+	class.POST("/:id/upload/logo", classHandler.UploadLogo)
 }

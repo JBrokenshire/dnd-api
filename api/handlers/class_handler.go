@@ -180,9 +180,9 @@ func (h *ClassHandler) Delete(c echo.Context) error {
 	return responses.MessageResponse(c, http.StatusOK, "Class deleted successfully")
 }
 
-// UploadImage godoc
-// @Summary Upload class image
-// @Description Upload class image
+// UploadLogo godoc
+// @Summary Upload class logo
+// @Description Upload class logo
 // @ID classes-upload-image
 // @Tags Class File Actions
 // @Accept json
@@ -192,8 +192,8 @@ func (h *ClassHandler) Delete(c echo.Context) error {
 // @Failure 400 {object} responses.Error
 // @Failure 404 {object} responses.Error
 // @Failure 500 {object} responses.Error
-// @Router /classes/{id}/upload [post]
-func (h *ClassHandler) UploadImage(c echo.Context) error {
+// @Router /classes/{id}/upload/logo [post]
+func (h *ClassHandler) UploadLogo(c echo.Context) error {
 	id := c.Param("id")
 
 	class := h.server.Repos.Class.GetById(id)
@@ -208,7 +208,7 @@ func (h *ClassHandler) UploadImage(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, "Unable to read file")
 	}
 	fileExtension := filepath.Ext(fileName)
-	allowedFileExtensions := []string{"jpg", "png", "webp"}
+	allowedFileExtensions := []string{"jpg", "jpeg", "png", "webp"}
 	if !h.server.Dependencies.GetFileService().FileExtensionAllowed(fileExtension, allowedFileExtensions) {
 		return responses.ErrorResponse(c, http.StatusBadRequest, "Invalid file type")
 	}
@@ -240,10 +240,16 @@ func (h *ClassHandler) UploadImage(c echo.Context) error {
 	}
 	defer closer.Close(src)
 
-	// Create file record
-	path := fmt.Sprintf("classes/%v/%v", class.ID, newFilename)
+	path := fmt.Sprintf("classes/%v", class.ID)
+	err = h.server.Dependencies.GetFileStore().Save(path, src, file.Filename)
+	if err != nil {
+		log.Printf("Error saving file: %v", err)
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error saving file")
+	}
+
+	// Create DB record
 	jobFile := &models.File{
-		Model:        models.FileModelClassImage,
+		Model:        models.FileModelClassLogo,
 		ModelId:      class.ID,
 		Filename:     newFilename,
 		FileLocation: path,

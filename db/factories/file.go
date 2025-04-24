@@ -17,7 +17,7 @@ func NewFile(db *gorm.DB, file *models.File) {
 
 func fillFileDefaults(file *models.File) {
 	if file.Model == "" {
-		file.Model = models.FileModelClassImage
+		file.Model = models.FileModelClassLogo
 	}
 	if file.ModelId == 0 {
 		file.ModelId = 1

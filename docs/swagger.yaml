@@ -16,12 +16,31 @@ definitions:
     type: object
   requests.CreateClassRequest:
     properties:
+      hit_point_die_value:
+        example: 4
+        type: integer
       name:
         example: Barbarian
         maxLength: 200
         type: string
+      primary_ability:
+        example: Strength
+        maxLength: 200
+        type: string
+      saves:
+        example: '[''Strength'',''Constitution'']'
+        maxLength: 200
+        type: string
+      short_description:
+        example: Barbarians are mighty warriors who are powered by primal forces of
+          the multiverse that manifest as a Rage.
+        type: string
     required:
+    - hit_point_die_value
     - name
+    - primary_ability
+    - saves
+    - short_description
     type: object
   requests.CreateRaceRequest:
     properties:
@@ -74,12 +93,31 @@ definitions:
     type: object
   requests.UpdateClassRequest:
     properties:
+      hit_point_die_value:
+        example: 4
+        type: integer
       name:
         example: Barbarian
         maxLength: 200
         type: string
+      primary_ability:
+        example: Strength
+        maxLength: 200
+        type: string
+      saves:
+        example: '[''Strength'',''Constitution'']'
+        maxLength: 200
+        type: string
+      short_description:
+        example: Barbarians are mighty warriors who are powered by primal forces of
+          the multiverse that manifest as a Rage.
+        type: string
     required:
+    - hit_point_die_value
     - name
+    - primary_ability
+    - saves
+    - short_description
     type: object
   requests.UpdateRaceRequest:
     properties:
@@ -127,11 +165,19 @@ definitions:
     type: object
   responses.ClassResponse:
     properties:
+      hit_point_die_value:
+        type: integer
       id:
         type: integer
       logo:
         $ref: '#/definitions/responses.FileResponse'
       name:
+        type: string
+      primary_ability:
+        type: string
+      saves:
+        type: string
+      short_description:
         type: string
     type: object
   responses.Data:

@@ -25,6 +25,7 @@ func (r *ClassRepository) GetClasses(c echo.Context, scopes Scopes) ([]*m.Class,
 	r.Db.
 		Scopes(paginateFunc).
 		Scopes(scopes...).
+		Order("name ASC").
 		Find(&classes)
 
 	// Load on images

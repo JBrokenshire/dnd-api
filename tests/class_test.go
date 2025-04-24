@@ -19,9 +19,9 @@ func TestClass_List(t *testing.T) {
 	ts.SetupDefaultUsers()
 
 	// Create classes
-	class := &m.Class{}
+	class := &m.Class{Name: "a"}
 	factories.NewClass(ts.S.Db, class)
-	class2 := &m.Class{}
+	class2 := &m.Class{Name: "b"}
 	factories.NewClass(ts.S.Db, class2)
 	namedClass := &m.Class{Name: "Test Class"}
 	factories.NewClass(ts.S.Db, namedClass)
@@ -198,6 +198,10 @@ func TestClass_Create(t *testing.T) {
 				BodyParts: []string{
 					"Required fields are empty or not valid:",
 					"Name is a required field",
+					"ShortDescription is a required field",
+					"PrimaryAbility is a required field",
+					"HitPointDieValue is a required field",
+					"Saves is a required field",
 				},
 			},
 		},
@@ -205,13 +209,19 @@ func TestClass_Create(t *testing.T) {
 			Name:    "Can't create class if the fields exceed max length",
 			Request: request,
 			RequestBody: requests.CreateClassRequest{
-				Name: string(make([]byte, 201)),
+				Name:             string(make([]byte, 201)),
+				PrimaryAbility:   string(make([]byte, 201)),
+				Saves:            string(make([]byte, 201)),
+				ShortDescription: "Test Short Description",
+				HitPointDieValue: 6,
 			},
 			Expected: helpers.ExpectedResponse{
 				StatusCode: http.StatusBadRequest,
 				BodyParts: []string{
 					"Required fields are empty or not valid:",
 					"Name must be a maximum of 200 characters in length",
+					"PrimaryAbility must be a maximum of 200 characters in length",
+					"Saves must be a maximum of 200 characters in length",
 				},
 			},
 		},
@@ -219,17 +229,29 @@ func TestClass_Create(t *testing.T) {
 			Name:    "Can create class",
 			Request: request,
 			RequestBody: requests.CreateClassRequest{
-				Name: "Test Class",
+				Name:             "Test Class",
+				ShortDescription: "Test Short Description",
+				PrimaryAbility:   "Strength",
+				HitPointDieValue: 6,
+				Saves:            "Test Saves",
 			},
 			Expected: helpers.ExpectedResponse{
 				StatusCode: http.StatusCreated,
 				BodyParts: []string{
 					`"name":"Test Class"`,
+					`"short_description":"Test Short Description"`,
+					`"primary_ability":"Strength"`,
+					`"hit_point_die_value":6`,
+					`"saves":"Test Saves"`,
 				},
 				DatabaseCheck: &helpers.DatabaseCheck{
 					Name: "Class was created",
 					Model: m.Class{
-						Name: "Test Class",
+						Name:             "Test Class",
+						ShortDescription: "Test Short Description",
+						PrimaryAbility:   "Strength",
+						HitPointDieValue: 6,
+						Saves:            "Test Saves",
 					},
 					CountExpected: 1,
 				},
@@ -271,6 +293,10 @@ func TestClass_Update(t *testing.T) {
 				BodyParts: []string{
 					"Required fields are empty or not valid:",
 					"Name is a required field",
+					"ShortDescription is a required field",
+					"PrimaryAbility is a required field",
+					"HitPointDieValue is a required field",
+					"Saves is a required field",
 				},
 			},
 		},
@@ -278,13 +304,19 @@ func TestClass_Update(t *testing.T) {
 			Name:    "Can't update class if fields exceed max length",
 			Request: getRequest(class.ID),
 			RequestBody: requests.UpdateClassRequest{
-				Name: string(make([]byte, 201)),
+				Name:             string(make([]byte, 201)),
+				PrimaryAbility:   string(make([]byte, 201)),
+				Saves:            string(make([]byte, 201)),
+				ShortDescription: "Test Short Description",
+				HitPointDieValue: 6,
 			},
 			Expected: helpers.ExpectedResponse{
 				StatusCode: http.StatusBadRequest,
 				BodyParts: []string{
 					"Required fields are empty or not valid:",
 					"Name must be a maximum of 200 characters in length",
+					"PrimaryAbility must be a maximum of 200 characters in length",
+					"Saves must be a maximum of 200 characters in length",
 				},
 			},
 		},
@@ -292,7 +324,11 @@ func TestClass_Update(t *testing.T) {
 			Name:    "Can't update class that doesn't exist",
 			Request: getRequest(1000),
 			RequestBody: requests.UpdateClassRequest{
-				Name: "Test Class",
+				Name:             "Test Class",
+				ShortDescription: "Test Short Description",
+				PrimaryAbility:   "Strength",
+				HitPointDieValue: 6,
+				Saves:            "Strength & Constitution",
 			},
 			Expected: helpers.ExpectedResponse{
 				StatusCode: http.StatusNotFound,
@@ -303,7 +339,11 @@ func TestClass_Update(t *testing.T) {
 			Name:    "Can't update class with invalid id",
 			Request: getRequest("invalid-id"),
 			RequestBody: requests.UpdateClassRequest{
-				Name: "Test Class",
+				Name:             "Test Class",
+				ShortDescription: "Test Short Description",
+				PrimaryAbility:   "Strength",
+				HitPointDieValue: 6,
+				Saves:            "Strength & Constitution",
 			},
 			Expected: helpers.ExpectedResponse{
 				StatusCode: http.StatusNotFound,
@@ -314,17 +354,29 @@ func TestClass_Update(t *testing.T) {
 			Name:    "Can update class",
 			Request: getRequest(class.ID),
 			RequestBody: requests.UpdateClassRequest{
-				Name: "Test Class",
+				Name:             "Test Class",
+				ShortDescription: "Test Short Description",
+				PrimaryAbility:   "Strength",
+				HitPointDieValue: 6,
+				Saves:            "Test Saves",
 			},
 			Expected: helpers.ExpectedResponse{
 				StatusCode: http.StatusOK,
 				BodyParts: []string{
 					`"name":"Test Class"`,
+					`"short_description":"Test Short Description"`,
+					`"primary_ability":"Strength"`,
+					`"hit_point_die_value":6`,
+					`"saves":"Test Saves"`,
 				},
 				DatabaseCheck: &helpers.DatabaseCheck{
-					Name: "Class was updated",
+					Name: "Class was created",
 					Model: m.Class{
-						Name: "Test Class",
+						Name:             "Test Class",
+						ShortDescription: "Test Short Description",
+						PrimaryAbility:   "Strength",
+						HitPointDieValue: 6,
+						Saves:            "Test Saves",
 					},
 					CountExpected: 1,
 				},

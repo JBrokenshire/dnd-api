@@ -100,7 +100,11 @@ func (h *ClassHandler) Create(c echo.Context) error {
 	}
 
 	class := &models.Class{
-		Name: request.Name,
+		Name:             request.Name,
+		ShortDescription: request.ShortDescription,
+		PrimaryAbility:   request.PrimaryAbility,
+		HitPointDieValue: request.HitPointDieValue,
+		Saves:            request.Saves,
 	}
 	err := h.server.Repos.Class.Create(class)
 	if err != nil {
@@ -142,6 +146,10 @@ func (h *ClassHandler) Update(c echo.Context) error {
 	}
 
 	class.Name = request.Name
+	class.ShortDescription = request.ShortDescription
+	class.PrimaryAbility = request.PrimaryAbility
+	class.HitPointDieValue = request.HitPointDieValue
+	class.Saves = request.Saves
 
 	err := h.server.Repos.Class.Update(class)
 	if err != nil {

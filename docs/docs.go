@@ -1000,13 +1000,35 @@ const docTemplate = `{
         "requests.CreateClassRequest": {
             "type": "object",
             "required": [
-                "name"
+                "hit_point_die_value",
+                "name",
+                "primary_ability",
+                "saves",
+                "short_description"
             ],
             "properties": {
+                "hit_point_die_value": {
+                    "type": "integer",
+                    "example": 4
+                },
                 "name": {
                     "type": "string",
                     "maxLength": 200,
                     "example": "Barbarian"
+                },
+                "primary_ability": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "example": "Strength"
+                },
+                "saves": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "example": "['Strength','Constitution']"
+                },
+                "short_description": {
+                    "type": "string",
+                    "example": "Barbarians are mighty warriors who are powered by primal forces of the multiverse that manifest as a Rage."
                 }
             }
         },
@@ -1083,13 +1105,35 @@ const docTemplate = `{
         "requests.UpdateClassRequest": {
             "type": "object",
             "required": [
-                "name"
+                "hit_point_die_value",
+                "name",
+                "primary_ability",
+                "saves",
+                "short_description"
             ],
             "properties": {
+                "hit_point_die_value": {
+                    "type": "integer",
+                    "example": 4
+                },
                 "name": {
                     "type": "string",
                     "maxLength": 200,
                     "example": "Barbarian"
+                },
+                "primary_ability": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "example": "Strength"
+                },
+                "saves": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "example": "['Strength','Constitution']"
+                },
+                "short_description": {
+                    "type": "string",
+                    "example": "Barbarians are mighty warriors who are powered by primal forces of the multiverse that manifest as a Rage."
                 }
             }
         },
@@ -1163,6 +1207,9 @@ const docTemplate = `{
         "responses.ClassResponse": {
             "type": "object",
             "properties": {
+                "hit_point_die_value": {
+                    "type": "integer"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -1170,6 +1217,15 @@ const docTemplate = `{
                     "$ref": "#/definitions/responses.FileResponse"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "primary_ability": {
+                    "type": "string"
+                },
+                "saves": {
+                    "type": "string"
+                },
+                "short_description": {
                     "type": "string"
                 }
             }

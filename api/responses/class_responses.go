@@ -5,8 +5,12 @@ import (
 )
 
 type ClassResponse struct {
-	ID   uint   `json:"id"`
-	Name string `json:"name"`
+	ID               uint   `json:"id"`
+	Name             string `json:"name"`
+	ShortDescription string `json:"short_description"`
+	PrimaryAbility   string `json:"primary_ability"`
+	HitPointDieValue int    `json:"hit_point_die_value"`
+	Saves            string `json:"saves"`
 
 	Logo *FileResponse `json:"logo"`
 }
@@ -18,8 +22,12 @@ type ClassPaginatedResponse struct {
 
 func NewClassResponse(class *m.Class) *ClassResponse {
 	res := &ClassResponse{
-		ID:   class.ID,
-		Name: class.Name,
+		ID:               class.ID,
+		Name:             class.Name,
+		ShortDescription: class.ShortDescription,
+		PrimaryAbility:   class.PrimaryAbility,
+		HitPointDieValue: class.HitPointDieValue,
+		Saves:            class.Saves,
 	}
 
 	if class.Logo.ID != 0 {

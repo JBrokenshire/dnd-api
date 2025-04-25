@@ -30,6 +30,11 @@ func (r *CharacterRepository) GetCharacters(c echo.Context, userId interface{}, 
 		Where("user_id = ?", userId).
 		Find(&characters)
 
+	// Load on images
+	for i := range characters {
+		r.Db.Where("model = ?", m.FileModelCharacterProfilePicture).Where("model_id = ?", characters[i].ID).Take(&characters[i].ProfilePicture)
+	}
+
 	return characters, page, pageSize
 }
 
@@ -51,5 +56,9 @@ func (r *CharacterRepository) GetById(id interface{}, userId interface{}) *m.Cha
 		Where("id = ?", id).
 		Where("user_id = ?", userId).
 		Find(&character)
+
+	// Load image
+	r.Db.Where("model = ?", m.FileModelCharacterProfilePicture).Where("model_id = ?", character.ID).Take(&character.ProfilePicture)
+
 	return &character
 }

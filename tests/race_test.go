@@ -466,7 +466,7 @@ func TestRace_UploadLogo(t *testing.T) {
 		fileStoreMock.Reset()
 	}
 
-	// Create class
+	// Create race
 	race := &m.Race{}
 	factories.NewRace(ts.S.Db, race)
 

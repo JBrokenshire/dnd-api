@@ -3,8 +3,9 @@ package models
 import "time"
 
 const (
-	FileModelClassLogo = "ClassLogo"
-	FileModelRaceLogo  = "RaceLogo"
+	FileModelClassLogo               = "ClassLogo"
+	FileModelRaceLogo                = "RaceLogo"
+	FileModelCharacterProfilePicture = "CharacterProfilePicture"
 )
 
 type File struct {

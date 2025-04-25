@@ -620,7 +620,7 @@ const docTemplate = `{
                     "Class File Actions"
                 ],
                 "summary": "Upload class logo",
-                "operationId": "classes-upload-image",
+                "operationId": "classes-upload-logo",
                 "parameters": [
                     {
                         "type": "string",
@@ -928,6 +928,57 @@ const docTemplate = `{
                 }
             }
         },
+        "/races/{id}/upload/logo": {
+            "post": {
+                "description": "Upload race logo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Race File Actions"
+                ],
+                "summary": "Upload race logo",
+                "operationId": "races-upload-logo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Race ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "post": {
                 "description": "Create user",
@@ -1035,13 +1086,35 @@ const docTemplate = `{
         "requests.CreateRaceRequest": {
             "type": "object",
             "required": [
-                "name"
+                "base_speed",
+                "creature_type",
+                "name",
+                "short_description",
+                "size"
             ],
             "properties": {
+                "base_speed": {
+                    "type": "integer",
+                    "example": 30
+                },
+                "creature_type": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "example": "Humanoid"
+                },
                 "name": {
                     "type": "string",
                     "maxLength": 200,
-                    "example": "Barbarian"
+                    "example": "Dragonborn"
+                },
+                "short_description": {
+                    "type": "string",
+                    "example": "The ancestors of dragonborn hatched from the eggs of chromatic and metallic dragons."
+                },
+                "size": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "example": "Medium (about 5-7 feet tall)"
                 }
             }
         },
@@ -1140,13 +1213,35 @@ const docTemplate = `{
         "requests.UpdateRaceRequest": {
             "type": "object",
             "required": [
-                "name"
+                "base_speed",
+                "creature_type",
+                "name",
+                "short_description",
+                "size"
             ],
             "properties": {
+                "base_speed": {
+                    "type": "integer",
+                    "example": 30
+                },
+                "creature_type": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "example": "Humanoid"
+                },
                 "name": {
                     "type": "string",
                     "maxLength": 200,
-                    "example": "Barbarian"
+                    "example": "Dragonborn"
+                },
+                "short_description": {
+                    "type": "string",
+                    "example": "The ancestors of dragonborn hatched from the eggs of chromatic and metallic dragons."
+                },
+                "size": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "example": "Medium (about 5-7 feet tall)"
                 }
             }
         },
@@ -1328,10 +1423,25 @@ const docTemplate = `{
         "responses.RaceResponse": {
             "type": "object",
             "properties": {
+                "base_speed": {
+                    "type": "integer"
+                },
+                "creature_type": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
+                "logo": {
+                    "$ref": "#/definitions/responses.FileResponse"
+                },
                 "name": {
+                    "type": "string"
+                },
+                "short_description": {
+                    "type": "string"
+                },
+                "size": {
                     "type": "string"
                 }
             }

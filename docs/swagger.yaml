@@ -44,12 +44,31 @@ definitions:
     type: object
   requests.CreateRaceRequest:
     properties:
+      base_speed:
+        example: 30
+        type: integer
+      creature_type:
+        example: Humanoid
+        maxLength: 200
+        type: string
       name:
-        example: Barbarian
+        example: Dragonborn
+        maxLength: 200
+        type: string
+      short_description:
+        example: The ancestors of dragonborn hatched from the eggs of chromatic and
+          metallic dragons.
+        type: string
+      size:
+        example: Medium (about 5-7 feet tall)
         maxLength: 200
         type: string
     required:
+    - base_speed
+    - creature_type
     - name
+    - short_description
+    - size
     type: object
   requests.CreateUserRequest:
     properties:
@@ -121,12 +140,31 @@ definitions:
     type: object
   requests.UpdateRaceRequest:
     properties:
+      base_speed:
+        example: 30
+        type: integer
+      creature_type:
+        example: Humanoid
+        maxLength: 200
+        type: string
       name:
-        example: Barbarian
+        example: Dragonborn
+        maxLength: 200
+        type: string
+      short_description:
+        example: The ancestors of dragonborn hatched from the eggs of chromatic and
+          metallic dragons.
+        type: string
+      size:
+        example: Medium (about 5-7 feet tall)
         maxLength: 200
         type: string
     required:
+    - base_speed
+    - creature_type
     - name
+    - short_description
+    - size
     type: object
   responses.CharacterPaginatedResponse:
     properties:
@@ -244,9 +282,19 @@ definitions:
     type: object
   responses.RaceResponse:
     properties:
+      base_speed:
+        type: integer
+      creature_type:
+        type: string
       id:
         type: integer
+      logo:
+        $ref: '#/definitions/responses.FileResponse'
       name:
+        type: string
+      short_description:
+        type: string
+      size:
         type: string
     type: object
   responses.RefreshResponse:
@@ -676,7 +724,7 @@ paths:
       consumes:
       - application/json
       description: Upload class logo
-      operationId: classes-upload-image
+      operationId: classes-upload-logo
       parameters:
       - description: Class ID
         in: path
@@ -884,6 +932,40 @@ paths:
       summary: Update race
       tags:
       - Race Actions
+  /races/{id}/upload/logo:
+    post:
+      consumes:
+      - application/json
+      description: Upload race logo
+      operationId: races-upload-logo
+      parameters:
+      - description: Race ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Upload race logo
+      tags:
+      - Race File Actions
   /users:
     post:
       consumes:

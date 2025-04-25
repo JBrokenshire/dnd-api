@@ -11,8 +11,9 @@ type CharacterResponse struct {
 	ClassId uint   `json:"class_id"`
 	RaceId  uint   `json:"race_id"`
 
-	Class ClassResponse `json:"class"`
-	Race  RaceResponse  `json:"race"`
+	Class          ClassResponse `json:"class"`
+	Race           RaceResponse  `json:"race"`
+	ProfilePicture FileResponse  `json:"profile_picture"`
 }
 
 type CharacterPaginatedResponse struct {
@@ -34,6 +35,9 @@ func NewCharacterResponse(character *m.Character) *CharacterResponse {
 	}
 	if character.Race.ID != 0 {
 		res.Race = *NewRaceResponse(&character.Race)
+	}
+	if character.ProfilePicture.ID != 0 {
+		res.ProfilePicture = *NewFileResponse(&character.ProfilePicture)
 	}
 
 	return res

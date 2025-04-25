@@ -7,6 +7,7 @@ type Character struct {
 	ClassId uint   `json:"class_id"`
 	RaceId  uint   `json:"race_id"`
 
-	Class Class `json:"class"`
-	Race  Race  `json:"race"`
+	Class          Class `json:"class"`
+	Race           Race  `json:"race"`
+	ProfilePicture File  `json:"profile_picture"`
 }

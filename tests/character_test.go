@@ -5,8 +5,11 @@ import (
 	"dnd-api/db/factories"
 	m "dnd-api/db/models"
 	"dnd-api/tests/helpers"
+	"dnd-api/tests/mocks"
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 )
 
@@ -14,6 +17,7 @@ func TestCharacter_List(t *testing.T) {
 	ts.ClearTable("classes")
 	ts.ClearTable("races")
 	ts.ClearTable("characters")
+	ts.ClearTable("files")
 	ts.SetupDefaultUsers()
 
 	// Create class
@@ -34,6 +38,10 @@ func TestCharacter_List(t *testing.T) {
 	differentUserCharacter := &m.Character{UserId: 1000}
 	factories.NewCharacter(ts.S.Db, differentUserCharacter)
 
+	// Create profile pictures
+	profilePicture := &m.File{Model: m.FileModelCharacterProfilePicture, ModelId: character.ID}
+	factories.NewFile(ts.S.Db, profilePicture)
+
 	getRequest := func(query string) helpers.Request {
 		return helpers.Request{
 			Method: http.MethodGet,
@@ -52,6 +60,7 @@ func TestCharacter_List(t *testing.T) {
 				StatusCode: http.StatusOK,
 				BodyParts: []string{
 					fmt.Sprintf(`"name":"%v"`, character.Name),
+					fmt.Sprintf(`"filename":"%v"`, profilePicture.Filename),
 					fmt.Sprintf(`"name":"%v"`, character2.Name),
 					fmt.Sprintf(`"name":"%v"`, namedCharacter.Name),
 					fmt.Sprintf(`"name":"%v"`, class.Name),
@@ -70,6 +79,7 @@ func TestCharacter_List(t *testing.T) {
 				StatusCode: http.StatusOK,
 				BodyParts: []string{
 					fmt.Sprintf(`"name":"%v"`, character.Name),
+					fmt.Sprintf(`"filename":"%v"`, profilePicture.Filename),
 					fmt.Sprintf(`"name":"%v"`, class.Name),
 					fmt.Sprintf(`"name":"%v"`, race.Name),
 					`"total_count":3`,
@@ -94,6 +104,7 @@ func TestCharacter_List(t *testing.T) {
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, character.Name),
+					fmt.Sprintf(`"filename":"%v"`, profilePicture.Filename),
 					fmt.Sprintf(`"name":"%v"`, namedCharacter.Name),
 					fmt.Sprintf(`"name":"%v"`, differentUserCharacter.Name),
 				},
@@ -112,6 +123,7 @@ func TestCharacter_List(t *testing.T) {
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, character.Name),
+					fmt.Sprintf(`"filename":"%v"`, profilePicture.Filename),
 					fmt.Sprintf(`"name":"%v"`, character2.Name),
 					fmt.Sprintf(`"name":"%v"`, differentUserCharacter.Name),
 				},
@@ -130,6 +142,7 @@ func TestCharacter_Get(t *testing.T) {
 	ts.ClearTable("classes")
 	ts.ClearTable("races")
 	ts.ClearTable("characters")
+	ts.ClearTable("files")
 	ts.SetupDefaultUsers()
 
 	// Create class
@@ -145,6 +158,10 @@ func TestCharacter_Get(t *testing.T) {
 	factories.NewCharacter(ts.S.Db, character)
 	differentUserCharacter := &m.Character{UserId: 1000}
 	factories.NewCharacter(ts.S.Db, differentUserCharacter)
+
+	// Create profile pictures
+	profilePicture := &m.File{Model: m.FileModelCharacterProfilePicture, ModelId: character.ID}
+	factories.NewFile(ts.S.Db, profilePicture)
 
 	getRequest := func(id interface{}) helpers.Request {
 		return helpers.Request{
@@ -188,6 +205,7 @@ func TestCharacter_Get(t *testing.T) {
 				StatusCode: http.StatusOK,
 				BodyParts: []string{
 					fmt.Sprintf(`"name":"%v"`, character.Name),
+					fmt.Sprintf(`"filename":"%v"`, profilePicture.Filename),
 					fmt.Sprintf(`"name":"%v"`, class.Name),
 					fmt.Sprintf(`"name":"%v"`, race.Name),
 				},
@@ -529,6 +547,207 @@ func TestCharacter_Delete(t *testing.T) {
 						Name: character.Name,
 					},
 					CountExpected: 0,
+				},
+			},
+		},
+	}
+
+	for _, test := range cases {
+		t.Run(test.Name, func(t *testing.T) {
+			RunAuthorisedTestCase(t, test)
+		})
+	}
+}
+
+func TestCharacter_UploadProfilePicture(t *testing.T) {
+	ts.ClearTable("characters")
+	ts.ClearTable("files")
+	ts.SetupDefaultUsers()
+
+	// Set mocks
+	fileStoreMock := mocks.NewFileStoreMock()
+	ts.S.Dependencies.SetFileStore(fileStoreMock)
+
+	setup := func(test *helpers.TestCase) {
+		ts.ClearTable("files")
+		fileStoreMock.Reset()
+	}
+
+	// Create classes
+	class := &m.Class{}
+	factories.NewClass(ts.S.Db, class)
+
+	// Create races
+	race := &m.Race{}
+	factories.NewRace(ts.S.Db, race)
+
+	// Create character
+	character := &m.Character{ClassId: class.ID, RaceId: race.ID}
+	factories.NewCharacter(ts.S.Db, character)
+	differentUserCharacter := &m.Character{ClassId: class.ID, RaceId: race.ID, UserId: 1000}
+	factories.NewCharacter(ts.S.Db, differentUserCharacter)
+
+	// PNG file
+	pngBody, pngMw := createMultipartFile(t, "file", "../assets/example.png")
+	// JPG file
+	jpgBody, jpgMw := createMultipartFile(t, "file", "../assets/example.jpg")
+	// JPEG file
+	jpegBody, jpegMw := createMultipartFile(t, "file", "../assets/example.jpeg")
+	// WEBP file
+	webpBody, webpMw := createMultipartFile(t, "file", "../assets/example.webp")
+	// PDF file
+	pdfBody, pdfMw := createMultipartFile(t, "file", "../assets/example.pdf")
+
+	getRequest := func(id interface{}) helpers.Request {
+		return helpers.Request{
+			Method: http.MethodPost,
+			Url:    fmt.Sprintf("/characters/%v/upload/profile-picture", id),
+		}
+	}
+
+	permissionRequest := getRequest(character.ID)
+	RunNoAuthenticationTests(t, permissionRequest.Method, permissionRequest.Url)
+
+	cases := []helpers.TestCase{
+		{
+			Name:    "Can't upload image for character that doesn't exist",
+			Request: getRequest(1000),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Character not found",
+			},
+		},
+		{
+			Name:    "Can't upload image for character with invalid id",
+			Request: getRequest("invalid-id"),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Character not found",
+			},
+		},
+		{
+			Name:    "Can't upload image for character that belongs to a different user",
+			Request: getRequest(differentUserCharacter.ID),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Character not found",
+			},
+		},
+		{
+			Name:    "Can't upload image for character if no file is provided",
+			Request: getRequest(character.ID),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusBadRequest,
+				BodyPart:   "Unable to read file",
+			},
+		},
+		{
+			Name:               "Can't upload image for character with invalid file type",
+			Request:            getRequest(character.ID),
+			RequestReader:      pdfBody,
+			RequestContentType: pdfMw.FormDataContentType(),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusBadRequest,
+				BodyPart:   "Invalid file type",
+			},
+		},
+		{
+			Name:               "Can upload png",
+			Setup:              setup,
+			Request:            getRequest(character.ID),
+			RequestReader:      pngBody,
+			RequestContentType: pngMw.FormDataContentType(),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "File uploaded",
+				DatabaseCheck: &helpers.DatabaseCheck{
+					Name: "File was uploaded",
+					Model: m.File{
+						Model:   m.FileModelCharacterProfilePicture,
+						ModelId: character.ID,
+					},
+					CountExpected: 1,
+				},
+				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
+					// Ensure file store was called correctly
+					assert.Equal(t, 1, len(fileStoreMock.SaveCalls))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].Path, fmt.Sprintf("characters/%v", character.ID))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].FileName, ".png")
+				},
+			},
+		},
+		{
+			Name:               "Can upload jpg",
+			Setup:              setup,
+			Request:            getRequest(character.ID),
+			RequestReader:      jpgBody,
+			RequestContentType: jpgMw.FormDataContentType(),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "File uploaded",
+				DatabaseCheck: &helpers.DatabaseCheck{
+					Name: "File was uploaded",
+					Model: m.File{
+						Model:   m.FileModelCharacterProfilePicture,
+						ModelId: character.ID,
+					},
+					CountExpected: 1,
+				},
+				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
+					// Ensure file store was called correctly
+					assert.Equal(t, 1, len(fileStoreMock.SaveCalls))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].Path, fmt.Sprintf("characters/%v", character.ID))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].FileName, ".jpg")
+				},
+			},
+		},
+		{
+			Name:               "Can upload jpeg",
+			Setup:              setup,
+			Request:            getRequest(character.ID),
+			RequestReader:      jpegBody,
+			RequestContentType: jpegMw.FormDataContentType(),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "File uploaded",
+				DatabaseCheck: &helpers.DatabaseCheck{
+					Name: "File was uploaded",
+					Model: m.File{
+						Model:   m.FileModelCharacterProfilePicture,
+						ModelId: character.ID,
+					},
+					CountExpected: 1,
+				},
+				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
+					// Ensure file store was called correctly
+					assert.Equal(t, 1, len(fileStoreMock.SaveCalls))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].Path, fmt.Sprintf("characters/%v", character.ID))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].FileName, ".jpeg")
+				},
+			},
+		},
+		{
+			Name:               "Can upload webp",
+			Setup:              setup,
+			Request:            getRequest(character.ID),
+			RequestReader:      webpBody,
+			RequestContentType: webpMw.FormDataContentType(),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "File uploaded",
+				DatabaseCheck: &helpers.DatabaseCheck{
+					Name: "File was uploaded",
+					Model: m.File{
+						Model:   m.FileModelCharacterProfilePicture,
+						ModelId: character.ID,
+					},
+					CountExpected: 1,
+				},
+				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
+					// Ensure file store was called correctly
+					assert.Equal(t, 1, len(fileStoreMock.SaveCalls))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].Path, fmt.Sprintf("characters/%v", character.ID))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].FileName, ".webp")
 				},
 			},
 		},

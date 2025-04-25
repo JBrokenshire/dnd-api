@@ -633,5 +633,4 @@ func TestClass_UploadLogo(t *testing.T) {
 			RunAuthorisedTestCase(t, test)
 		})
 	}
-
 }

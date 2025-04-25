@@ -191,7 +191,7 @@ func (h *ClassHandler) Delete(c echo.Context) error {
 // UploadLogo godoc
 // @Summary Upload class logo
 // @Description Upload class logo
-// @ID classes-upload-image
+// @ID classes-upload-logo
 // @Tags Class File Actions
 // @Accept json
 // @Produce json
@@ -256,13 +256,13 @@ func (h *ClassHandler) UploadLogo(c echo.Context) error {
 	}
 
 	// Create DB record
-	jobFile := &models.File{
+	logoFile := &models.File{
 		Model:        models.FileModelClassLogo,
 		ModelId:      class.ID,
 		Filename:     newFilename,
 		FileLocation: path,
 	}
-	if err := h.server.Repos.File.Create(jobFile); err != nil {
+	if err := h.server.Repos.File.Create(logoFile); err != nil {
 		log.Printf("Error creating file record: %v", err)
 		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error creating file record")
 	}

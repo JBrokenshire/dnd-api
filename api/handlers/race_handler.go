@@ -5,10 +5,14 @@ import (
 	"dnd-api/api/requests"
 	"dnd-api/api/responses"
 	"dnd-api/db/models"
+	"dnd-api/pkg/closer"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/random"
+	"log"
 	"net/http"
+	"path/filepath"
 )
 
 type RaceHandler struct {
@@ -96,7 +100,11 @@ func (h *RaceHandler) Create(c echo.Context) error {
 	}
 
 	race := &models.Race{
-		Name: request.Name,
+		Name:             request.Name,
+		ShortDescription: request.ShortDescription,
+		CreatureType:     request.CreatureType,
+		Size:             request.Size,
+		BaseSpeed:        request.BaseSpeed,
 	}
 	err := h.server.Repos.Race.Create(race)
 	if err != nil {
@@ -138,6 +146,10 @@ func (h *RaceHandler) Update(c echo.Context) error {
 	}
 
 	race.Name = request.Name
+	race.ShortDescription = request.ShortDescription
+	race.CreatureType = request.CreatureType
+	race.Size = request.Size
+	race.BaseSpeed = request.BaseSpeed
 
 	err := h.server.Repos.Race.Update(race)
 	if err != nil {
@@ -174,4 +186,86 @@ func (h *RaceHandler) Delete(c echo.Context) error {
 	}
 
 	return responses.MessageResponse(c, http.StatusOK, "Race deleted successfully")
+}
+
+// UploadLogo godoc
+// @Summary Upload race logo
+// @Description Upload race logo
+// @ID races-upload-logo
+// @Tags Race File Actions
+// @Accept json
+// @Produce json
+// @Param id path string true "Race ID"
+// @Success 200 {object} responses.Data
+// @Failure 400 {object} responses.Error
+// @Failure 404 {object} responses.Error
+// @Failure 500 {object} responses.Error
+// @Router /races/{id}/upload/logo [post]
+func (h *RaceHandler) UploadLogo(c echo.Context) error {
+	id := c.Param("id")
+
+	race := h.server.Repos.Race.GetById(id)
+	if race.ID == 0 {
+		return responses.ErrorResponse(c, http.StatusNotFound, "Race not found")
+	}
+
+	// Check the file mimetype - We only want to accept images
+	fileName, fileMimeType, err := h.server.Dependencies.GetFileService().ReadFileInfo(c)
+	if err != nil {
+		log.Printf("Error reading file info: %v", err)
+		return responses.ErrorResponse(c, http.StatusBadRequest, "Unable to read file")
+	}
+	fileExtension := filepath.Ext(fileName)
+	allowedFileExtensions := []string{"jpg", "jpeg", "png", "webp"}
+	if !h.server.Dependencies.GetFileService().FileExtensionAllowed(fileExtension, allowedFileExtensions) {
+		return responses.ErrorResponse(c, http.StatusBadRequest, "Invalid file type")
+	}
+
+	allowedMIMEs := []string{"image/jpeg", "image/png", "image/webp"}
+	if !h.server.Dependencies.GetFileService().MIMETypeAllowed(fileMimeType, allowedMIMEs) {
+		return responses.ErrorResponse(c, http.StatusBadRequest, "Invalid file content type")
+	}
+
+	// Get file from request
+	file, err := c.FormFile("file")
+	if err != nil {
+		log.Printf("Error getting file from form: %v", err)
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error getting file from request")
+	}
+
+	// Change the file name
+	newFilename := random.String(32)
+	if fileExtension != "" {
+		newFilename += fileExtension
+	}
+	file.Filename = newFilename
+
+	// Upload file
+	src, err := file.Open()
+	if err != nil {
+		log.Printf("Error opening file: %v", err)
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error opening file")
+	}
+	defer closer.Close(src)
+
+	path := fmt.Sprintf("races/%v", race.ID)
+	err = h.server.Dependencies.GetFileStore().Save(path, src, file.Filename)
+	if err != nil {
+		log.Printf("Error saving file: %v", err)
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error saving file")
+	}
+
+	// Create DB record
+	logoFile := &models.File{
+		Model:        models.FileModelRaceLogo,
+		ModelId:      race.ID,
+		Filename:     newFilename,
+		FileLocation: path,
+	}
+	if err := h.server.Repos.File.Create(logoFile); err != nil {
+		log.Printf("Error creating file record: %v", err)
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error creating file record")
+	}
+
+	return responses.MessageResponse(c, http.StatusOK, "File uploaded")
 }

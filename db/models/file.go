@@ -4,6 +4,7 @@ import "time"
 
 const (
 	FileModelClassLogo = "ClassLogo"
+	FileModelRaceLogo  = "RaceLogo"
 )
 
 type File struct {

@@ -3,8 +3,14 @@ package responses
 import m "dnd-api/db/models"
 
 type RaceResponse struct {
-	ID   uint   `json:"id"`
-	Name string `json:"name"`
+	ID               uint   `json:"id"`
+	Name             string `json:"name"`
+	ShortDescription string `json:"short_description"`
+	CreatureType     string `json:"creature_type"`
+	Size             string `json:"size"`
+	BaseSpeed        int    `json:"base_speed"`
+
+	Logo *FileResponse `json:"logo"`
 }
 
 type RacePaginatedResponse struct {
@@ -13,10 +19,20 @@ type RacePaginatedResponse struct {
 }
 
 func NewRaceResponse(race *m.Race) *RaceResponse {
-	return &RaceResponse{
-		ID:   race.ID,
-		Name: race.Name,
+	res := &RaceResponse{
+		ID:               race.ID,
+		Name:             race.Name,
+		ShortDescription: race.ShortDescription,
+		CreatureType:     race.CreatureType,
+		Size:             race.Size,
+		BaseSpeed:        race.BaseSpeed,
 	}
+
+	if race.Logo.ID != 0 {
+		res.Logo = NewFileResponse(&race.Logo)
+	}
+
+	return res
 }
 
 func NewRaceResponses(races []*m.Race) []RaceResponse {

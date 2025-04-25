@@ -15,4 +15,5 @@ func raceRoutes(server *api.Server) {
 	race.POST("", raceHandler.Create)
 	race.PUT("/:id", raceHandler.Update)
 	race.DELETE("/:id", raceHandler.Delete)
+	race.POST("/:id/upload/logo", raceHandler.UploadLogo)
 }

@@ -25,7 +25,14 @@ func (r *RaceRepository) GetRaces(c echo.Context, scopes Scopes) ([]*m.Race, int
 	r.Db.
 		Scopes(paginateFunc).
 		Scopes(scopes...).
+		Order("name ASC").
 		Find(&races)
+
+	// Load on images
+	for i := range races {
+		r.Db.Where("model = ?", m.FileModelRaceLogo).Where("model_id = ?", races[i].ID).Take(&races[i].Logo)
+	}
+
 	return races, page, pageSize
 }
 
@@ -41,5 +48,8 @@ func (r *RaceRepository) CountRaces(scopes Scopes) int {
 func (r *RaceRepository) GetById(id interface{}) *m.Race {
 	var race m.Race
 	r.Db.Where("id = ?", id).First(&race)
+
+	// Load image
+	r.Db.Where("model = ?", m.FileModelRaceLogo).Where("model_id = ?", race.ID).Take(&race.Logo)
 	return &race
 }

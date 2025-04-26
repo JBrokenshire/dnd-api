@@ -143,6 +143,88 @@ func TestSubclass_List(t *testing.T) {
 	}
 }
 
+func TestSubclass_Get(t *testing.T) {
+	ts.ClearTable("classes")
+	ts.ClearTable("subclasses")
+	ts.ClearTable("files")
+	ts.SetupDefaultUsers()
+
+	// Create classes
+	class := &m.Class{}
+	factories.NewClass(ts.S.Db, class)
+
+	// Create subclasses
+	subclass := &m.Subclass{ClassId: class.ID}
+	factories.NewSubclass(ts.S.Db, subclass)
+
+	// Create images
+	logo := &m.File{Model: m.FileModelSubclassLogo, ModelId: subclass.ID}
+	factories.NewFile(ts.S.Db, logo)
+
+	getRequest := func(classId, subclassId interface{}) helpers.Request {
+		return helpers.Request{
+			Method: http.MethodGet,
+			Url:    fmt.Sprintf("/subclasses/%v/%v", classId, subclassId),
+		}
+	}
+
+	permissionRequest := getRequest(class.ID, subclass.ID)
+	RunNoAuthenticationTests(t, permissionRequest.Method, permissionRequest.Url)
+
+	cases := []helpers.TestCase{
+		{
+			Name:    "Can't get subclass with class id that doesn't exist",
+			Request: getRequest(1000, subclass.ID),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Subclass not found",
+			},
+		},
+		{
+			Name:    "Can't get subclass with invalid class id",
+			Request: getRequest("invalid-id", subclass.ID),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Subclass not found",
+			},
+		},
+		{
+			Name:    "Can't get subclass with id that doesn't exist",
+			Request: getRequest(class.ID, 1000),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Subclass not found",
+			},
+		},
+		{
+			Name:    "Can't get subclass with invalid id",
+			Request: getRequest(class.ID, "invalid-id"),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Subclass not found",
+			},
+		},
+		{
+			Name:    "Can get subclass",
+			Request: getRequest(class.ID, subclass.ID),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyParts: []string{
+					fmt.Sprintf(`"name":"%v"`, subclass.Name),
+					fmt.Sprintf(`"short_description":"%v"`, subclass.ShortDescription),
+					fmt.Sprintf(`"filename":"%v"`, logo.Filename),
+				},
+			},
+		},
+	}
+
+	for _, test := range cases {
+		t.Run(test.Name, func(t *testing.T) {
+			RunAuthorisedTestCase(t, test)
+		})
+	}
+}
+
 func TestSubclass_Create(t *testing.T) {
 	ts.ClearTable("classes")
 	ts.ClearTable("subclasses")

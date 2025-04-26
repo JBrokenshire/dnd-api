@@ -11,6 +11,7 @@ func subclassRoutes(server *api.Server) {
 	subclass := restrictedRouteGroup(server, "/subclasses")
 
 	subclass.GET("/:classId", subclassHandler.List)
+	subclass.GET("/:classId/:subclassId", subclassHandler.Get)
 	subclass.POST("", subclassHandler.Create)
 	subclass.POST("/:classId/:subclassId/upload/logo", subclassHandler.UploadLogo)
 }

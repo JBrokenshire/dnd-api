@@ -394,6 +394,7 @@ func TestClass_Update(t *testing.T) {
 
 func TestClass_Delete(t *testing.T) {
 	ts.ClearTable("classes")
+	ts.ClearTable("subclasses")
 	ts.ClearTable("files")
 	ts.SetupDefaultUsers()
 
@@ -408,6 +409,12 @@ func TestClass_Delete(t *testing.T) {
 	// Create classes
 	class := &m.Class{}
 	factories.NewClass(ts.S.Db, class)
+	class2 := &m.Class{}
+	factories.NewClass(ts.S.Db, class2)
+
+	// Create subclasses
+	subclass := &m.Subclass{ClassId: class2.ID}
+	factories.NewSubclass(ts.S.Db, subclass)
 
 	// Create images
 	logo := &m.File{Model: m.FileModelClassLogo, ModelId: class.ID}
@@ -438,6 +445,14 @@ func TestClass_Delete(t *testing.T) {
 			Expected: helpers.ExpectedResponse{
 				StatusCode: http.StatusNotFound,
 				BodyPart:   "Class not found",
+			},
+		},
+		{
+			Name:    "Can't delete class with subclasses",
+			Request: getRequest(class2.ID),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusBadRequest,
+				BodyPart:   "Can't delete class with subclasses",
 			},
 		},
 		{

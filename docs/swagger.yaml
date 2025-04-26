@@ -253,10 +253,6 @@ definitions:
         type: string
       short_description:
         type: string
-      subclasses:
-        items:
-          $ref: '#/definitions/responses.SubclassResponse'
-        type: array
     type: object
   responses.Data:
     properties:
@@ -740,6 +736,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
         "404":
           description: Not Found
           schema:

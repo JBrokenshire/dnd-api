@@ -169,6 +169,7 @@ func (h *ClassHandler) Update(c echo.Context) error {
 // @Produce json
 // @Param id path string true "Class ID"
 // @Success 200 {object} responses.Data
+// @Failure 400 {object} responses.Error
 // @Failure 404 {object} responses.Error
 // @Failure 500 {object} responses.Error
 // @Router /classes/{id} [delete]
@@ -178,6 +179,11 @@ func (h *ClassHandler) Delete(c echo.Context) error {
 	class := h.server.Repos.Class.GetById(id)
 	if class.ID == 0 {
 		return responses.ErrorResponse(c, http.StatusNotFound, "Class not found")
+	}
+
+	subclasses := h.server.Repos.Class.GetSubclasses(class.ID)
+	if len(subclasses) > 0 {
+		return responses.ErrorResponse(c, http.StatusBadRequest, "Can't delete class with subclasses")
 	}
 
 	// Delete logo

@@ -62,6 +62,31 @@ func (h *SubclassHandler) List(c echo.Context) error {
 	return responses.Response(c, http.StatusOK, res)
 }
 
+// Get godoc
+// @Summary Get subclass by ID
+// @Description Get subclass by ID
+// @ID subclasses-get
+// @Tags Class Actions
+// @Accept json
+// @Produce json
+// @Param classId path string true "Class ID"
+// @Param subclassId path string true "Subclass ID"
+// @Success 200 {object} responses.SubclassResponse
+// @Failure 404 {object} responses.Error
+// @Router /subclasses/{classId}/{subclassId} [get]
+func (h *SubclassHandler) Get(c echo.Context) error {
+	classId := c.Param("classId")
+	subclassId := c.Param("subclassId")
+
+	subclass := h.server.Repos.Subclass.GetById(subclassId, classId)
+	if subclass.ID == 0 {
+		return responses.ErrorResponse(c, http.StatusNotFound, "Subclass not found")
+	}
+
+	res := responses.NewSubclassResponse(subclass)
+	return responses.Response(c, http.StatusOK, res)
+}
+
 // Create godoc
 // @Summary Create subclass
 // @Description Create subclass

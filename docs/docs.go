@@ -643,6 +643,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/responses.Data"
                         }
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
                     "404": {
                         "description": "Not Found",
                         "schema": {
@@ -1590,12 +1596,6 @@ const docTemplate = `{
                 },
                 "short_description": {
                     "type": "string"
-                },
-                "subclasses": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/responses.SubclassResponse"
-                    }
                 }
             }
         },

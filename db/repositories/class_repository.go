@@ -54,3 +54,12 @@ func (r *ClassRepository) GetById(id interface{}) *m.Class {
 
 	return &class
 }
+
+func (r *ClassRepository) GetSubclasses(id interface{}) []*m.Subclass {
+	var subclasses []*m.Subclass
+	r.Db.
+		Where("class_id = ?", id).
+		Find(&subclasses)
+
+	return subclasses
+}

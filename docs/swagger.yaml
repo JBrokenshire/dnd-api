@@ -4,13 +4,21 @@ definitions:
     properties:
       class_id:
         type: integer
+      level:
+        maximum: 20
+        minimum: 1
+        type: integer
       name:
         maxLength: 200
+        type: string
+      pronouns:
+        maxLength: 32
         type: string
       race_id:
         type: integer
     required:
     - class_id
+    - level
     - name
     - race_id
     type: object
@@ -100,13 +108,21 @@ definitions:
     properties:
       class_id:
         type: integer
+      level:
+        maximum: 20
+        minimum: 1
+        type: integer
       name:
         maxLength: 200
+        type: string
+      pronouns:
+        maxLength: 32
         type: string
       race_id:
         type: integer
     required:
     - class_id
+    - level
     - name
     - race_id
     type: object
@@ -183,7 +199,13 @@ definitions:
         type: integer
       id:
         type: integer
+      level:
+        type: integer
       name:
+        type: string
+      profile_picture:
+        $ref: '#/definitions/responses.FileResponse'
+      pronouns:
         type: string
       race:
         $ref: '#/definitions/responses.RaceResponse'
@@ -566,6 +588,40 @@ paths:
       summary: Update character
       tags:
       - Character Actions
+  /characters/{id}/upload/profile-picture:
+    post:
+      consumes:
+      - application/json
+      description: Upload character profile picture
+      operationId: characters-upload-profile-picture
+      parameters:
+      - description: Character ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Upload character profile picture
+      tags:
+      - Character File Actions
   /classes:
     get:
       consumes:

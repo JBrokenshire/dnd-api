@@ -115,10 +115,12 @@ func (h *CharacterHandler) Create(c echo.Context) error {
 	}
 
 	character := &models.Character{
-		UserId:  currentUser.ID,
-		Name:    request.Name,
-		ClassId: class.ID,
-		RaceId:  race.ID,
+		UserId:   currentUser.ID,
+		Name:     request.Name,
+		ClassId:  class.ID,
+		RaceId:   race.ID,
+		Pronouns: request.Pronouns,
+		Level:    request.Level,
 	}
 
 	err := h.server.Repos.Character.Create(character)
@@ -177,6 +179,8 @@ func (h *CharacterHandler) Update(c echo.Context) error {
 	character.Name = request.Name
 	character.ClassId = request.ClassId
 	character.RaceId = request.RaceId
+	character.Pronouns = request.Pronouns
+	character.Level = request.Level
 	character.Class = *class
 	character.Race = *race
 

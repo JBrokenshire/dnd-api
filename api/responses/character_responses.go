@@ -5,11 +5,13 @@ import (
 )
 
 type CharacterResponse struct {
-	ID      uint   `json:"id"`
-	UserId  uint   `json:"user_id"`
-	Name    string `json:"name"`
-	ClassId uint   `json:"class_id"`
-	RaceId  uint   `json:"race_id"`
+	ID       uint   `json:"id"`
+	UserId   uint   `json:"user_id"`
+	Name     string `json:"name"`
+	ClassId  uint   `json:"class_id"`
+	RaceId   uint   `json:"race_id"`
+	Pronouns string `json:"pronouns"`
+	Level    int    `json:"level"`
 
 	Class          ClassResponse `json:"class"`
 	Race           RaceResponse  `json:"race"`
@@ -23,11 +25,13 @@ type CharacterPaginatedResponse struct {
 
 func NewCharacterResponse(character *m.Character) *CharacterResponse {
 	res := &CharacterResponse{
-		ID:      character.ID,
-		UserId:  character.UserId,
-		Name:    character.Name,
-		ClassId: character.ClassId,
-		RaceId:  character.RaceId,
+		ID:       character.ID,
+		UserId:   character.UserId,
+		Name:     character.Name,
+		ClassId:  character.ClassId,
+		RaceId:   character.RaceId,
+		Pronouns: character.Pronouns,
+		Level:    character.Level,
 	}
 
 	if character.Class.ID != 0 {

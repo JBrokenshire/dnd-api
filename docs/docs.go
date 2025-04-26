@@ -378,6 +378,57 @@ const docTemplate = `{
                 }
             }
         },
+        "/characters/{id}/upload/profile-picture": {
+            "post": {
+                "description": "Upload character profile picture",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Character File Actions"
+                ],
+                "summary": "Upload character profile picture",
+                "operationId": "characters-upload-profile-picture",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Character ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/classes": {
             "get": {
                 "description": "List classes (paginated)",
@@ -1032,6 +1083,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "class_id",
+                "level",
                 "name",
                 "race_id"
             ],
@@ -1039,9 +1091,18 @@ const docTemplate = `{
                 "class_id": {
                     "type": "integer"
                 },
+                "level": {
+                    "type": "integer",
+                    "maximum": 20,
+                    "minimum": 1
+                },
                 "name": {
                     "type": "string",
                     "maxLength": 200
+                },
+                "pronouns": {
+                    "type": "string",
+                    "maxLength": 32
                 },
                 "race_id": {
                     "type": "integer"
@@ -1159,6 +1220,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "class_id",
+                "level",
                 "name",
                 "race_id"
             ],
@@ -1166,9 +1228,18 @@ const docTemplate = `{
                 "class_id": {
                     "type": "integer"
                 },
+                "level": {
+                    "type": "integer",
+                    "maximum": 20,
+                    "minimum": 1
+                },
                 "name": {
                     "type": "string",
                     "maxLength": 200
+                },
+                "pronouns": {
+                    "type": "string",
+                    "maxLength": 32
                 },
                 "race_id": {
                     "type": "integer"
@@ -1271,7 +1342,16 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "level": {
+                    "type": "integer"
+                },
                 "name": {
+                    "type": "string"
+                },
+                "profile_picture": {
+                    "$ref": "#/definitions/responses.FileResponse"
+                },
+                "pronouns": {
                     "type": "string"
                 },
                 "race": {

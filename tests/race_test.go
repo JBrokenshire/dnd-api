@@ -393,10 +393,24 @@ func TestRace_Update(t *testing.T) {
 
 func TestRace_Delete(t *testing.T) {
 	ts.ClearTable("races")
+	ts.ClearTable("files")
 	ts.SetupDefaultUsers()
 
+	// Set mocks
+	fileStoreMock := mocks.NewFileStoreMock()
+	ts.S.Dependencies.SetFileStore(fileStoreMock)
+
+	setup := func(test *helpers.TestCase) {
+		fileStoreMock.Reset()
+	}
+
+	// Create races
 	race := &m.Race{}
 	factories.NewRace(ts.S.Db, race)
+
+	// Create images
+	logo := &m.File{Model: m.FileModelRaceLogo, ModelId: race.ID}
+	factories.NewFile(ts.S.Db, logo)
 
 	getRequest := func(id interface{}) helpers.Request {
 		return helpers.Request{
@@ -427,19 +441,36 @@ func TestRace_Delete(t *testing.T) {
 		},
 		{
 			Name:    "Can delete race",
+			Setup:   setup,
 			Request: getRequest(race.ID),
 			Expected: helpers.ExpectedResponse{
 				StatusCode: http.StatusOK,
 				BodyParts: []string{
 					"Race deleted successfully",
 				},
-				DatabaseCheck: &helpers.DatabaseCheck{
-					Name: "Race was deleted",
-					Model: m.Race{
-						ID:   race.ID,
-						Name: race.Name,
+				DatabaseChecks: []*helpers.DatabaseCheck{
+					{
+						Name: "Race was deleted",
+						Model: m.Race{
+							ID:   race.ID,
+							Name: race.Name,
+						},
+						CountExpected: 0,
 					},
-					CountExpected: 0,
+					{
+						Name: "Logo was deleted",
+						Model: m.File{
+							ID:      logo.ID,
+							Model:   m.FileModelRaceLogo,
+							ModelId: race.ID,
+						},
+						CountExpected: 0,
+					},
+				},
+				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
+					// Ensure file store was called correctly
+					assert.Equal(t, 1, len(fileStoreMock.DeleteCalls))
+					assert.Equal(t, fmt.Sprintf("%v/%v", logo.FileLocation, logo.Filename), fileStoreMock.DeleteCalls[0])
 				},
 			},
 		},

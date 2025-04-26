@@ -31,7 +31,7 @@ func ConfigureRoutes(server *s.Server) {
 		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 		AllowCredentials: true,
 	}))
-	
+
 	// File Routes
 	fileRoutes(server)
 
@@ -55,6 +55,8 @@ func ConfigureRoutes(server *s.Server) {
 	userRoutes(server)
 	// Class Routes
 	classRoutes(server)
+	// Subclass Routes
+	subclassRoutes(server)
 	// Race Routes
 	raceRoutes(server)
 	// Character Routes

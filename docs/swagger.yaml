@@ -78,6 +78,20 @@ definitions:
     - short_description
     - size
     type: object
+  requests.CreateSubclassRequest:
+    properties:
+      class_id:
+        type: integer
+      name:
+        maxLength: 200
+        type: string
+      short_description:
+        type: string
+    required:
+    - class_id
+    - name
+    - short_description
+    type: object
   requests.CreateUserRequest:
     properties:
       confirm_password:
@@ -239,6 +253,10 @@ definitions:
         type: string
       short_description:
         type: string
+      subclasses:
+        items:
+          $ref: '#/definitions/responses.SubclassResponse'
+        type: array
     type: object
   responses.Data:
     properties:
@@ -339,6 +357,28 @@ definitions:
       total_count:
         example: 300
         type: integer
+    type: object
+  responses.SubclassPaginatedResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/responses.SubclassResponse'
+        type: array
+      meta:
+        $ref: '#/definitions/responses.ResponseMeta'
+    type: object
+  responses.SubclassResponse:
+    properties:
+      class_id:
+        type: integer
+      id:
+        type: integer
+      logo:
+        $ref: '#/definitions/responses.FileResponse'
+      name:
+        type: string
+      short_description:
+        type: string
     type: object
 info:
   contact:
@@ -1022,6 +1062,118 @@ paths:
       summary: Upload race logo
       tags:
       - Race File Actions
+  /subclasses:
+    post:
+      consumes:
+      - application/json
+      description: Create subclass
+      operationId: subclasses-create
+      parameters:
+      - description: Subclass information
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CreateSubclassRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.SubclassResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Create subclass
+      tags:
+      - Subclass Actions
+  /subclasses/{classId}:
+    get:
+      consumes:
+      - application/json
+      description: List subclasses for class (paginated)
+      operationId: subclasses-list
+      parameters:
+      - description: Class ID
+        in: path
+        name: classId
+        required: true
+        type: string
+      - description: Search subclasses by name
+        in: query
+        name: search
+        type: string
+      - description: The page number
+        in: query
+        name: page
+        type: integer
+      - description: The numbers of items to return. Max 100
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SubclassPaginatedResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: List subclasses
+      tags:
+      - Subclass Actions
+  /subclasses/{classId}/{subclassId}/upload/logo:
+    post:
+      consumes:
+      - application/json
+      description: Upload subclass logo
+      operationId: subclasses-upload-logo
+      parameters:
+      - description: Class ID
+        in: path
+        name: classId
+        required: true
+        type: string
+      - description: Subclass ID
+        in: path
+        name: subclassId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Upload subclass logo
+      tags:
+      - Subclass File Actions
   /users:
     post:
       consumes:

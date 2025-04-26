@@ -114,6 +114,7 @@ func TestClass_List(t *testing.T) {
 
 func TestClass_Get(t *testing.T) {
 	ts.ClearTable("classes")
+	ts.ClearTable("subclasses")
 	ts.ClearTable("files")
 	ts.SetupDefaultUsers()
 
@@ -124,8 +125,8 @@ func TestClass_Get(t *testing.T) {
 	factories.NewClass(ts.S.Db, class2)
 
 	// Create images
-	logo := &m.File{Model: m.FileModelClassLogo, ModelId: class.ID}
-	factories.NewFile(ts.S.Db, logo)
+	classLogo := &m.File{Model: m.FileModelClassLogo, ModelId: class.ID}
+	factories.NewFile(ts.S.Db, classLogo)
 
 	getRequest := func(id interface{}) helpers.Request {
 		return helpers.Request{
@@ -161,7 +162,7 @@ func TestClass_Get(t *testing.T) {
 				StatusCode: http.StatusOK,
 				BodyParts: []string{
 					fmt.Sprintf(`"name":"%v"`, class.Name),
-					fmt.Sprintf(`"filename":"%v"`, logo.Filename),
+					fmt.Sprintf(`"filename":"%v"`, classLogo.Filename),
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, class2.Name),
@@ -393,10 +394,24 @@ func TestClass_Update(t *testing.T) {
 
 func TestClass_Delete(t *testing.T) {
 	ts.ClearTable("classes")
+	ts.ClearTable("files")
 	ts.SetupDefaultUsers()
 
+	// Set mocks
+	fileStoreMock := mocks.NewFileStoreMock()
+	ts.S.Dependencies.SetFileStore(fileStoreMock)
+
+	setup := func(test *helpers.TestCase) {
+		fileStoreMock.Reset()
+	}
+
+	// Create classes
 	class := &m.Class{}
 	factories.NewClass(ts.S.Db, class)
+
+	// Create images
+	logo := &m.File{Model: m.FileModelClassLogo, ModelId: class.ID}
+	factories.NewFile(ts.S.Db, logo)
 
 	getRequest := func(id interface{}) helpers.Request {
 		return helpers.Request{
@@ -427,19 +442,35 @@ func TestClass_Delete(t *testing.T) {
 		},
 		{
 			Name:    "Can delete class",
+			Setup:   setup,
 			Request: getRequest(class.ID),
 			Expected: helpers.ExpectedResponse{
 				StatusCode: http.StatusOK,
 				BodyParts: []string{
 					"Class deleted successfully",
 				},
-				DatabaseCheck: &helpers.DatabaseCheck{
-					Name: "Class was deleted",
-					Model: m.Class{
-						ID:   class.ID,
-						Name: class.Name,
+				DatabaseChecks: []*helpers.DatabaseCheck{
+					{
+						Name: "Class was deleted",
+						Model: m.Class{
+							ID:   class.ID,
+							Name: class.Name,
+						},
+						CountExpected: 0,
 					},
-					CountExpected: 0,
+					{
+						Name: "Logo was deleted",
+						Model: m.File{
+							ID:      logo.ID,
+							Model:   m.FileModelClassLogo,
+							ModelId: class.ID,
+						},
+					},
+				},
+				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
+					// Ensure file store was called correctly
+					assert.Equal(t, 1, len(fileStoreMock.DeleteCalls))
+					assert.Equal(t, fmt.Sprintf("%v/%v", logo.FileLocation, logo.Filename), fileStoreMock.DeleteCalls[0])
 				},
 			},
 		},

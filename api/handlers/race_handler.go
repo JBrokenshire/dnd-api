@@ -180,6 +180,22 @@ func (h *RaceHandler) Delete(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusNotFound, "Race not found")
 	}
 
+	if race.Logo.ID != 0 {
+		// Delete from file store
+		err := h.server.Dependencies.GetFileStore().Delete(fmt.Sprintf("%v/%v", race.Logo.FileLocation, race.Logo.Filename))
+		if err != nil {
+			log.Println("Error deleting race logo from file store: ", err.Error())
+			return responses.ErrorResponse(c, http.StatusInternalServerError, "Something went wrong deleting the race logo from the file store")
+		}
+
+		// Delete from database
+		err = h.server.Repos.File.Delete(race.Logo)
+		if err != nil {
+			log.Println("Error deleting race logo from database: ", err.Error())
+			return responses.ErrorResponse(c, http.StatusInternalServerError, "Something went wrong deleting the race logo from the database")
+		}
+	}
+
 	err := h.server.Repos.Race.Delete(race)
 	if err != nil {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, "Something went wrong deleting the race")

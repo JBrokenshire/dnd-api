@@ -1023,6 +1023,174 @@
                 }
             }
         },
+        "/subclasses": {
+            "post": {
+                "description": "Create subclass",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subclass Actions"
+                ],
+                "summary": "Create subclass",
+                "operationId": "subclasses-create",
+                "parameters": [
+                    {
+                        "description": "Subclass information",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CreateSubclassRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SubclassResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/subclasses/{classId}": {
+            "get": {
+                "description": "List subclasses for class (paginated)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subclass Actions"
+                ],
+                "summary": "List subclasses",
+                "operationId": "subclasses-list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "classId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search subclasses by name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "The page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "The numbers of items to return. Max 100",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SubclassPaginatedResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/subclasses/{classId}/{subclassId}/upload/logo": {
+            "post": {
+                "description": "Upload subclass logo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subclass File Actions"
+                ],
+                "summary": "Upload subclass logo",
+                "operationId": "subclasses-upload-logo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "classId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Subclass ID",
+                        "name": "subclassId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "post": {
                 "description": "Create user",
@@ -1169,6 +1337,26 @@
                     "type": "string",
                     "maxLength": 200,
                     "example": "Medium (about 5-7 feet tall)"
+                }
+            }
+        },
+        "requests.CreateSubclassRequest": {
+            "type": "object",
+            "required": [
+                "class_id",
+                "name",
+                "short_description"
+            ],
+            "properties": {
+                "class_id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 200
+                },
+                "short_description": {
+                    "type": "string"
                 }
             }
         },
@@ -1395,6 +1583,12 @@
                 },
                 "short_description": {
                     "type": "string"
+                },
+                "subclasses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.SubclassResponse"
+                    }
                 }
             }
         },
@@ -1547,6 +1741,40 @@
                 "total_count": {
                     "type": "integer",
                     "example": 300
+                }
+            }
+        },
+        "responses.SubclassPaginatedResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.SubclassResponse"
+                    }
+                },
+                "meta": {
+                    "$ref": "#/definitions/responses.ResponseMeta"
+                }
+            }
+        },
+        "responses.SubclassResponse": {
+            "type": "object",
+            "properties": {
+                "class_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "logo": {
+                    "$ref": "#/definitions/responses.FileResponse"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "short_description": {
+                    "type": "string"
                 }
             }
         }

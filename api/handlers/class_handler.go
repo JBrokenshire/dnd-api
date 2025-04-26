@@ -180,8 +180,25 @@ func (h *ClassHandler) Delete(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusNotFound, "Class not found")
 	}
 
+	// Delete logo
+	if class.Logo.ID != 0 {
+		// Delete from file store
+		err := h.server.Dependencies.GetFileStore().Delete(fmt.Sprintf("%v/%v", class.Logo.FileLocation, class.Logo.Filename))
+		if err != nil {
+			log.Println("Error deleting class logo from file store: ", err.Error())
+			return responses.ErrorResponse(c, http.StatusInternalServerError, "Something went wrong deleting the class logo from the file store")
+		}
+
+		err = h.server.Repos.File.Delete(class.Logo)
+		if err != nil {
+			log.Println("Error deleting class logo from database: ", err.Error())
+			return responses.ErrorResponse(c, http.StatusInternalServerError, "Something went wrong deleting the class logo from the database")
+		}
+	}
+
 	err := h.server.Repos.Class.Delete(class)
 	if err != nil {
+		log.Println("Error deleting class from the database: ", err.Error())
 		return responses.ErrorResponse(c, http.StatusInternalServerError, "Something went wrong deleting the class")
 	}
 

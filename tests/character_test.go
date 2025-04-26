@@ -587,13 +587,26 @@ func TestCharacter_Update(t *testing.T) {
 
 func TestCharacter_Delete(t *testing.T) {
 	ts.ClearTable("characters")
+	ts.ClearTable("files")
 	ts.SetupDefaultUsers()
+
+	// Set mocks
+	fileStoreMock := mocks.NewFileStoreMock()
+	ts.S.Dependencies.SetFileStore(fileStoreMock)
+
+	setup := func(test *helpers.TestCase) {
+		fileStoreMock.Reset()
+	}
 
 	// Create characters
 	character := &m.Character{}
 	factories.NewCharacter(ts.S.Db, character)
 	differentUserCharacter := &m.Character{UserId: 1000}
 	factories.NewCharacter(ts.S.Db, differentUserCharacter)
+
+	// Create images
+	profilePicture := &m.File{Model: m.FileModelCharacterProfilePicture, ModelId: character.ID}
+	factories.NewFile(ts.S.Db, profilePicture)
 
 	getRequest := func(id interface{}) helpers.Request {
 		return helpers.Request{
@@ -632,17 +645,33 @@ func TestCharacter_Delete(t *testing.T) {
 		},
 		{
 			Name:    "Can delete character",
+			Setup:   setup,
 			Request: getRequest(character.ID),
 			Expected: helpers.ExpectedResponse{
 				StatusCode: http.StatusOK,
 				BodyPart:   "Character deleted successfully",
-				DatabaseCheck: &helpers.DatabaseCheck{
-					Name: "Character was deleted",
-					Model: m.Character{
-						ID:   character.ID,
-						Name: character.Name,
+				DatabaseChecks: []*helpers.DatabaseCheck{
+					{
+						Name: "Character was deleted",
+						Model: m.Character{
+							ID:   character.ID,
+							Name: character.Name,
+						},
+						CountExpected: 0,
 					},
-					CountExpected: 0,
+					{
+						Name: "Profile picture was deleted",
+						Model: m.File{
+							Model:   m.FileModelCharacterProfilePicture,
+							ModelId: character.ID,
+						},
+						CountExpected: 0,
+					},
+				},
+				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
+					// Ensure file store was called correctly
+					assert.Equal(t, 1, len(fileStoreMock.DeleteCalls))
+					assert.Equal(t, fmt.Sprintf("%v/%v", profilePicture.FileLocation, profilePicture.Filename), fileStoreMock.DeleteCalls[0])
 				},
 			},
 		},

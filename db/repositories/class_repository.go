@@ -49,7 +49,8 @@ func (r *ClassRepository) GetById(id interface{}) *m.Class {
 	var class m.Class
 	r.Db.Where("id = ?", id).First(&class)
 
-	// Load image
+	// Load class logo
 	r.Db.Where("model = ?", m.FileModelClassLogo).Where("model_id = ?", class.ID).Take(&class.Logo)
+
 	return &class
 }

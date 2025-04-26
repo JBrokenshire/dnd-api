@@ -4,6 +4,7 @@ import "time"
 
 const (
 	FileModelClassLogo               = "ClassLogo"
+	FileModelSubclassLogo            = "SubclassLogo"
 	FileModelRaceLogo                = "RaceLogo"
 	FileModelCharacterProfilePicture = "CharacterProfilePicture"
 )

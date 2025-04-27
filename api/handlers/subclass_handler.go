@@ -130,6 +130,99 @@ func (h *SubclassHandler) Create(c echo.Context) error {
 	return responses.Response(c, http.StatusCreated, res)
 }
 
+// Update godoc
+// @Summary Update subclass
+// @Description Update subclass
+// @ID subclasses-update
+// @Tags Subclass Actions
+// @Accept json
+// @Produce json
+// @Param classId path string true "Class ID"
+// @Param subclassId path string true "Subclass ID"
+// @Param params body requests.UpdateSubclassRequest true "Subclass information"
+// @Success 200 {object} responses.SubclassResponse
+// @Failure 400 {object} responses.Error
+// @Failure 404 {object} responses.Error
+// @Failure 500 {object} responses.Error
+// @Router /subclasses/{classId}/{subclassId} [put]
+func (h *SubclassHandler) Update(c echo.Context) error {
+	classId := c.Param("classId")
+	subclassId := c.Param("subclassId")
+
+	request := new(requests.UpdateSubclassRequest)
+	if err := c.Bind(request); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, err.Error())
+	}
+	if err := c.Validate(request); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, "Required fields are empty or not valid: "+err.Error())
+	}
+
+	subclass := h.server.Repos.Subclass.GetById(subclassId, classId)
+	if subclass.ID == 0 {
+		return responses.ErrorResponse(c, http.StatusNotFound, "Subclass not found")
+	}
+
+	subclass.Name = request.Name
+	subclass.ShortDescription = request.ShortDescription
+
+	err := h.server.Repos.Subclass.Update(subclass)
+	if err != nil {
+		log.Println("Error updating subclass: ", err.Error())
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Something went wrong updating the subclass")
+	}
+
+	res := responses.NewSubclassResponse(subclass)
+	return responses.Response(c, http.StatusOK, res)
+}
+
+// Delete godoc
+// @Summary Delete subclass
+// @Description Delete subclass
+// @ID subclasses-delete
+// @Tags Subclass Actions
+// @Accept json
+// @Produce json
+// @Param classId path string true "Class ID"
+// @Param subclassId path string true "Class ID"
+// @Success 200 {object} responses.Data
+// @Failure 400 {object} responses.Error
+// @Failure 404 {object} responses.Error
+// @Failure 500 {object} responses.Error
+// @Router /subclasses/{classId}/{subclassId} [delete]
+func (h *SubclassHandler) Delete(c echo.Context) error {
+	classId := c.Param("classId")
+	subclassId := c.Param("subclassId")
+
+	subclass := h.server.Repos.Subclass.GetById(subclassId, classId)
+	if subclass.ID == 0 {
+		return responses.ErrorResponse(c, http.StatusNotFound, "Subclass not found")
+	}
+
+	// Delete logo
+	if subclass.Logo.ID != 0 {
+		// Delete from file store
+		err := h.server.Dependencies.GetFileStore().Delete(fmt.Sprintf("%v/%v", subclass.Logo.FileLocation, subclass.Logo.Filename))
+		if err != nil {
+			log.Println("Error deleting subclass logo from file store: ", err.Error())
+			return responses.ErrorResponse(c, http.StatusInternalServerError, "Something went wrong deleting the subclass logo from the file store")
+		}
+
+		err = h.server.Repos.File.Delete(subclass.Logo)
+		if err != nil {
+			log.Println("Error deleting subclass logo from database: ", err.Error())
+			return responses.ErrorResponse(c, http.StatusInternalServerError, "Something went wrong deleting the subclass logo from the database")
+		}
+	}
+
+	err := h.server.Repos.Subclass.Delete(subclass)
+	if err != nil {
+		log.Println("Error deleting subclass from the database: ", err.Error())
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Something went wrong deleting the subclass")
+	}
+
+	return responses.MessageResponse(c, http.StatusOK, "Subclass deleted successfully")
+}
+
 // UploadLogo godoc
 // @Summary Upload subclass logo
 // @Description Upload subclass logo

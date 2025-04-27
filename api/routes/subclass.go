@@ -13,5 +13,7 @@ func subclassRoutes(server *api.Server) {
 	subclass.GET("/:classId", subclassHandler.List)
 	subclass.GET("/:classId/:subclassId", subclassHandler.Get)
 	subclass.POST("", subclassHandler.Create)
+	subclass.PUT("/:classId/:subclassId", subclassHandler.Update)
+	subclass.DELETE("/:classId/:subclassId", subclassHandler.Delete)
 	subclass.POST("/:classId/:subclassId/upload/logo", subclassHandler.UploadLogo)
 }

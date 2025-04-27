@@ -196,6 +196,17 @@ definitions:
     - short_description
     - size
     type: object
+  requests.UpdateSubclassRequest:
+    properties:
+      name:
+        maxLength: 200
+        type: string
+      short_description:
+        type: string
+    required:
+    - name
+    - short_description
+    type: object
   responses.CharacterPaginatedResponse:
     properties:
       data:
@@ -1133,6 +1144,119 @@ paths:
           schema:
             $ref: '#/definitions/responses.Error'
       summary: List subclasses
+      tags:
+      - Subclass Actions
+  /subclasses/{classId}/{subclassId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete subclass
+      operationId: subclasses-delete
+      parameters:
+      - description: Class ID
+        in: path
+        name: classId
+        required: true
+        type: string
+      - description: Class ID
+        in: path
+        name: subclassId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Delete subclass
+      tags:
+      - Subclass Actions
+    get:
+      consumes:
+      - application/json
+      description: Get subclass by ID
+      operationId: subclasses-get
+      parameters:
+      - description: Class ID
+        in: path
+        name: classId
+        required: true
+        type: string
+      - description: Subclass ID
+        in: path
+        name: subclassId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SubclassResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Get subclass by ID
+      tags:
+      - Class Actions
+    put:
+      consumes:
+      - application/json
+      description: Update subclass
+      operationId: subclasses-update
+      parameters:
+      - description: Class ID
+        in: path
+        name: classId
+        required: true
+        type: string
+      - description: Subclass ID
+        in: path
+        name: subclassId
+        required: true
+        type: string
+      - description: Subclass information
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.UpdateSubclassRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SubclassResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Update subclass
       tags:
       - Subclass Actions
   /subclasses/{classId}/{subclassId}/upload/logo:

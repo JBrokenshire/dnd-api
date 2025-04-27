@@ -319,6 +319,278 @@ func TestSubclass_Create(t *testing.T) {
 	}
 }
 
+func TestSubclass_Update(t *testing.T) {
+	ts.ClearTable("classes")
+	ts.ClearTable("subclasses")
+	ts.SetupDefaultUsers()
+
+	// Create classes
+	class := &m.Class{}
+	factories.NewClass(ts.S.Db, class)
+	class2 := &m.Class{}
+	factories.NewClass(ts.S.Db, class2)
+
+	// Create subclasses
+	subclass := &m.Subclass{ClassId: class.ID}
+	factories.NewSubclass(ts.S.Db, subclass)
+	differentClassSubclass := &m.Subclass{ClassId: class2.ID}
+	factories.NewSubclass(ts.S.Db, differentClassSubclass)
+
+	getRequest := func(classId, subclassId interface{}) helpers.Request {
+		return helpers.Request{
+			Method: http.MethodPut,
+			Url:    fmt.Sprintf("/subclasses/%v/%v", classId, subclassId),
+		}
+	}
+
+	permissionRequest := getRequest(class.ID, subclass.ID)
+	RunNoAuthenticationTests(t, permissionRequest.Method, permissionRequest.Url)
+
+	cases := []helpers.TestCase{
+		{
+			Name:        "Can't update subclass without required fields",
+			Request:     getRequest(class.ID, subclass.ID),
+			RequestBody: requests.UpdateSubclassRequest{},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusBadRequest,
+				BodyParts: []string{
+					"Required fields are empty or not valid",
+					"Name is a required field",
+					"ShortDescription is a required field",
+				},
+			},
+		},
+		{
+			Name:    "Can't update subclass if fields exceed max length",
+			Request: getRequest(class.ID, subclass.ID),
+			RequestBody: requests.UpdateSubclassRequest{
+				Name:             string(make([]byte, 201)),
+				ShortDescription: "Test Short Description",
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusBadRequest,
+				BodyParts: []string{
+					"Required fields are empty or not valid",
+					"Name must be a maximum of 200 characters in length",
+				},
+			},
+		},
+		{
+			Name:    "Can't update subclass with class id that doesn't exist",
+			Request: getRequest(1000, subclass.ID),
+			RequestBody: requests.UpdateSubclassRequest{
+				Name:             "Test Name",
+				ShortDescription: "Test Short Description",
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Subclass not found",
+			},
+		},
+		{
+			Name:    "Can't update subclass with invalid class id",
+			Request: getRequest("invalid-id", subclass.ID),
+			RequestBody: requests.UpdateSubclassRequest{
+				Name:             "Test Name",
+				ShortDescription: "Test Short Description",
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Subclass not found",
+			},
+		},
+		{
+			Name:    "Can't update subclass with subclass id that doesn't exist",
+			Request: getRequest(class.ID, 1000),
+			RequestBody: requests.UpdateSubclassRequest{
+				Name:             "Test Name",
+				ShortDescription: "Test Short Description",
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Subclass not found",
+			},
+		},
+		{
+			Name:    "Can't update subclass with invalid subclass id",
+			Request: getRequest(class.ID, "invalid-id"),
+			RequestBody: requests.UpdateSubclassRequest{
+				Name:             "Test Name",
+				ShortDescription: "Test Short Description",
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Subclass not found",
+			},
+		},
+		{
+			Name:    "Can't update subclass that belongs to a different class",
+			Request: getRequest(class.ID, differentClassSubclass.ID),
+			RequestBody: requests.UpdateSubclassRequest{
+				Name:             "Test Name",
+				ShortDescription: "Test Short Description",
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Subclass not found",
+			},
+		},
+		{
+			Name:    "Can update subclass",
+			Request: getRequest(class.ID, subclass.ID),
+			RequestBody: requests.UpdateSubclassRequest{
+				Name:             "Test Name",
+				ShortDescription: "Test Short Description",
+			},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyParts: []string{
+					`"name":"Test Name"`,
+					`"short_description":"Test Short Description"`,
+				},
+				DatabaseCheck: &helpers.DatabaseCheck{
+					Name: "Subclass was updated",
+					Model: m.Subclass{
+						ID:               subclass.ID,
+						Name:             "Test Name",
+						ShortDescription: "Test Short Description",
+					},
+					CountExpected: 1,
+				},
+			},
+		},
+	}
+
+	for _, test := range cases {
+		t.Run(test.Name, func(t *testing.T) {
+			RunAuthorisedTestCase(t, test)
+		})
+	}
+}
+
+func TestSubclass_Delete(t *testing.T) {
+	ts.ClearTable("classes")
+	ts.ClearTable("subclasses")
+	ts.ClearTable("files")
+	ts.SetupDefaultUsers()
+
+	// Set mocks
+	fileStoreMock := mocks.NewFileStoreMock()
+	ts.S.Dependencies.SetFileStore(fileStoreMock)
+
+	setup := func(test *helpers.TestCase) {
+		fileStoreMock.Reset()
+	}
+
+	// Create classes
+	class := &m.Class{}
+	factories.NewClass(ts.S.Db, class)
+	class2 := &m.Class{}
+	factories.NewClass(ts.S.Db, class2)
+
+	// Create subclasses
+	subclass := &m.Subclass{ClassId: class.ID}
+	factories.NewSubclass(ts.S.Db, subclass)
+	differentClassSubclass := &m.Subclass{ClassId: class2.ID}
+	factories.NewSubclass(ts.S.Db, differentClassSubclass)
+
+	// Create images
+	logo := &m.File{Model: m.FileModelSubclassLogo, ModelId: subclass.ID}
+	factories.NewFile(ts.S.Db, logo)
+
+	getRequest := func(classId, subclassId interface{}) helpers.Request {
+		return helpers.Request{
+			Method: http.MethodDelete,
+			Url:    fmt.Sprintf("/subclasses/%v/%v", classId, subclassId),
+		}
+	}
+
+	permissionRequest := getRequest(class.ID, subclass.ID)
+	RunNoAuthenticationTests(t, permissionRequest.Method, permissionRequest.Url)
+
+	cases := []helpers.TestCase{
+		{
+			Name:    "Can't delete subclass with class id that doesn't exist",
+			Request: getRequest(1000, subclass.ID),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Subclass not found",
+			},
+		},
+		{
+			Name:    "Can't delete subclass with invalid class id",
+			Request: getRequest("invalid-id", subclass.ID),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Subclass not found",
+			},
+		},
+		{
+			Name:    "Can't delete subclass with subclass id that doesn't exist",
+			Request: getRequest(class.ID, 1000),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Subclass not found",
+			},
+		},
+		{
+			Name:    "Can't delete subclass with invalid subclass id",
+			Request: getRequest(class.ID, "invalid-id"),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Subclass not found",
+			},
+		},
+		{
+			Name:    "Can't delete subclass that belongs to a different class",
+			Request: getRequest(class.ID, differentClassSubclass.ID),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusNotFound,
+				BodyPart:   "Subclass not found",
+			},
+		},
+		{
+			Name:    "Can delete subclass",
+			Setup:   setup,
+			Request: getRequest(class.ID, subclass.ID),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "Subclass deleted successfully",
+				DatabaseChecks: []*helpers.DatabaseCheck{
+					{
+						Name: "Subclass was deleted",
+						Model: m.Subclass{
+							ID:               subclass.ID,
+							Name:             subclass.Name,
+							ShortDescription: subclass.ShortDescription,
+						},
+						CountExpected: 0,
+					},
+					{
+						Name: "Logo was deleted",
+						Model: m.File{
+							ID:      logo.ID,
+							Model:   m.FileModelSubclassLogo,
+							ModelId: subclass.ID,
+						},
+					},
+				},
+				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
+					// Ensure file store was called correctly
+					assert.Equal(t, 1, len(fileStoreMock.DeleteCalls))
+					assert.Equal(t, fmt.Sprintf("%v/%v", logo.FileLocation, logo.Filename), fileStoreMock.DeleteCalls[0])
+				},
+			},
+		},
+	}
+
+	for _, test := range cases {
+		t.Run(test.Name, func(t *testing.T) {
+			RunAuthorisedTestCase(t, test)
+		})
+	}
+}
+
 func TestSubclass_UploadLogo(t *testing.T) {
 	ts.ClearTable("classes")
 	ts.ClearTable("subclasses")

@@ -1146,6 +1146,173 @@ const docTemplate = `{
                 }
             }
         },
+        "/subclasses/{classId}/{subclassId}": {
+            "get": {
+                "description": "Get subclass by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Class Actions"
+                ],
+                "summary": "Get subclass by ID",
+                "operationId": "subclasses-get",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "classId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Subclass ID",
+                        "name": "subclassId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SubclassResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update subclass",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subclass Actions"
+                ],
+                "summary": "Update subclass",
+                "operationId": "subclasses-update",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "classId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Subclass ID",
+                        "name": "subclassId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Subclass information",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.UpdateSubclassRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.SubclassResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete subclass",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subclass Actions"
+                ],
+                "summary": "Delete subclass",
+                "operationId": "subclasses-delete",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "classId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "subclassId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/subclasses/{classId}/{subclassId}/upload/logo": {
             "post": {
                 "description": "Upload subclass logo",
@@ -1507,6 +1674,22 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 200,
                     "example": "Medium (about 5-7 feet tall)"
+                }
+            }
+        },
+        "requests.UpdateSubclassRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "short_description"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "maxLength": 200
+                },
+                "short_description": {
+                    "type": "string"
                 }
             }
         },

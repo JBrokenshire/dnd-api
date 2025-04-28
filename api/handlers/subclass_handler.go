@@ -251,6 +251,23 @@ func (h *SubclassHandler) UploadLogo(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusNotFound, "Subclass not found")
 	}
 
+	// Delete existing logos
+	if subclass.Logo.ID != 0 {
+		// Delete from file store
+		err := h.server.Dependencies.GetFileStore().Delete(fmt.Sprintf("%v/%v", subclass.Logo.FileLocation, subclass.Logo.Filename))
+		if err != nil {
+			log.Println("Error deleting subclass logo from file store: ", err.Error())
+			return responses.ErrorResponse(c, http.StatusInternalServerError, "Something went wrong deleting the subclass logo from the file store")
+		}
+
+		// Delete from DB
+		err = h.server.Repos.File.Delete(subclass.Logo)
+		if err != nil {
+			log.Printf("Error deleting subclass logo from database: %v", err.Error())
+			return responses.ErrorResponse(c, http.StatusInternalServerError, "Something went wrong deleting the subclass logo from the database")
+		}
+	}
+
 	// Check the file mimetype - We only want to accept images
 	fileName, fileMimeType, err := h.server.Dependencies.GetFileService().ReadFileInfo(c)
 	if err != nil {
@@ -304,7 +321,7 @@ func (h *SubclassHandler) UploadLogo(c echo.Context) error {
 		Filename:     newFilename,
 		FileLocation: path,
 	}
-	if err := h.server.Repos.File.Create(logoFile); err != nil {
+	if err := h.server.Repos.File.Update(logoFile); err != nil {
 		log.Printf("Error creating file record: %v", err)
 		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error creating file record")
 	}

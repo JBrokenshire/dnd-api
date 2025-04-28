@@ -2,6 +2,7 @@ package routes
 
 import (
 	s "dnd-api/api"
+	conf "dnd-api/config"
 	mw "dnd-api/pkg/middleware"
 	"dnd-api/services/jwt_service"
 	"github.com/labstack/echo/v4"
@@ -22,6 +23,11 @@ func ConfigureRoutes(server *s.Server) {
 		SigningKey: []byte(os.Getenv("ACCESS_SECRET")),
 	}
 	userJwtMiddleware = jwt_service.JWTWithConfig(config)
+
+	// logger using ZeroLog
+	if conf.Get().LogMiddleware == true {
+		server.Echo.Use(mw.CustomLogger())
+	}
 
 	// Configure CORS
 	server.Echo.Use(middleware.CORSWithConfig(middleware.CORSConfig{

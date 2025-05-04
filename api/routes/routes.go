@@ -2,6 +2,7 @@ package routes
 
 import (
 	s "dnd-api/api"
+	conf "dnd-api/config"
 	mw "dnd-api/pkg/middleware"
 	"dnd-api/services/jwt_service"
 	"github.com/labstack/echo/v4"
@@ -45,6 +46,11 @@ func ConfigureRoutes(server *s.Server) {
 			return false
 		},
 	}))
+
+	// logger using ZeroLog
+	if conf.Get().LogMiddleware == true {
+		server.Echo.Use(mw.CustomLogger())
+	}
 
 	// Add additional headers
 	server.Echo.Use(mw.ServerHeader)

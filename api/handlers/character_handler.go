@@ -115,12 +115,18 @@ func (h *CharacterHandler) Create(c echo.Context) error {
 	}
 
 	character := &models.Character{
-		UserId:   currentUser.ID,
-		Name:     request.Name,
-		ClassId:  class.ID,
-		RaceId:   race.ID,
-		Pronouns: request.Pronouns,
-		Level:    request.Level,
+		UserId:       currentUser.ID,
+		Name:         request.Name,
+		ClassId:      class.ID,
+		RaceId:       race.ID,
+		Pronouns:     request.Pronouns,
+		Level:        request.Level,
+		Strength:     request.Strength,
+		Dexterity:    request.Dexterity,
+		Constitution: request.Constitution,
+		Intelligence: request.Intelligence,
+		Wisdom:       request.Wisdom,
+		Charisma:     request.Charisma,
 	}
 
 	err := h.server.Repos.Character.Create(character)
@@ -181,6 +187,13 @@ func (h *CharacterHandler) Update(c echo.Context) error {
 	character.RaceId = request.RaceId
 	character.Pronouns = request.Pronouns
 	character.Level = request.Level
+	character.Strength = request.Strength
+	character.Dexterity = request.Dexterity
+	character.Constitution = request.Constitution
+	character.Intelligence = request.Intelligence
+	character.Wisdom = request.Wisdom
+	character.Charisma = request.Charisma
+
 	character.Class = *class
 	character.Race = *race
 

@@ -22,5 +22,6 @@ func getMigrationsList() []store.Migratable {
 		&list.UpdateRacesAddDetails{},
 		&list.UpdateCharactersAddDetails{},
 		&list.CreateSubclassesTable{},
+		&list.UpdateCharactersAddAbilityScores{},
 	}
 }

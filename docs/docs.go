@@ -1423,14 +1423,40 @@ const docTemplate = `{
         "requests.CreateCharacterRequest": {
             "type": "object",
             "required": [
+                "charisma",
                 "class_id",
+                "constitution",
+                "dexterity",
+                "intelligence",
                 "level",
                 "name",
-                "race_id"
+                "race_id",
+                "strength",
+                "wisdom"
             ],
             "properties": {
+                "charisma": {
+                    "type": "integer",
+                    "maximum": 30,
+                    "minimum": 3
+                },
                 "class_id": {
                     "type": "integer"
+                },
+                "constitution": {
+                    "type": "integer",
+                    "maximum": 30,
+                    "minimum": 3
+                },
+                "dexterity": {
+                    "type": "integer",
+                    "maximum": 30,
+                    "minimum": 3
+                },
+                "intelligence": {
+                    "type": "integer",
+                    "maximum": 30,
+                    "minimum": 3
                 },
                 "level": {
                     "type": "integer",
@@ -1447,6 +1473,16 @@ const docTemplate = `{
                 },
                 "race_id": {
                     "type": "integer"
+                },
+                "strength": {
+                    "type": "integer",
+                    "maximum": 30,
+                    "minimum": 3
+                },
+                "wisdom": {
+                    "type": "integer",
+                    "maximum": 30,
+                    "minimum": 3
                 }
             }
         },
@@ -1580,14 +1616,40 @@ const docTemplate = `{
         "requests.UpdateCharacterRequest": {
             "type": "object",
             "required": [
+                "charisma",
                 "class_id",
+                "constitution",
+                "dexterity",
+                "intelligence",
                 "level",
                 "name",
-                "race_id"
+                "race_id",
+                "strength",
+                "wisdom"
             ],
             "properties": {
+                "charisma": {
+                    "type": "integer",
+                    "maximum": 30,
+                    "minimum": 3
+                },
                 "class_id": {
                     "type": "integer"
+                },
+                "constitution": {
+                    "type": "integer",
+                    "maximum": 30,
+                    "minimum": 3
+                },
+                "dexterity": {
+                    "type": "integer",
+                    "maximum": 30,
+                    "minimum": 3
+                },
+                "intelligence": {
+                    "type": "integer",
+                    "maximum": 30,
+                    "minimum": 3
                 },
                 "level": {
                     "type": "integer",
@@ -1604,6 +1666,16 @@ const docTemplate = `{
                 },
                 "race_id": {
                     "type": "integer"
+                },
+                "strength": {
+                    "type": "integer",
+                    "maximum": 30,
+                    "minimum": 3
+                },
+                "wisdom": {
+                    "type": "integer",
+                    "maximum": 30,
+                    "minimum": 3
                 }
             }
         },
@@ -1699,7 +1771,7 @@ const docTemplate = `{
                 "data": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/responses.CharacterResponse"
+                        "$ref": "#/definitions/responses.SlimCharacterResponse"
                     }
                 },
                 "meta": {
@@ -1710,13 +1782,25 @@ const docTemplate = `{
         "responses.CharacterResponse": {
             "type": "object",
             "properties": {
+                "charisma": {
+                    "type": "integer"
+                },
                 "class": {
                     "$ref": "#/definitions/responses.ClassResponse"
                 },
                 "class_id": {
                     "type": "integer"
                 },
+                "constitution": {
+                    "type": "integer"
+                },
+                "dexterity": {
+                    "type": "integer"
+                },
                 "id": {
+                    "type": "integer"
+                },
+                "intelligence": {
                     "type": "integer"
                 },
                 "level": {
@@ -1737,7 +1821,14 @@ const docTemplate = `{
                 "race_id": {
                     "type": "integer"
                 },
+                "strength": {
+                    "description": "Ability Scores",
+                    "type": "integer"
+                },
                 "user_id": {
+                    "type": "integer"
+                },
+                "wisdom": {
                     "type": "integer"
                 }
             }
@@ -1931,6 +2022,41 @@ const docTemplate = `{
                 "total_count": {
                     "type": "integer",
                     "example": 300
+                }
+            }
+        },
+        "responses.SlimCharacterResponse": {
+            "type": "object",
+            "properties": {
+                "class": {
+                    "$ref": "#/definitions/responses.ClassResponse"
+                },
+                "class_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "profile_picture": {
+                    "$ref": "#/definitions/responses.FileResponse"
+                },
+                "pronouns": {
+                    "type": "string"
+                },
+                "race": {
+                    "$ref": "#/definitions/responses.RaceResponse"
+                },
+                "race_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },

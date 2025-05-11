@@ -2,7 +2,23 @@ basePath: /
 definitions:
   requests.CreateCharacterRequest:
     properties:
+      charisma:
+        maximum: 30
+        minimum: 3
+        type: integer
       class_id:
+        type: integer
+      constitution:
+        maximum: 30
+        minimum: 3
+        type: integer
+      dexterity:
+        maximum: 30
+        minimum: 3
+        type: integer
+      intelligence:
+        maximum: 30
+        minimum: 3
         type: integer
       level:
         maximum: 20
@@ -16,11 +32,25 @@ definitions:
         type: string
       race_id:
         type: integer
+      strength:
+        maximum: 30
+        minimum: 3
+        type: integer
+      wisdom:
+        maximum: 30
+        minimum: 3
+        type: integer
     required:
+    - charisma
     - class_id
+    - constitution
+    - dexterity
+    - intelligence
     - level
     - name
     - race_id
+    - strength
+    - wisdom
     type: object
   requests.CreateClassRequest:
     properties:
@@ -120,7 +150,23 @@ definitions:
     type: object
   requests.UpdateCharacterRequest:
     properties:
+      charisma:
+        maximum: 30
+        minimum: 3
+        type: integer
       class_id:
+        type: integer
+      constitution:
+        maximum: 30
+        minimum: 3
+        type: integer
+      dexterity:
+        maximum: 30
+        minimum: 3
+        type: integer
+      intelligence:
+        maximum: 30
+        minimum: 3
         type: integer
       level:
         maximum: 20
@@ -134,11 +180,25 @@ definitions:
         type: string
       race_id:
         type: integer
+      strength:
+        maximum: 30
+        minimum: 3
+        type: integer
+      wisdom:
+        maximum: 30
+        minimum: 3
+        type: integer
     required:
+    - charisma
     - class_id
+    - constitution
+    - dexterity
+    - intelligence
     - level
     - name
     - race_id
+    - strength
+    - wisdom
     type: object
   requests.UpdateClassRequest:
     properties:
@@ -211,18 +271,26 @@ definitions:
     properties:
       data:
         items:
-          $ref: '#/definitions/responses.CharacterResponse'
+          $ref: '#/definitions/responses.SlimCharacterResponse'
         type: array
       meta:
         $ref: '#/definitions/responses.ResponseMeta'
     type: object
   responses.CharacterResponse:
     properties:
+      charisma:
+        type: integer
       class:
         $ref: '#/definitions/responses.ClassResponse'
       class_id:
         type: integer
+      constitution:
+        type: integer
+      dexterity:
+        type: integer
       id:
+        type: integer
+      intelligence:
         type: integer
       level:
         type: integer
@@ -236,7 +304,12 @@ definitions:
         $ref: '#/definitions/responses.RaceResponse'
       race_id:
         type: integer
+      strength:
+        description: Ability Scores
+        type: integer
       user_id:
+        type: integer
+      wisdom:
         type: integer
     type: object
   responses.ClassPaginatedResponse:
@@ -363,6 +436,29 @@ definitions:
         type: integer
       total_count:
         example: 300
+        type: integer
+    type: object
+  responses.SlimCharacterResponse:
+    properties:
+      class:
+        $ref: '#/definitions/responses.ClassResponse'
+      class_id:
+        type: integer
+      id:
+        type: integer
+      level:
+        type: integer
+      name:
+        type: string
+      profile_picture:
+        $ref: '#/definitions/responses.FileResponse'
+      pronouns:
+        type: string
+      race:
+        $ref: '#/definitions/responses.RaceResponse'
+      race_id:
+        type: integer
+      user_id:
         type: integer
     type: object
   responses.SubclassPaginatedResponse:

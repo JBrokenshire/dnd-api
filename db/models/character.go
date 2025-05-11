@@ -9,6 +9,14 @@ type Character struct {
 	Level    int    `json:"level"`
 	Pronouns string `json:"pronouns"`
 
+	// Ability Scores
+	Strength     uint `json:"strength"`
+	Dexterity    uint `json:"dexterity"`
+	Constitution uint `json:"constitution"`
+	Intelligence uint `json:"intelligence"`
+	Wisdom       uint `json:"wisdom"`
+	Charisma     uint `json:"charisma"`
+
 	Class          Class `json:"class"`
 	Race           Race  `json:"race"`
 	ProfilePicture File  `json:"profile_picture"`

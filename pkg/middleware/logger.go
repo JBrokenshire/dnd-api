@@ -38,8 +38,8 @@ func CustomLogger() echo.MiddlewareFunc {
 			var userId uint
 			currentUser := c.Get("currentUser")
 			if currentUser != nil {
-				currentUser = currentUser.(m.User)
-				userId = currentUser.(m.User).ID
+				currentUser = currentUser.(*m.User)
+				userId = currentUser.(*m.User).ID
 			}
 
 			logger.Info().

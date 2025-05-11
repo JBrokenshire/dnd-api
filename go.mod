@@ -19,7 +19,6 @@ require (
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/labstack/gommon v0.4.2
 	github.com/lib/pq v1.10.9
-	github.com/rs/zerolog v1.34.0
 	github.com/selvatico/go-mocket v1.0.7
 	github.com/stretchr/testify v1.10.0
 	github.com/swaggo/swag v1.16.4

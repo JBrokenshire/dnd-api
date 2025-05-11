@@ -9,7 +9,6 @@ import (
 )
 
 type SysConfig struct {
-	ExternalApiKey         string        `env:"EXTERNAL_API_KEY"`
 	LogMiddleware          bool          `env:"LOG_MIDDLEWARE"`
 	HashCost               int           `env:"HASH_COST"`
 	BruteForceLimit        int64         `env:"BRUTE_FORCE_LIMIT"`
@@ -17,7 +16,11 @@ type SysConfig struct {
 	BruteForceDuration     time.Duration `env:"BRUTE_FORCE_DURATION"`
 	KeyBruteForceLimit     int64         `env:"KEY_BRUTE_FORCE_LIMIT"`
 	KeyBruteForceDuration  time.Duration `env:"KEY_BRUTE_FORCE_DURATION"`
+	DefaultEnrollmentPin   string        `env:"DEFAULT_ENROLLMENT_PIN"`
+	DefaultDisabledPin     string        `env:"DEFAULT_DISABLED_PIN"`
 	LoginRateLimit         rate.Limit    `env:"LOGIN_RATE_LIMIT"`
+	DeallocationSyncDelay  time.Duration `env:"DEALLOCATION_SYNC_DELAY"`
+	AllocationSyncDelay    time.Duration `env:"ALLOCATION_SYNC_DELAY"`
 }
 
 var settings *SysConfig
@@ -42,7 +45,11 @@ func setup() {
 		BruteForceDuration:     15 * time.Minute,
 		KeyBruteForceLimit:     15,
 		KeyBruteForceDuration:  15 * time.Minute,
+		DefaultEnrollmentPin:   "a0000",
+		DefaultDisabledPin:     "a1111",
 		LoginRateLimit:         10,
+		DeallocationSyncDelay:  1 * time.Minute,
+		AllocationSyncDelay:    2 * time.Minute,
 	}
 
 	err := cleanenv.ReadEnv(settings)

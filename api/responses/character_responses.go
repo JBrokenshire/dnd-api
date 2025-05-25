@@ -21,6 +21,10 @@ type CharacterResponse struct {
 	Wisdom       uint `json:"wisdom"`
 	Charisma     uint `json:"charisma"`
 
+	// Settings
+	AdvancementType string `json:"advancement_type"`
+	HitPointType    string `json:"hit_point_type"`
+
 	Class          ClassResponse `json:"class"`
 	Race           RaceResponse  `json:"race"`
 	ProfilePicture FileResponse  `json:"profile_picture"`
@@ -61,6 +65,9 @@ func NewCharacterResponse(character *m.Character) *CharacterResponse {
 		Intelligence: character.Intelligence,
 		Wisdom:       character.Wisdom,
 		Charisma:     character.Charisma,
+
+		AdvancementType: character.AdvancementType,
+		HitPointType:    character.HitPointType,
 	}
 
 	if character.Class.ID != 0 {

@@ -25,4 +25,10 @@ func fillCharacterDefaults(character *m.Character) {
 	if character.Level == 0 {
 		character.Level = 1
 	}
+	if character.AdvancementType == "" {
+		character.AdvancementType = m.AdvancementTypeMilestone
+	}
+	if character.HitPointType == "" {
+		character.HitPointType = m.HitPointTypeFixed
+	}
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/random"
+	"golang.org/x/exp/slices"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -114,19 +115,31 @@ func (h *CharacterHandler) Create(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusNotFound, "Race not found")
 	}
 
+	if !slices.Contains(models.ValidAdvancementTypes, request.AdvancementType) {
+		return responses.ErrorResponse(c, http.StatusBadRequest, "AdvancementType is not valid")
+	}
+
+	if !slices.Contains(models.ValidHitPointTypes, request.HitPointType) {
+		return responses.ErrorResponse(c, http.StatusBadRequest, "HitPointType is not valid")
+	}
+
 	character := &models.Character{
-		UserId:       currentUser.ID,
-		Name:         request.Name,
-		ClassId:      class.ID,
-		RaceId:       race.ID,
-		Pronouns:     request.Pronouns,
-		Level:        request.Level,
+		UserId:   currentUser.ID,
+		Name:     request.Name,
+		ClassId:  class.ID,
+		RaceId:   race.ID,
+		Pronouns: request.Pronouns,
+		Level:    request.Level,
+
 		Strength:     request.Strength,
 		Dexterity:    request.Dexterity,
 		Constitution: request.Constitution,
 		Intelligence: request.Intelligence,
 		Wisdom:       request.Wisdom,
 		Charisma:     request.Charisma,
+
+		AdvancementType: request.AdvancementType,
+		HitPointType:    request.HitPointType,
 	}
 
 	err := h.server.Repos.Character.Create(character)
@@ -182,17 +195,29 @@ func (h *CharacterHandler) Update(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusNotFound, "Race not found")
 	}
 
+	if !slices.Contains(models.ValidAdvancementTypes, request.AdvancementType) {
+		return responses.ErrorResponse(c, http.StatusBadRequest, "AdvancementType is not valid")
+	}
+
+	if !slices.Contains(models.ValidHitPointTypes, request.HitPointType) {
+		return responses.ErrorResponse(c, http.StatusBadRequest, "HitPointType is not valid")
+	}
+
 	character.Name = request.Name
 	character.ClassId = request.ClassId
 	character.RaceId = request.RaceId
 	character.Pronouns = request.Pronouns
 	character.Level = request.Level
+
 	character.Strength = request.Strength
 	character.Dexterity = request.Dexterity
 	character.Constitution = request.Constitution
 	character.Intelligence = request.Intelligence
 	character.Wisdom = request.Wisdom
 	character.Charisma = request.Charisma
+
+	character.AdvancementType = request.AdvancementType
+	character.HitPointType = request.HitPointType
 
 	character.Class = *class
 	character.Race = *race

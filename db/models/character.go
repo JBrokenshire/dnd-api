@@ -1,5 +1,25 @@
 package models
 
+const (
+	AdvancementTypeMilestone = "Milestone"
+	AdvancementTypeXP        = "XP"
+)
+
+var ValidAdvancementTypes = []string{
+	AdvancementTypeMilestone,
+	AdvancementTypeXP,
+}
+
+const (
+	HitPointTypeFixed  = "Fixed"
+	HitPointTypeManual = "Manual"
+)
+
+var ValidHitPointTypes = []string{
+	HitPointTypeFixed,
+	HitPointTypeManual,
+}
+
 type Character struct {
 	ID       uint   `gorm:"primary_key;auto_increment" json:"id"`
 	UserId   uint   `json:"user_id"`
@@ -16,6 +36,10 @@ type Character struct {
 	Intelligence uint `json:"intelligence"`
 	Wisdom       uint `json:"wisdom"`
 	Charisma     uint `json:"charisma"`
+
+	// Settings
+	AdvancementType string `json:"advancement_type"`
+	HitPointType    string `json:"hit_point_type"`
 
 	Class          Class `json:"class"`
 	Race           Race  `json:"race"`

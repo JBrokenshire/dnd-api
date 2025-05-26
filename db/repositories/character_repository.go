@@ -57,8 +57,9 @@ func (r *CharacterRepository) GetById(id interface{}, userId interface{}) *m.Cha
 		Where("user_id = ?", userId).
 		Find(&character)
 
-	// Load image
+	// Load images
 	r.Db.Where("model = ?", m.FileModelCharacterProfilePicture).Where("model_id = ?", character.ID).Take(&character.ProfilePicture)
+	r.Db.Where("model = ?", m.FileModelClassBackgroundImage).Where("model_id = ?", character.Class.ID).Take(&character.Class.BackgroundImage)
 
 	return &character
 }

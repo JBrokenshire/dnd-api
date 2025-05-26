@@ -309,3 +309,102 @@ func (h *ClassHandler) UploadLogo(c echo.Context) error {
 
 	return responses.MessageResponse(c, http.StatusOK, "File uploaded")
 }
+
+// UploadBackgroundImage godoc
+// @Summary Upload class background image
+// @Description Upload class background image
+// @ID classes-upload-background-image
+// @Tags Class File Actions
+// @Accept json
+// @Produce json
+// @Param id path string true "Class ID"
+// @Success 200 {object} responses.Data
+// @Failure 400 {object} responses.Error
+// @Failure 404 {object} responses.Error
+// @Failure 500 {object} responses.Error
+// @Router /classes/{id}/upload/background-image [post]
+func (h *ClassHandler) UploadBackgroundImage(c echo.Context) error {
+	id := c.Param("id")
+
+	class := h.server.Repos.Class.GetById(id)
+	if class.ID == 0 {
+		return responses.ErrorResponse(c, http.StatusNotFound, "Class not found")
+	}
+
+	// Delete existing logos
+	if class.BackgroundImage.ID != 0 {
+		// Delete from file store
+		err := h.server.Dependencies.GetFileStore().Delete(fmt.Sprintf("%v/%v", class.BackgroundImage.FileLocation, class.BackgroundImage.Filename))
+		if err != nil {
+			log.Println("Error deleting class background image from file store: ", err.Error())
+			return responses.ErrorResponse(c, http.StatusInternalServerError, "Something went wrong deleting the class background image from the file store")
+		}
+
+		// Delete from DB
+		err = h.server.Repos.File.Delete(class.BackgroundImage)
+		if err != nil {
+			log.Printf("Error deleting class background image from database: %v", err.Error())
+			return responses.ErrorResponse(c, http.StatusInternalServerError, "Something went wrong deleting the class background image from the database")
+		}
+	}
+
+	// Check the file mimetype - We only want to accept images
+	fileName, fileMimeType, err := h.server.Dependencies.GetFileService().ReadFileInfo(c)
+	if err != nil {
+		log.Printf("Error reading file info: %v", err)
+		return responses.ErrorResponse(c, http.StatusBadRequest, "Unable to read file")
+	}
+	fileExtension := filepath.Ext(fileName)
+	allowedFileExtensions := []string{"jpg", "jpeg", "png", "webp"}
+	if !h.server.Dependencies.GetFileService().FileExtensionAllowed(fileExtension, allowedFileExtensions) {
+		return responses.ErrorResponse(c, http.StatusBadRequest, "Invalid file type")
+	}
+
+	allowedMIMEs := []string{"image/jpeg", "image/png", "image/webp"}
+	if !h.server.Dependencies.GetFileService().MIMETypeAllowed(fileMimeType, allowedMIMEs) {
+		return responses.ErrorResponse(c, http.StatusBadRequest, "Invalid file content type")
+	}
+
+	// Get file from request
+	file, err := c.FormFile("file")
+	if err != nil {
+		log.Printf("Error getting file from form: %v", err)
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error getting file from request")
+	}
+
+	// Change the file name
+	newFilename := random.String(32)
+	if fileExtension != "" {
+		newFilename += fileExtension
+	}
+	file.Filename = newFilename
+
+	// Upload file
+	src, err := file.Open()
+	if err != nil {
+		log.Printf("Error opening file: %v", err)
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error opening file")
+	}
+	defer closer.Close(src)
+
+	path := fmt.Sprintf("classes/%v", class.ID)
+	err = h.server.Dependencies.GetFileStore().Save(path, src, file.Filename)
+	if err != nil {
+		log.Printf("Error saving file: %v", err)
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error saving file")
+	}
+
+	// Create DB record
+	logoFile := &models.File{
+		Model:        models.FileModelClassBackgroundImage,
+		ModelId:      class.ID,
+		Filename:     newFilename,
+		FileLocation: path,
+	}
+	if err := h.server.Repos.File.Create(logoFile); err != nil {
+		log.Printf("Error creating file record: %v", err)
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error creating file record")
+	}
+
+	return responses.MessageResponse(c, http.StatusOK, "File uploaded")
+}

@@ -26,6 +26,6 @@ func fillFileDefaults(file *models.File) {
 		file.Filename = random.String(16) + ".jpg"
 	}
 	if file.FileLocation == "" {
-		file.FileLocation = fmt.Sprintf("/%v/%v", random.String(16), file.Filename)
+		file.FileLocation = fmt.Sprintf("/%v", random.String(16))
 	}
 }

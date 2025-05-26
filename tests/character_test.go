@@ -149,6 +149,10 @@ func TestCharacter_Get(t *testing.T) {
 	class := &m.Class{}
 	factories.NewClass(ts.S.Db, class)
 
+	// Create class images
+	backgroundImage := &m.File{Model: m.FileModelClassBackgroundImage, ModelId: class.ID}
+	factories.NewFile(ts.S.Db, backgroundImage)
+
 	// Create race
 	race := &m.Race{}
 	factories.NewRace(ts.S.Db, race)
@@ -207,6 +211,7 @@ func TestCharacter_Get(t *testing.T) {
 					fmt.Sprintf(`"name":"%v"`, character.Name),
 					fmt.Sprintf(`"filename":"%v"`, profilePicture.Filename),
 					fmt.Sprintf(`"name":"%v"`, class.Name),
+					fmt.Sprintf(`"filename":"%v"`, backgroundImage.Filename),
 					fmt.Sprintf(`"name":"%v"`, race.Name),
 				},
 			},

@@ -12,7 +12,8 @@ type ClassResponse struct {
 	HitPointDieValue int    `json:"hit_point_die_value"`
 	Saves            string `json:"saves"`
 
-	Logo *FileResponse `json:"logo"`
+	Logo            *FileResponse `json:"logo"`
+	BackgroundImage *FileResponse `json:"background_image"`
 }
 
 type ClassPaginatedResponse struct {
@@ -32,6 +33,9 @@ func NewClassResponse(class *m.Class) *ClassResponse {
 
 	if class.Logo.ID != 0 {
 		res.Logo = NewFileResponse(&class.Logo)
+	}
+	if class.BackgroundImage.ID != 0 {
+		res.BackgroundImage = NewFileResponse(&class.BackgroundImage)
 	}
 
 	return res

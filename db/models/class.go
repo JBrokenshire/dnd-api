@@ -8,5 +8,6 @@ type Class struct {
 	HitPointDieValue int    `json:"hit_point_die_value"`
 	Saves            string `json:"saves"`
 
-	Logo File `json:"logo"`
+	Logo            File `json:"logo"`
+	BackgroundImage File `json:"background_image"`
 }

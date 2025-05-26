@@ -2,6 +2,9 @@ basePath: /
 definitions:
   requests.CreateCharacterRequest:
     properties:
+      advancement_type:
+        description: Settings
+        type: string
       charisma:
         maximum: 30
         minimum: 3
@@ -16,6 +19,8 @@ definitions:
         maximum: 30
         minimum: 3
         type: integer
+      hit_point_type:
+        type: string
       intelligence:
         maximum: 30
         minimum: 3
@@ -33,6 +38,7 @@ definitions:
       race_id:
         type: integer
       strength:
+        description: Ability Scores
         maximum: 30
         minimum: 3
         type: integer
@@ -41,10 +47,12 @@ definitions:
         minimum: 3
         type: integer
     required:
+    - advancement_type
     - charisma
     - class_id
     - constitution
     - dexterity
+    - hit_point_type
     - intelligence
     - level
     - name
@@ -150,6 +158,9 @@ definitions:
     type: object
   requests.UpdateCharacterRequest:
     properties:
+      advancement_type:
+        description: Settings
+        type: string
       charisma:
         maximum: 30
         minimum: 3
@@ -164,6 +175,8 @@ definitions:
         maximum: 30
         minimum: 3
         type: integer
+      hit_point_type:
+        type: string
       intelligence:
         maximum: 30
         minimum: 3
@@ -181,6 +194,7 @@ definitions:
       race_id:
         type: integer
       strength:
+        description: Ability Scores
         maximum: 30
         minimum: 3
         type: integer
@@ -189,10 +203,12 @@ definitions:
         minimum: 3
         type: integer
     required:
+    - advancement_type
     - charisma
     - class_id
     - constitution
     - dexterity
+    - hit_point_type
     - intelligence
     - level
     - name
@@ -278,6 +294,9 @@ definitions:
     type: object
   responses.CharacterResponse:
     properties:
+      advancement_type:
+        description: Settings
+        type: string
       charisma:
         type: integer
       class:
@@ -288,6 +307,8 @@ definitions:
         type: integer
       dexterity:
         type: integer
+      hit_point_type:
+        type: string
       id:
         type: integer
       intelligence:

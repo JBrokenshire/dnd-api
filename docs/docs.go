@@ -1423,10 +1423,12 @@ const docTemplate = `{
         "requests.CreateCharacterRequest": {
             "type": "object",
             "required": [
+                "advancement_type",
                 "charisma",
                 "class_id",
                 "constitution",
                 "dexterity",
+                "hit_point_type",
                 "intelligence",
                 "level",
                 "name",
@@ -1435,6 +1437,10 @@ const docTemplate = `{
                 "wisdom"
             ],
             "properties": {
+                "advancement_type": {
+                    "description": "Settings",
+                    "type": "string"
+                },
                 "charisma": {
                     "type": "integer",
                     "maximum": 30,
@@ -1452,6 +1458,9 @@ const docTemplate = `{
                     "type": "integer",
                     "maximum": 30,
                     "minimum": 3
+                },
+                "hit_point_type": {
+                    "type": "string"
                 },
                 "intelligence": {
                     "type": "integer",
@@ -1475,6 +1484,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "strength": {
+                    "description": "Ability Scores",
                     "type": "integer",
                     "maximum": 30,
                     "minimum": 3
@@ -1616,10 +1626,12 @@ const docTemplate = `{
         "requests.UpdateCharacterRequest": {
             "type": "object",
             "required": [
+                "advancement_type",
                 "charisma",
                 "class_id",
                 "constitution",
                 "dexterity",
+                "hit_point_type",
                 "intelligence",
                 "level",
                 "name",
@@ -1628,6 +1640,10 @@ const docTemplate = `{
                 "wisdom"
             ],
             "properties": {
+                "advancement_type": {
+                    "description": "Settings",
+                    "type": "string"
+                },
                 "charisma": {
                     "type": "integer",
                     "maximum": 30,
@@ -1645,6 +1661,9 @@ const docTemplate = `{
                     "type": "integer",
                     "maximum": 30,
                     "minimum": 3
+                },
+                "hit_point_type": {
+                    "type": "string"
                 },
                 "intelligence": {
                     "type": "integer",
@@ -1668,6 +1687,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "strength": {
+                    "description": "Ability Scores",
                     "type": "integer",
                     "maximum": 30,
                     "minimum": 3
@@ -1782,6 +1802,10 @@ const docTemplate = `{
         "responses.CharacterResponse": {
             "type": "object",
             "properties": {
+                "advancement_type": {
+                    "description": "Settings",
+                    "type": "string"
+                },
                 "charisma": {
                     "type": "integer"
                 },
@@ -1796,6 +1820,9 @@ const docTemplate = `{
                 },
                 "dexterity": {
                     "type": "integer"
+                },
+                "hit_point_type": {
+                    "type": "string"
                 },
                 "id": {
                     "type": "integer"

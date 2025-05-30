@@ -378,6 +378,66 @@ const docTemplate = `{
                 }
             }
         },
+        "/characters/{id}/health": {
+            "put": {
+                "description": "Update character health",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Character Actions"
+                ],
+                "summary": "Update character health",
+                "operationId": "characters-update-health",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Character ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Health information",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.UpdateCharacterHealthRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CharacterResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/characters/{id}/inspiration": {
             "post": {
                 "description": "Toggle character inspiration",
@@ -1713,6 +1773,18 @@ const docTemplate = `{
                 }
             }
         },
+        "requests.UpdateCharacterHealthRequest": {
+            "type": "object",
+            "required": [
+                "current_hit_points"
+            ],
+            "properties": {
+                "current_hit_points": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            }
+        },
         "requests.UpdateCharacterRequest": {
             "type": "object",
             "required": [
@@ -1908,6 +1980,9 @@ const docTemplate = `{
                 "constitution": {
                     "type": "integer"
                 },
+                "current_hit_points": {
+                    "type": "integer"
+                },
                 "dexterity": {
                     "type": "integer"
                 },
@@ -1924,6 +1999,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "level": {
+                    "type": "integer"
+                },
+                "max_hit_points": {
                     "type": "integer"
                 },
                 "name": {
@@ -1943,6 +2021,9 @@ const docTemplate = `{
                 },
                 "strength": {
                     "description": "Ability Scores",
+                    "type": "integer"
+                },
+                "temp_hit_points": {
                     "type": "integer"
                 },
                 "user_id": {

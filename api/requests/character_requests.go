@@ -39,3 +39,7 @@ type UpdateCharacterRequest struct {
 	AdvancementType string `json:"advancement_type" validate:"required"`
 	HitPointType    string `json:"hit_point_type" validate:"required"`
 }
+
+type UpdateCharacterHealthRequest struct {
+	CurrentHitPoints int `json:"current_hit_points" validate:"required,min=0"`
+}

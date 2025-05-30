@@ -36,7 +36,11 @@ type Character struct {
 	Intelligence uint `json:"intelligence"`
 	Wisdom       uint `json:"wisdom"`
 	Charisma     uint `json:"charisma"`
-	Inspiration  bool `json:"inspiration"`
+
+	Inspiration      bool `json:"inspiration"`
+	CurrentHitPoints uint `json:"current_hit_points"`
+	MaxHitPoints     uint `json:"max_hit_points"`
+	TempHitPoints    uint `json:"temp_hit_points"`
 
 	// Settings
 	AdvancementType string `json:"advancement_type"`

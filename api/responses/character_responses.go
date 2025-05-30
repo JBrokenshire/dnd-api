@@ -21,6 +21,8 @@ type CharacterResponse struct {
 	Wisdom       uint `json:"wisdom"`
 	Charisma     uint `json:"charisma"`
 
+	Inspiration bool `json:"inspiration"`
+
 	// Settings
 	AdvancementType string `json:"advancement_type"`
 	HitPointType    string `json:"hit_point_type"`
@@ -65,6 +67,8 @@ func NewCharacterResponse(character *m.Character) *CharacterResponse {
 		Intelligence: character.Intelligence,
 		Wisdom:       character.Wisdom,
 		Charisma:     character.Charisma,
+
+		Inspiration: character.Inspiration,
 
 		AdvancementType: character.AdvancementType,
 		HitPointType:    character.HitPointType,

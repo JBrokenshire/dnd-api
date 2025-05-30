@@ -360,3 +360,33 @@ func (h *CharacterHandler) UploadProfilePicture(c echo.Context) error {
 
 	return responses.MessageResponse(c, http.StatusOK, "File uploaded")
 }
+
+// ToggleInspiration godoc
+// @Summary Toggle character inspiration
+// @Description Toggle character inspiration
+// @ID characters-toggle-inspiration
+// @Tags Character Actions
+// @Param id path string true "Character ID"
+// @Success 200 {object} responses.CharacterResponse
+// @Failure 404 {object} responses.Error
+// @Failure 500 {object} responses.Error
+// @Router /characters/{id}/inspiration [post]
+func (h *CharacterHandler) ToggleInspiration(c echo.Context) error {
+	id := c.Param("id")
+	currentUser := c.Get("currentUser").(*models.User)
+
+	character := h.server.Repos.Character.GetById(id, currentUser.ID)
+	if character.ID == 0 {
+		return responses.ErrorResponse(c, http.StatusNotFound, "Character not found")
+	}
+
+	character.Inspiration = !character.Inspiration
+	err := h.server.Repos.Character.Update(character)
+	if err != nil {
+		log.Printf("Error toggling character inspiration: %v", err)
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error toggling character inspiration")
+	}
+
+	res := responses.NewCharacterResponse(character)
+	return responses.Response(c, http.StatusOK, res)
+}

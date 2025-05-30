@@ -378,6 +378,45 @@ const docTemplate = `{
                 }
             }
         },
+        "/characters/{id}/inspiration": {
+            "post": {
+                "description": "Toggle character inspiration",
+                "tags": [
+                    "Character Actions"
+                ],
+                "summary": "Toggle character inspiration",
+                "operationId": "characters-toggle-inspiration",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Character ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CharacterResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/characters/{id}/upload/profile-picture": {
             "post": {
                 "description": "Upload character profile picture",
@@ -1878,6 +1917,9 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "inspiration": {
+                    "type": "boolean"
+                },
                 "intelligence": {
                     "type": "integer"
                 },
@@ -1928,6 +1970,9 @@ const docTemplate = `{
         "responses.ClassResponse": {
             "type": "object",
             "properties": {
+                "background_image": {
+                    "$ref": "#/definitions/responses.FileResponse"
+                },
                 "hit_point_die_value": {
                     "type": "integer"
                 },

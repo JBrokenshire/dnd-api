@@ -16,4 +16,5 @@ func characterRoutes(server *api.Server) {
 	character.PUT("/:id", characterHandler.Update)
 	character.DELETE("/:id", characterHandler.Delete)
 	character.POST("/:id/upload/profile-picture", characterHandler.UploadProfilePicture)
+	character.POST("/:id/inspiration", characterHandler.ToggleInspiration)
 }

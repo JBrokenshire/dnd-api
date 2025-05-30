@@ -311,6 +311,8 @@ definitions:
         type: string
       id:
         type: integer
+      inspiration:
+        type: boolean
       intelligence:
         type: integer
       level:
@@ -344,6 +346,8 @@ definitions:
     type: object
   responses.ClassResponse:
     properties:
+      background_image:
+        $ref: '#/definitions/responses.FileResponse'
       hit_point_die_value:
         type: integer
       id:
@@ -750,6 +754,32 @@ paths:
           schema:
             $ref: '#/definitions/responses.Error'
       summary: Update character
+      tags:
+      - Character Actions
+  /characters/{id}/inspiration:
+    post:
+      description: Toggle character inspiration
+      operationId: characters-toggle-inspiration
+      parameters:
+      - description: Character ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.CharacterResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Toggle character inspiration
       tags:
       - Character Actions
   /characters/{id}/upload/profile-picture:

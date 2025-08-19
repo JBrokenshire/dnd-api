@@ -41,5 +41,5 @@ type UpdateCharacterRequest struct {
 }
 
 type UpdateCharacterHealthRequest struct {
-	CurrentHitPoints int `json:"current_hit_points" validate:"required,min=0"`
+	CurrentHitPoints int `json:"current_hit_points" validate:"min=0"`
 }

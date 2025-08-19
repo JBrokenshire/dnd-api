@@ -161,8 +161,6 @@ definitions:
       current_hit_points:
         minimum: 0
         type: integer
-    required:
-    - current_hit_points
     type: object
   requests.UpdateCharacterRequest:
     properties:

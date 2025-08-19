@@ -1775,9 +1775,6 @@ const docTemplate = `{
         },
         "requests.UpdateCharacterHealthRequest": {
             "type": "object",
-            "required": [
-                "current_hit_points"
-            ],
             "properties": {
                 "current_hit_points": {
                     "type": "integer",

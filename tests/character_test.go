@@ -1367,18 +1367,6 @@ func TestCharacter_UpdateHealth(t *testing.T) {
 
 	cases := []helpers.TestCase{
 		{
-			Name:        "Can't update health without required fields",
-			Request:     getRequest(character.ID),
-			RequestBody: requests.UpdateCharacterHealthRequest{},
-			Expected: helpers.ExpectedResponse{
-				StatusCode: http.StatusBadRequest,
-				BodyParts: []string{
-					"Required fields are empty or not valid:",
-					"CurrentHitPoints is a required field",
-				},
-			},
-		},
-		{
 			Name:    "Can't update health with value less than 0",
 			Request: getRequest(character.ID),
 			RequestBody: requests.UpdateCharacterHealthRequest{

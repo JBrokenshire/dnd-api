@@ -7,6 +7,8 @@ import (
 
 func characterRoutes(server *api.Server) {
 	characterHandler := handlers.NewCharacterHandler(server)
+	inspirationHandler := handlers.NewCharacterInspirationHandler(server)
+	healthHandler := handlers.NewCharacterHealthHandler(server)
 
 	character := restrictedRouteGroup(server, "/characters")
 
@@ -16,6 +18,10 @@ func characterRoutes(server *api.Server) {
 	character.PUT("/:id", characterHandler.Update)
 	character.DELETE("/:id", characterHandler.Delete)
 	character.POST("/:id/upload/profile-picture", characterHandler.UploadProfilePicture)
-	character.POST("/:id/inspiration", characterHandler.ToggleInspiration)
-	character.PUT("/:id/health", characterHandler.UpdateHealth)
+
+	// Inspiration
+	character.PUT("/:id/inspiration", inspirationHandler.Update)
+
+	// Health
+	character.PUT("/:id/health", healthHandler.Update)
 }

@@ -807,11 +807,11 @@ paths:
             $ref: '#/definitions/responses.Error'
       summary: Update character health
       tags:
-      - Character Actions
+      - Character Health Actions
   /characters/{id}/inspiration:
-    post:
-      description: Toggle character inspiration
-      operationId: characters-toggle-inspiration
+    put:
+      description: Update character inspiration
+      operationId: characters-update-inspiration
       parameters:
       - description: Character ID
         in: path
@@ -831,9 +831,9 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/responses.Error'
-      summary: Toggle character inspiration
+      summary: Update character inspiration
       tags:
-      - Character Actions
+      - Character Inspiration Actions
   /characters/{id}/upload/profile-picture:
     post:
       consumes:

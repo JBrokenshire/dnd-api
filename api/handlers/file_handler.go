@@ -21,7 +21,7 @@ func NewFileHandler(server *api.Server) *FileHandler {
 // @Produce text/plain
 // @Param filepath path string true "filepath"
 // @Success 200 {file} runtime.File
-// @Failure 400 {object} responses.Error
+// @Failure 404 {object} responses.Error
 // @Security ApiKeyAuth
 // @Router /files/{filepath} [get]
 func (h *FileHandler) Get(c echo.Context) error {

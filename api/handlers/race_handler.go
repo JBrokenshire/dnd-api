@@ -225,6 +225,23 @@ func (h *RaceHandler) UploadLogo(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusNotFound, "Race not found")
 	}
 
+	// Delete existing logo
+	if race.Logo.ID != 0 {
+		// Delete from file store
+		err := h.server.Dependencies.GetFileStore().Delete(fmt.Sprintf("%v/%v", race.Logo.FileLocation, race.Logo.Filename))
+		if err != nil {
+			log.Println("Error deleting race logo from file store: ", err.Error())
+			return responses.ErrorResponse(c, http.StatusInternalServerError, "Something went wrong deleting the race logo from the file store")
+		}
+
+		// Delete from database
+		err = h.server.Repos.File.Delete(race.Logo)
+		if err != nil {
+			log.Println("Error deleting race logo from database: ", err.Error())
+			return responses.ErrorResponse(c, http.StatusInternalServerError, "Something went wrong deleting the race logo from the database")
+		}
+	}
+
 	// Check the file mimetype - We only want to accept images
 	fileName, fileMimeType, err := h.server.Dependencies.GetFileService().ReadFileInfo(c)
 	if err != nil {

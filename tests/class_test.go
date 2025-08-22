@@ -428,6 +428,8 @@ func TestClass_Delete(t *testing.T) {
 	// Create images
 	logo := &m.File{Model: m.FileModelClassLogo, ModelId: class.ID}
 	factories.NewFile(ts.S.Db, logo)
+	backgroundImage := &m.File{Model: m.FileModelClassBackgroundImage, ModelId: class.ID}
+	factories.NewFile(ts.S.Db, backgroundImage)
 
 	getRequest := func(id interface{}) helpers.Request {
 		return helpers.Request{
@@ -489,12 +491,23 @@ func TestClass_Delete(t *testing.T) {
 							Model:   m.FileModelClassLogo,
 							ModelId: class.ID,
 						},
+						CountExpected: 0,
+					},
+					{
+						Name: "Background image was deleted",
+						Model: m.File{
+							ID:      backgroundImage.ID,
+							Model:   m.FileModelClassBackgroundImage,
+							ModelId: class.ID,
+						},
+						CountExpected: 0,
 					},
 				},
 				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
 					// Ensure file store was called correctly
-					assert.Equal(t, 1, len(fileStoreMock.DeleteCalls))
+					assert.Equal(t, 2, len(fileStoreMock.DeleteCalls))
 					assert.Equal(t, fmt.Sprintf("%v/%v", logo.FileLocation, logo.Filename), fileStoreMock.DeleteCalls[0])
+					assert.Equal(t, fmt.Sprintf("%v/%v", backgroundImage.FileLocation, backgroundImage.Filename), fileStoreMock.DeleteCalls[1])
 				},
 			},
 		},
@@ -521,12 +534,19 @@ func TestClass_UploadLogo(t *testing.T) {
 		fileStoreMock.Reset()
 	}
 
-	// Create class
+	// Create classes
 	class := &m.Class{}
 	factories.NewClass(ts.S.Db, class)
+	classWithLogo := &m.Class{}
+	factories.NewClass(ts.S.Db, classWithLogo)
 
-	// PNG file
+	// Create logo
+	existingLogo := &m.File{Model: m.FileModelClassLogo, ModelId: classWithLogo.ID}
+	factories.NewFile(ts.S.Db, existingLogo)
+
+	// PNG files
 	pngBody, pngMw := createMultipartFile(t, "file", "../assets/example.png")
+	png2Body, png2Mw := createMultipartFile(t, "file", "../assets/example.png")
 	// JPG file
 	jpgBody, jpgMw := createMultipartFile(t, "file", "../assets/example.jpg")
 	// JPEG file
@@ -681,6 +701,51 @@ func TestClass_UploadLogo(t *testing.T) {
 				},
 			},
 		},
+		{
+			Name: "Can delete existing logo for class when uploading a new logo",
+			Setup: func(test *helpers.TestCase) {
+				setup(test)
+
+				logo := &m.File{ModelId: classWithLogo.ID, Model: m.FileModelClassLogo, Filename: "existing-logo.png"}
+				factories.NewFile(ts.S.Db, logo)
+			},
+			Request:            getRequest(classWithLogo.ID),
+			RequestReader:      png2Body,
+			RequestContentType: png2Mw.FormDataContentType(),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "File uploaded",
+				DatabaseChecks: []*helpers.DatabaseCheck{
+					{
+						Name: "Existing logo was deleted",
+						Model: m.File{
+							Model:    m.FileModelClassLogo,
+							ModelId:  classWithLogo.ID,
+							Filename: "existing-logo.png",
+						},
+						CountExpected: 0,
+					},
+					{
+						Name: "New logo was uploaded",
+						Model: m.File{
+							Model:   m.FileModelClassLogo,
+							ModelId: classWithLogo.ID,
+						},
+						CountExpected: 1,
+					},
+				},
+				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
+					// Ensure file store was called correctly
+					assert.Equal(t, 1, len(fileStoreMock.SaveCalls))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].Path, fmt.Sprintf("classes/%v", classWithLogo.ID))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].FileName, ".png")
+
+					// Ensure existing logo was deleted from file store
+					assert.Equal(t, 1, len(fileStoreMock.DeleteCalls))
+					assert.Contains(t, fileStoreMock.DeleteCalls[0], "existing-logo.png")
+				},
+			},
+		},
 	}
 
 	for _, test := range cases {
@@ -707,9 +772,12 @@ func TestClass_UploadBackgroundImage(t *testing.T) {
 	// Create class
 	class := &m.Class{}
 	factories.NewClass(ts.S.Db, class)
+	classWithBackgroundImage := &m.Class{}
+	factories.NewClass(ts.S.Db, classWithBackgroundImage)
 
 	// PNG file
 	pngBody, pngMw := createMultipartFile(t, "file", "../assets/example.png")
+	png2Body, png2Mw := createMultipartFile(t, "file", "../assets/example.png")
 	// JPG file
 	jpgBody, jpgMw := createMultipartFile(t, "file", "../assets/example.jpg")
 	// JPEG file
@@ -861,6 +929,51 @@ func TestClass_UploadBackgroundImage(t *testing.T) {
 					assert.Equal(t, 1, len(fileStoreMock.SaveCalls))
 					assert.Contains(t, fileStoreMock.SaveCalls[0].Path, fmt.Sprintf("classes/%v", class.ID))
 					assert.Contains(t, fileStoreMock.SaveCalls[0].FileName, ".webp")
+				},
+			},
+		},
+		{
+			Name: "Can delete existing background image when uploading a new one",
+			Setup: func(test *helpers.TestCase) {
+				setup(test)
+
+				bgImage := &m.File{Model: m.FileModelClassBackgroundImage, ModelId: classWithBackgroundImage.ID, Filename: "existing-bg-image.png"}
+				factories.NewFile(ts.S.Db, bgImage)
+			},
+			Request:            getRequest(classWithBackgroundImage.ID),
+			RequestReader:      png2Body,
+			RequestContentType: png2Mw.FormDataContentType(),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "File uploaded",
+				DatabaseChecks: []*helpers.DatabaseCheck{
+					{
+						Name: "File was uploaded",
+						Model: m.File{
+							Model:   m.FileModelClassBackgroundImage,
+							ModelId: classWithBackgroundImage.ID,
+						},
+						CountExpected: 1,
+					},
+					{
+						Name: "Existing image was deleted",
+						Model: m.File{
+							Model:    m.FileModelClassBackgroundImage,
+							ModelId:  classWithBackgroundImage.ID,
+							Filename: "existing-bg-image.png",
+						},
+						CountExpected: 0,
+					},
+				},
+				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
+					// Ensure file store was called correctly
+					assert.Equal(t, 1, len(fileStoreMock.SaveCalls))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].Path, fmt.Sprintf("classes/%v", classWithBackgroundImage.ID))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].FileName, ".png")
+
+					// Ensure existing bg image was deleted
+					assert.Equal(t, 1, len(fileStoreMock.DeleteCalls))
+					assert.Contains(t, fileStoreMock.DeleteCalls[0], "existing-bg-image.png")
 				},
 			},
 		},

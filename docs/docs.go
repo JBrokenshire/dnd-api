@@ -388,7 +388,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Character Actions"
+                    "Character Health Actions"
                 ],
                 "summary": "Update character health",
                 "operationId": "characters-update-health",
@@ -439,13 +439,13 @@ const docTemplate = `{
             }
         },
         "/characters/{id}/inspiration": {
-            "post": {
-                "description": "Toggle character inspiration",
+            "put": {
+                "description": "Update character inspiration",
                 "tags": [
-                    "Character Actions"
+                    "Character Inspiration Actions"
                 ],
-                "summary": "Toggle character inspiration",
-                "operationId": "characters-toggle-inspiration",
+                "summary": "Update character inspiration",
+                "operationId": "characters-update-inspiration",
                 "parameters": [
                     {
                         "type": "string",

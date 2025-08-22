@@ -500,9 +500,12 @@ func TestRace_UploadLogo(t *testing.T) {
 	// Create race
 	race := &m.Race{}
 	factories.NewRace(ts.S.Db, race)
+	raceWithLogo := &m.Race{}
+	factories.NewRace(ts.S.Db, raceWithLogo)
 
 	// PNG file
 	pngBody, pngMw := createMultipartFile(t, "file", "../assets/example.png")
+	png2Body, png2Mw := createMultipartFile(t, "file", "../assets/example.png")
 	// JPG file
 	jpgBody, jpgMw := createMultipartFile(t, "file", "../assets/example.jpg")
 	// JPEG file
@@ -654,6 +657,51 @@ func TestRace_UploadLogo(t *testing.T) {
 					assert.Equal(t, 1, len(fileStoreMock.SaveCalls))
 					assert.Contains(t, fileStoreMock.SaveCalls[0].Path, fmt.Sprintf("races/%v", race.ID))
 					assert.Contains(t, fileStoreMock.SaveCalls[0].FileName, ".webp")
+				},
+			},
+		},
+		{
+			Name: "Can delete existing logo when uploading new one",
+			Setup: func(test *helpers.TestCase) {
+				setup(test)
+
+				logo := &m.File{Model: m.FileModelRaceLogo, ModelId: raceWithLogo.ID, Filename: "logo.png"}
+				factories.NewFile(ts.S.Db, logo)
+			},
+			Request:            getRequest(raceWithLogo.ID),
+			RequestReader:      png2Body,
+			RequestContentType: png2Mw.FormDataContentType(),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "File uploaded",
+				DatabaseChecks: []*helpers.DatabaseCheck{
+					{
+						Name: "File was uploaded",
+						Model: m.File{
+							Model:   m.FileModelRaceLogo,
+							ModelId: raceWithLogo.ID,
+						},
+						CountExpected: 1,
+					},
+					{
+						Name: "Existing logo was deleted",
+						Model: m.File{
+							Model:    m.FileModelRaceLogo,
+							ModelId:  raceWithLogo.ID,
+							Filename: "logo.png",
+						},
+						CountExpected: 0,
+					},
+				},
+				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
+					// Ensure file store was called correctly
+					assert.Equal(t, 1, len(fileStoreMock.SaveCalls))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].Path, fmt.Sprintf("races/%v", raceWithLogo.ID))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].FileName, ".png")
+
+					// Ensure existing logo was deleted from file store
+					assert.Equal(t, 1, len(fileStoreMock.DeleteCalls))
+					assert.Contains(t, fileStoreMock.DeleteCalls[0], "logo.png")
 				},
 			},
 		},

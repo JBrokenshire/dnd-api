@@ -305,15 +305,21 @@ definitions:
         type: string
       charisma:
         type: integer
+      charisma_save_adjustment:
+        type: integer
       class:
         $ref: '#/definitions/responses.ClassResponse'
       class_id:
         type: integer
       constitution:
         type: integer
+      constitution_save_adjustment:
+        type: integer
       current_hit_points:
         type: integer
       dexterity:
+        type: integer
+      dexterity_save_adjustment:
         type: integer
       hit_point_type:
         type: string
@@ -322,6 +328,8 @@ definitions:
       inspiration:
         type: boolean
       intelligence:
+        type: integer
+      intelligence_save_adjustment:
         type: integer
       level:
         type: integer
@@ -340,11 +348,16 @@ definitions:
       strength:
         description: Ability Scores
         type: integer
+      strength_save_adjustment:
+        description: Saving Throw Adjustments
+        type: integer
       temp_hit_points:
         type: integer
       user_id:
         type: integer
       wisdom:
+        type: integer
+      wisdom_save_adjustment:
         type: integer
     type: object
   responses.ClassPaginatedResponse:
@@ -1110,8 +1123,8 @@ paths:
           description: OK
           schema:
             type: file
-        "400":
-          description: Bad Request
+        "404":
+          description: Not Found
           schema:
             $ref: '#/definitions/responses.Error'
       security:

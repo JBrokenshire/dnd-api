@@ -897,8 +897,8 @@ const docTemplate = `{
                             "type": "file"
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/responses.Error"
                         }
@@ -1968,6 +1968,9 @@ const docTemplate = `{
                 "charisma": {
                     "type": "integer"
                 },
+                "charisma_save_adjustment": {
+                    "type": "integer"
+                },
                 "class": {
                     "$ref": "#/definitions/responses.ClassResponse"
                 },
@@ -1977,10 +1980,16 @@ const docTemplate = `{
                 "constitution": {
                     "type": "integer"
                 },
+                "constitution_save_adjustment": {
+                    "type": "integer"
+                },
                 "current_hit_points": {
                     "type": "integer"
                 },
                 "dexterity": {
+                    "type": "integer"
+                },
+                "dexterity_save_adjustment": {
                     "type": "integer"
                 },
                 "hit_point_type": {
@@ -1993,6 +2002,9 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "intelligence": {
+                    "type": "integer"
+                },
+                "intelligence_save_adjustment": {
                     "type": "integer"
                 },
                 "level": {
@@ -2020,6 +2032,10 @@ const docTemplate = `{
                     "description": "Ability Scores",
                     "type": "integer"
                 },
+                "strength_save_adjustment": {
+                    "description": "Saving Throw Adjustments",
+                    "type": "integer"
+                },
                 "temp_hit_points": {
                     "type": "integer"
                 },
@@ -2027,6 +2043,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "wisdom": {
+                    "type": "integer"
+                },
+                "wisdom_save_adjustment": {
                     "type": "integer"
                 }
             }

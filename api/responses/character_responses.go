@@ -38,9 +38,10 @@ type CharacterResponse struct {
 	AdvancementType string `json:"advancement_type"`
 	HitPointType    string `json:"hit_point_type"`
 
-	Class          ClassResponse `json:"class"`
-	Race           RaceResponse  `json:"race"`
-	ProfilePicture FileResponse  `json:"profile_picture"`
+	Class          ClassResponse            `json:"class"`
+	Race           RaceResponse             `json:"race"`
+	ProfilePicture FileResponse             `json:"profile_picture"`
+	Senses         []CharacterSenseResponse `json:"senses"`
 }
 
 type SlimCharacterResponse struct {
@@ -103,6 +104,9 @@ func NewCharacterResponse(character *m.Character) *CharacterResponse {
 	}
 	if character.ProfilePicture.ID != 0 {
 		res.ProfilePicture = *NewFileResponse(&character.ProfilePicture)
+	}
+	if len(character.Senses) > 0 {
+		res.Senses = NewCharacterSenseResponses(character.Senses)
 	}
 
 	return res

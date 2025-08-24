@@ -54,7 +54,8 @@ type Character struct {
 	AdvancementType string `json:"advancement_type"`
 	HitPointType    string `json:"hit_point_type"`
 
-	Class          Class `json:"class"`
-	Race           Race  `json:"race"`
-	ProfilePicture File  `json:"profile_picture"`
+	Class          Class            `json:"class"`
+	Race           Race             `json:"race"`
+	ProfilePicture File             `json:"profile_picture"`
+	Senses         []CharacterSense `json:"senses"`
 }

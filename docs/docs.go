@@ -2028,6 +2028,12 @@ const docTemplate = `{
                 "race_id": {
                     "type": "integer"
                 },
+                "senses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.CharacterSenseResponse"
+                    }
+                },
                 "strength": {
                     "description": "Ability Scores",
                     "type": "integer"
@@ -2047,6 +2053,14 @@ const docTemplate = `{
                 },
                 "wisdom_save_adjustment": {
                     "type": "integer"
+                }
+            }
+        },
+        "responses.CharacterSenseResponse": {
+            "type": "object",
+            "properties": {
+                "sense": {
+                    "type": "string"
                 }
             }
         },

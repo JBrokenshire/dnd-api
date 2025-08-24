@@ -345,6 +345,10 @@ definitions:
         $ref: '#/definitions/responses.RaceResponse'
       race_id:
         type: integer
+      senses:
+        items:
+          $ref: '#/definitions/responses.CharacterSenseResponse'
+        type: array
       strength:
         description: Ability Scores
         type: integer
@@ -359,6 +363,11 @@ definitions:
         type: integer
       wisdom_save_adjustment:
         type: integer
+    type: object
+  responses.CharacterSenseResponse:
+    properties:
+      sense:
+        type: string
     type: object
   responses.ClassPaginatedResponse:
     properties:

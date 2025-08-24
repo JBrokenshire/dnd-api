@@ -27,5 +27,6 @@ func getMigrationsList() []store.Migratable {
 		&list.UpdateCharactersAddInspiration{},
 		&list.UpdateCharactersAddHealth{},
 		&list.UpdateCharactersAddSavingThrowAdjustments{},
+		&list.CreateCharacterSensesTable{},
 	}
 }

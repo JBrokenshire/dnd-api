@@ -143,6 +143,7 @@ func TestCharacter_Get(t *testing.T) {
 	ts.ClearTable("races")
 	ts.ClearTable("characters")
 	ts.ClearTable("files")
+	ts.ClearTable("character_senses")
 	ts.SetupDefaultUsers()
 
 	// Create class
@@ -160,12 +161,22 @@ func TestCharacter_Get(t *testing.T) {
 	// Create characters
 	character := &m.Character{ClassId: class.ID, RaceId: race.ID}
 	factories.NewCharacter(ts.S.Db, character)
+	character2 := &m.Character{ClassId: class.ID, RaceId: race.ID}
+	factories.NewCharacter(ts.S.Db, character2)
 	differentUserCharacter := &m.Character{UserId: 1000}
 	factories.NewCharacter(ts.S.Db, differentUserCharacter)
 
 	// Create profile pictures
 	profilePicture := &m.File{Model: m.FileModelCharacterProfilePicture, ModelId: character.ID}
 	factories.NewFile(ts.S.Db, profilePicture)
+
+	// Create character senses
+	sense := &m.CharacterSense{CharacterID: character.ID}
+	factories.NewCharacterSense(ts.S.Db, sense)
+	sense2 := &m.CharacterSense{CharacterID: character.ID}
+	factories.NewCharacterSense(ts.S.Db, sense2)
+	differentCharacterSense := &m.CharacterSense{CharacterID: character2.ID}
+	factories.NewCharacterSense(ts.S.Db, differentCharacterSense)
 
 	getRequest := func(id interface{}) helpers.Request {
 		return helpers.Request{
@@ -213,6 +224,13 @@ func TestCharacter_Get(t *testing.T) {
 					fmt.Sprintf(`"name":"%v"`, class.Name),
 					fmt.Sprintf(`"filename":"%v"`, backgroundImage.Filename),
 					fmt.Sprintf(`"name":"%v"`, race.Name),
+					fmt.Sprintf(`"sense":"%v"`, sense.Sense),
+					fmt.Sprintf(`"sense":"%v"`, sense2.Sense),
+				},
+				BodyPartsMissing: []string{
+					fmt.Sprintf(`"name":"%v"`, character2.Name),
+					fmt.Sprintf(`"name":"%v"`, differentUserCharacter.Name),
+					fmt.Sprintf(`"sense":"%v"`, differentCharacterSense.Sense),
 				},
 			},
 		},

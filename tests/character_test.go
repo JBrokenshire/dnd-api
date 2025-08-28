@@ -144,6 +144,7 @@ func TestCharacter_Get(t *testing.T) {
 	ts.ClearTable("characters")
 	ts.ClearTable("files")
 	ts.ClearTable("character_proficient_skills")
+	ts.ClearTable("character_defenses")
 	ts.SetupDefaultUsers()
 
 	// Create class
@@ -177,6 +178,14 @@ func TestCharacter_Get(t *testing.T) {
 	factories.NewCharacterProficientSkill(ts.S.Db, character2ProficientSkill)
 	differentUserCharacterProficientSkill := &m.CharacterProficientSkill{CharacterID: differentUserCharacter.ID, Skill: m.ValidSkills[2]}
 	factories.NewCharacterProficientSkill(ts.S.Db, differentUserCharacterProficientSkill)
+
+	// Create defenses
+	characterDefense := &m.CharacterDefense{CharacterID: character.ID, DamageType: m.DamageTypeFire, DefenseType: m.DefenseTypeResistance}
+	factories.NewCharacterDefense(ts.S.Db, characterDefense)
+	character2Defense := &m.CharacterDefense{CharacterID: character2.ID, DamageType: m.DamageTypeCold, DefenseType: m.DefenseTypeImmunity}
+	factories.NewCharacterDefense(ts.S.Db, character2Defense)
+	differentUserCharacterDefense := &m.CharacterDefense{CharacterID: differentUserCharacter.ID, DamageType: m.DamageTypeBludgeoning, DefenseType: m.DefenseTypeVulnerability}
+	factories.NewCharacterDefense(ts.S.Db, differentUserCharacterDefense)
 
 	getRequest := func(id interface{}) helpers.Request {
 		return helpers.Request{
@@ -225,12 +234,18 @@ func TestCharacter_Get(t *testing.T) {
 					fmt.Sprintf(`"filename":"%v"`, backgroundImage.Filename),
 					fmt.Sprintf(`"name":"%v"`, race.Name),
 					characterProficientSkill.Skill,
+					characterDefense.DamageType,
+					characterDefense.DefenseType,
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, character2.Name),
 					fmt.Sprintf(`"name":"%v"`, differentUserCharacter.Name),
 					character2ProficientSkill.Skill,
 					differentUserCharacterProficientSkill.Skill,
+					character2Defense.DamageType,
+					character2Defense.DefenseType,
+					differentUserCharacterDefense.DamageType,
+					differentUserCharacterDefense.DefenseType,
 				},
 			},
 		},

@@ -63,6 +63,8 @@ func (r *CharacterRepository) GetById(id interface{}, userId interface{}) *m.Cha
 
 	// Load Proficient Skills
 	r.Db.Where("character_id = ?", character.ID).Find(&character.ProficientSkills)
+	// Load Defenses
+	r.Db.Where("character_id = ?", character.ID).Find(&character.Defenses)
 
 	return &character
 }

@@ -1944,6 +1944,17 @@ const docTemplate = `{
                 }
             }
         },
+        "responses.CharacterDefenseResponse": {
+            "type": "object",
+            "properties": {
+                "damage_type": {
+                    "type": "string"
+                },
+                "defense_type": {
+                    "type": "string"
+                }
+            }
+        },
         "responses.CharacterPaginatedResponse": {
             "type": "object",
             "properties": {
@@ -1996,6 +2007,12 @@ const docTemplate = `{
                 },
                 "current_hit_points": {
                     "type": "integer"
+                },
+                "defenses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.CharacterDefenseResponse"
+                    }
                 },
                 "dexterity": {
                     "type": "integer"

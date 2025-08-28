@@ -289,6 +289,13 @@ definitions:
     - name
     - short_description
     type: object
+  responses.CharacterDefenseResponse:
+    properties:
+      damage_type:
+        type: string
+      defense_type:
+        type: string
+    type: object
   responses.CharacterPaginatedResponse:
     properties:
       data:
@@ -324,6 +331,10 @@ definitions:
         type: integer
       current_hit_points:
         type: integer
+      defenses:
+        items:
+          $ref: '#/definitions/responses.CharacterDefenseResponse'
+        type: array
       dexterity:
         type: integer
       dexterity_save_adjustment:

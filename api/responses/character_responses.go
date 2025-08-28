@@ -45,6 +45,7 @@ type CharacterResponse struct {
 	Race             RaceResponse                       `json:"race"`
 	ProfilePicture   FileResponse                       `json:"profile_picture"`
 	ProficientSkills []CharacterProficientSkillResponse `json:"proficient_skills"`
+	Defenses         []CharacterDefenseResponse         `json:"defenses"`
 }
 
 type SlimCharacterResponse struct {
@@ -113,6 +114,9 @@ func NewCharacterResponse(character *m.Character) *CharacterResponse {
 	}
 	if len(character.ProficientSkills) > 0 {
 		res.ProficientSkills = NewCharacterProficientSkillResponses(character.ProficientSkills)
+	}
+	if len(character.Defenses) > 0 {
+		res.Defenses = NewCharacterDefenseResponses(character.Defenses)
 	}
 
 	return res

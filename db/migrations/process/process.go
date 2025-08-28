@@ -30,5 +30,6 @@ func getMigrationsList() []store.Migratable {
 		&list.UpdateCharactersAddSenses{},
 		&list.UpdateCharactersAddProficiencies{},
 		&list.CreateCharacterProficientSkillsTable{},
+		&list.CreateCharacterDefensesTable{},
 	}
 }

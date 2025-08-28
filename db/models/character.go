@@ -61,4 +61,5 @@ type Character struct {
 	Race             Race                        `json:"race"`
 	ProfilePicture   File                        `json:"profile_picture"`
 	ProficientSkills []*CharacterProficientSkill `json:"proficient_skills"`
+	Defenses         []*CharacterDefense         `json:"defenses"`
 }

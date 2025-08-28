@@ -57,7 +57,8 @@ type Character struct {
 	Senses        string `json:"senses"`
 	Proficiencies string `json:"proficiencies"`
 
-	Class          Class `json:"class"`
-	Race           Race  `json:"race"`
-	ProfilePicture File  `json:"profile_picture"`
+	Class            Class                       `json:"class"`
+	Race             Race                        `json:"race"`
+	ProfilePicture   File                        `json:"profile_picture"`
+	ProficientSkills []*CharacterProficientSkill `json:"proficient_skills"`
 }

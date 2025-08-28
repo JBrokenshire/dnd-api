@@ -1958,6 +1958,17 @@ const docTemplate = `{
                 }
             }
         },
+        "responses.CharacterProficientSkillResponse": {
+            "type": "object",
+            "properties": {
+                "proficiency_type": {
+                    "type": "string"
+                },
+                "skill": {
+                    "type": "string"
+                }
+            }
+        },
         "responses.CharacterResponse": {
             "type": "object",
             "properties": {
@@ -2018,6 +2029,12 @@ const docTemplate = `{
                 },
                 "proficiencies": {
                     "type": "string"
+                },
+                "proficient_skills": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.CharacterProficientSkillResponse"
+                    }
                 },
                 "profile_picture": {
                     "$ref": "#/definitions/responses.FileResponse"

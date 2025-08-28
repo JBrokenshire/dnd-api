@@ -298,6 +298,13 @@ definitions:
       meta:
         $ref: '#/definitions/responses.ResponseMeta'
     type: object
+  responses.CharacterProficientSkillResponse:
+    properties:
+      proficiency_type:
+        type: string
+      skill:
+        type: string
+    type: object
   responses.CharacterResponse:
     properties:
       advancement_type:
@@ -339,6 +346,10 @@ definitions:
         type: string
       proficiencies:
         type: string
+      proficient_skills:
+        items:
+          $ref: '#/definitions/responses.CharacterProficientSkillResponse'
+        type: array
       profile_picture:
         $ref: '#/definitions/responses.FileResponse'
       pronouns:

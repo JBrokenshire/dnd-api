@@ -61,5 +61,8 @@ func (r *CharacterRepository) GetById(id interface{}, userId interface{}) *m.Cha
 	r.Db.Where("model = ?", m.FileModelCharacterProfilePicture).Where("model_id = ?", character.ID).Take(&character.ProfilePicture)
 	r.Db.Where("model = ?", m.FileModelClassBackgroundImage).Where("model_id = ?", character.Class.ID).Take(&character.Class.BackgroundImage)
 
+	// Load Proficient Skills
+	r.Db.Where("character_id = ?", character.ID).Find(&character.ProficientSkills)
+
 	return &character
 }

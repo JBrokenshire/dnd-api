@@ -143,7 +143,7 @@ func TestCharacter_Get(t *testing.T) {
 	ts.ClearTable("races")
 	ts.ClearTable("characters")
 	ts.ClearTable("files")
-	ts.ClearTable("character_senses")
+	ts.ClearTable("character_proficient_skills")
 	ts.SetupDefaultUsers()
 
 	// Create class
@@ -170,13 +170,13 @@ func TestCharacter_Get(t *testing.T) {
 	profilePicture := &m.File{Model: m.FileModelCharacterProfilePicture, ModelId: character.ID}
 	factories.NewFile(ts.S.Db, profilePicture)
 
-	// Create character senses
-	sense := &m.CharacterSense{CharacterID: character.ID}
-	factories.NewCharacterSense(ts.S.Db, sense)
-	sense2 := &m.CharacterSense{CharacterID: character.ID}
-	factories.NewCharacterSense(ts.S.Db, sense2)
-	differentCharacterSense := &m.CharacterSense{CharacterID: character2.ID}
-	factories.NewCharacterSense(ts.S.Db, differentCharacterSense)
+	// Create proficient skills
+	characterProficientSkill := &m.CharacterProficientSkill{CharacterID: character.ID, Skill: m.ValidSkills[0]}
+	factories.NewCharacterProficientSkill(ts.S.Db, characterProficientSkill)
+	character2ProficientSkill := &m.CharacterProficientSkill{CharacterID: character2.ID, Skill: m.ValidSkills[1]}
+	factories.NewCharacterProficientSkill(ts.S.Db, character2ProficientSkill)
+	differentUserCharacterProficientSkill := &m.CharacterProficientSkill{CharacterID: differentUserCharacter.ID, Skill: m.ValidSkills[2]}
+	factories.NewCharacterProficientSkill(ts.S.Db, differentUserCharacterProficientSkill)
 
 	getRequest := func(id interface{}) helpers.Request {
 		return helpers.Request{
@@ -224,13 +224,13 @@ func TestCharacter_Get(t *testing.T) {
 					fmt.Sprintf(`"name":"%v"`, class.Name),
 					fmt.Sprintf(`"filename":"%v"`, backgroundImage.Filename),
 					fmt.Sprintf(`"name":"%v"`, race.Name),
-					fmt.Sprintf(`"sense":"%v"`, sense.Sense),
-					fmt.Sprintf(`"sense":"%v"`, sense2.Sense),
+					characterProficientSkill.Skill,
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, character2.Name),
 					fmt.Sprintf(`"name":"%v"`, differentUserCharacter.Name),
-					fmt.Sprintf(`"sense":"%v"`, differentCharacterSense.Sense),
+					character2ProficientSkill.Skill,
+					differentUserCharacterProficientSkill.Skill,
 				},
 			},
 		},

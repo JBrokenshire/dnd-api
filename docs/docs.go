@@ -2016,6 +2016,9 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "proficiencies": {
+                    "type": "string"
+                },
                 "profile_picture": {
                     "$ref": "#/definitions/responses.FileResponse"
                 },
@@ -2029,10 +2032,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "senses": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/responses.CharacterSenseResponse"
-                    }
+                    "type": "string"
                 },
                 "strength": {
                     "description": "Ability Scores",
@@ -2053,14 +2053,6 @@ const docTemplate = `{
                 },
                 "wisdom_save_adjustment": {
                     "type": "integer"
-                }
-            }
-        },
-        "responses.CharacterSenseResponse": {
-            "type": "object",
-            "properties": {
-                "sense": {
-                    "type": "string"
                 }
             }
         },

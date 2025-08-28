@@ -337,6 +337,8 @@ definitions:
         type: integer
       name:
         type: string
+      proficiencies:
+        type: string
       profile_picture:
         $ref: '#/definitions/responses.FileResponse'
       pronouns:
@@ -346,9 +348,7 @@ definitions:
       race_id:
         type: integer
       senses:
-        items:
-          $ref: '#/definitions/responses.CharacterSenseResponse'
-        type: array
+        type: string
       strength:
         description: Ability Scores
         type: integer
@@ -363,11 +363,6 @@ definitions:
         type: integer
       wisdom_save_adjustment:
         type: integer
-    type: object
-  responses.CharacterSenseResponse:
-    properties:
-      sense:
-        type: string
     type: object
   responses.ClassPaginatedResponse:
     properties:

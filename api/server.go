@@ -28,6 +28,8 @@ func NewServer() *Server {
 		Db:   db.Init(),
 	}
 
+	s.Echo.HideBanner = true
+
 	s.Repos = repositories.NewRepos(s.Db)
 	s.Dependencies = dependencies.NewDependencyService(s.Db)
 

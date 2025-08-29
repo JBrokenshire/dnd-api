@@ -1944,6 +1944,20 @@ const docTemplate = `{
                 }
             }
         },
+        "responses.BackgroundResponse": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "feature": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "responses.CharacterDefenseResponse": {
             "type": "object",
             "properties": {
@@ -1987,6 +2001,16 @@ const docTemplate = `{
                     "description": "Settings",
                     "type": "string"
                 },
+                "age": {
+                    "type": "string"
+                },
+                "alignment": {
+                    "description": "Details",
+                    "type": "string"
+                },
+                "background": {
+                    "$ref": "#/definitions/responses.BackgroundResponse"
+                },
                 "charisma": {
                     "type": "integer"
                 },
@@ -2019,6 +2043,21 @@ const docTemplate = `{
                 },
                 "dexterity_save_adjustment": {
                     "type": "integer"
+                },
+                "eyes": {
+                    "type": "string"
+                },
+                "faith": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "hair": {
+                    "type": "string"
+                },
+                "height": {
+                    "type": "string"
                 },
                 "hit_point_type": {
                     "type": "string"
@@ -2068,6 +2107,12 @@ const docTemplate = `{
                 "senses": {
                     "type": "string"
                 },
+                "size": {
+                    "type": "string"
+                },
+                "skin": {
+                    "type": "string"
+                },
                 "strength": {
                     "description": "Ability Scores",
                     "type": "integer"
@@ -2081,6 +2126,9 @@ const docTemplate = `{
                 },
                 "user_id": {
                     "type": "integer"
+                },
+                "weight": {
+                    "type": "string"
                 },
                 "wisdom": {
                     "type": "integer"

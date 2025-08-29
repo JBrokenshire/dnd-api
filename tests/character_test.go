@@ -145,6 +145,7 @@ func TestCharacter_Get(t *testing.T) {
 	ts.ClearTable("files")
 	ts.ClearTable("character_proficient_skills")
 	ts.ClearTable("character_defenses")
+	ts.ClearTable("backgrounds")
 	ts.SetupDefaultUsers()
 
 	// Create class
@@ -159,8 +160,12 @@ func TestCharacter_Get(t *testing.T) {
 	race := &m.Race{}
 	factories.NewRace(ts.S.Db, race)
 
+	// Create background
+	background := &m.Background{}
+	factories.NewBackground(ts.S.Db, background)
+
 	// Create characters
-	character := &m.Character{ClassId: class.ID, RaceId: race.ID}
+	character := &m.Character{ClassId: class.ID, RaceId: race.ID, BackgroundId: background.ID}
 	factories.NewCharacter(ts.S.Db, character)
 	character2 := &m.Character{ClassId: class.ID, RaceId: race.ID}
 	factories.NewCharacter(ts.S.Db, character2)
@@ -236,6 +241,7 @@ func TestCharacter_Get(t *testing.T) {
 					characterProficientSkill.Skill,
 					characterDefense.DamageType,
 					characterDefense.DefenseType,
+					fmt.Sprintf(`"name":"%v"`, background.Name),
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, character2.Name),

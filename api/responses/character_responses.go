@@ -13,6 +13,18 @@ type CharacterResponse struct {
 	Pronouns string `json:"pronouns"`
 	Level    int    `json:"level"`
 
+	// Details
+	Alignment string `json:"alignment"`
+	Gender    string `json:"gender"`
+	Eyes      string `json:"eyes"`
+	Size      string `json:"size"`
+	Height    string `json:"height"`
+	Faith     string `json:"faith"`
+	Hair      string `json:"hair"`
+	Skin      string `json:"skin"`
+	Age       string `json:"age"`
+	Weight    string `json:"weight"`
+
 	// Ability Scores
 	Strength     uint `json:"strength"`
 	Dexterity    uint `json:"dexterity"`
@@ -46,6 +58,7 @@ type CharacterResponse struct {
 	ProfilePicture   FileResponse                       `json:"profile_picture"`
 	ProficientSkills []CharacterProficientSkillResponse `json:"proficient_skills"`
 	Defenses         []CharacterDefenseResponse         `json:"defenses"`
+	Background       BackgroundResponse                 `json:"background"`
 }
 
 type SlimCharacterResponse struct {
@@ -76,6 +89,17 @@ func NewCharacterResponse(character *m.Character) *CharacterResponse {
 		RaceId:   character.RaceId,
 		Pronouns: character.Pronouns,
 		Level:    character.Level,
+
+		Alignment: character.Alignment,
+		Gender:    character.Gender,
+		Eyes:      character.Eyes,
+		Size:      character.Size,
+		Height:    character.Height,
+		Faith:     character.Faith,
+		Hair:      character.Hair,
+		Skin:      character.Skin,
+		Age:       character.Age,
+		Weight:    character.Weight,
 
 		Strength:     character.Strength,
 		Dexterity:    character.Dexterity,
@@ -117,6 +141,9 @@ func NewCharacterResponse(character *m.Character) *CharacterResponse {
 	}
 	if len(character.Defenses) > 0 {
 		res.Defenses = NewCharacterDefenseResponses(character.Defenses)
+	}
+	if character.Background.ID != 0 {
+		res.Background = *NewBackgroundResponse(&character.Background)
 	}
 
 	return res

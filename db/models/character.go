@@ -21,13 +21,25 @@ var ValidHitPointTypes = []string{
 }
 
 type Character struct {
-	ID       uint   `gorm:"primary_key;auto_increment" json:"id"`
-	UserId   uint   `json:"user_id"`
-	Name     string `json:"name"`
-	ClassId  uint   `json:"class_id"`
-	RaceId   uint   `json:"race_id"`
-	Level    int    `json:"level"`
-	Pronouns string `json:"pronouns"`
+	ID           uint   `gorm:"primary_key;auto_increment" json:"id"`
+	UserId       uint   `json:"user_id"`
+	Name         string `json:"name"`
+	ClassId      uint   `json:"class_id"`
+	RaceId       uint   `json:"race_id"`
+	Level        int    `json:"level"`
+	Pronouns     string `json:"pronouns"`
+	BackgroundId uint   `json:"background_id"`
+
+	Alignment string `json:"alignment"`
+	Gender    string `json:"gender"`
+	Eyes      string `json:"eyes"`
+	Size      string `json:"size"`
+	Height    string `json:"height"`
+	Faith     string `json:"faith"`
+	Hair      string `json:"hair"`
+	Skin      string `json:"skin"`
+	Age       string `json:"age"`
+	Weight    string `json:"weight"`
 
 	// Ability Scores
 	Strength     uint `json:"strength"`
@@ -62,4 +74,5 @@ type Character struct {
 	ProfilePicture   File                        `json:"profile_picture"`
 	ProficientSkills []*CharacterProficientSkill `json:"proficient_skills"`
 	Defenses         []*CharacterDefense         `json:"defenses"`
+	Background       Background                  `json:"background"`
 }

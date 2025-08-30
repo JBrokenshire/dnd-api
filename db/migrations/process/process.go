@@ -33,5 +33,6 @@ func getMigrationsList() []store.Migratable {
 		&list.CreateCharacterDefensesTable{},
 		&list.CreateBackgroundsTable{},
 		&list.UpdateCharactersAddBackground{},
+		&list.UpdateClassesAddSpellcasting{},
 	}
 }

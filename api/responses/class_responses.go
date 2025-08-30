@@ -5,12 +5,13 @@ import (
 )
 
 type ClassResponse struct {
-	ID               uint   `json:"id"`
-	Name             string `json:"name"`
-	ShortDescription string `json:"short_description"`
-	PrimaryAbility   string `json:"primary_ability"`
-	HitPointDieValue int    `json:"hit_point_die_value"`
-	Saves            string `json:"saves"`
+	ID                  uint    `json:"id"`
+	Name                string  `json:"name"`
+	ShortDescription    string  `json:"short_description"`
+	PrimaryAbility      string  `json:"primary_ability"`
+	HitPointDieValue    int     `json:"hit_point_die_value"`
+	Saves               string  `json:"saves"`
+	SpellcastingAbility *string `json:"spellcasting_ability"`
 
 	Logo            *FileResponse `json:"logo"`
 	BackgroundImage *FileResponse `json:"background_image"`
@@ -23,12 +24,13 @@ type ClassPaginatedResponse struct {
 
 func NewClassResponse(class *m.Class) *ClassResponse {
 	res := &ClassResponse{
-		ID:               class.ID,
-		Name:             class.Name,
-		ShortDescription: class.ShortDescription,
-		PrimaryAbility:   class.PrimaryAbility,
-		HitPointDieValue: class.HitPointDieValue,
-		Saves:            class.Saves,
+		ID:                  class.ID,
+		Name:                class.Name,
+		ShortDescription:    class.ShortDescription,
+		PrimaryAbility:      class.PrimaryAbility,
+		HitPointDieValue:    class.HitPointDieValue,
+		Saves:               class.Saves,
+		SpellcastingAbility: class.SpellcastingAbility,
 	}
 
 	if class.Logo.ID != 0 {

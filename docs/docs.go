@@ -2178,6 +2178,9 @@ const docTemplate = `{
                 },
                 "short_description": {
                     "type": "string"
+                },
+                "spellcasting_ability": {
+                    "type": "string"
                 }
             }
         },

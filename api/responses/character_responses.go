@@ -59,6 +59,7 @@ type CharacterResponse struct {
 	ProficientSkills []CharacterProficientSkillResponse `json:"proficient_skills"`
 	Defenses         []CharacterDefenseResponse         `json:"defenses"`
 	Background       BackgroundResponse                 `json:"background"`
+	Spells           []SpellResponse                    `json:"spells"`
 }
 
 type SlimCharacterResponse struct {
@@ -144,6 +145,9 @@ func NewCharacterResponse(character *m.Character) *CharacterResponse {
 	}
 	if character.Background.ID != 0 {
 		res.Background = *NewBackgroundResponse(&character.Background)
+	}
+	if len(character.Spells) > 0 {
+		res.Spells = NewSpellResponses(character.Spells)
 	}
 
 	return res

@@ -75,4 +75,5 @@ type Character struct {
 	ProficientSkills []*CharacterProficientSkill `json:"proficient_skills"`
 	Defenses         []*CharacterDefense         `json:"defenses"`
 	Background       Background                  `json:"background"`
+	Spells           []*Spell                    `json:"spells"`
 }

@@ -401,6 +401,10 @@ definitions:
         type: string
       skin:
         type: string
+      spells:
+        items:
+          $ref: '#/definitions/responses.SpellResponse'
+        type: array
       strength:
         description: Ability Scores
         type: integer
@@ -570,6 +574,35 @@ definitions:
         type: integer
       user_id:
         type: integer
+    type: object
+  responses.SpellResponse:
+    properties:
+      can_upcast:
+        type: boolean
+      casting_time:
+        type: string
+      damage:
+        type: string
+      damage_type:
+        type: string
+      effect:
+        type: string
+      is_attack:
+        type: boolean
+      is_save:
+        type: boolean
+      level:
+        type: integer
+      name:
+        type: string
+      notes:
+        type: string
+      range:
+        type: string
+      save_ability:
+        type: string
+      school:
+        type: string
     type: object
   responses.SubclassPaginatedResponse:
     properties:

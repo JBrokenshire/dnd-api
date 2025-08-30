@@ -146,6 +146,8 @@ func TestCharacter_Get(t *testing.T) {
 	ts.ClearTable("character_proficient_skills")
 	ts.ClearTable("character_defenses")
 	ts.ClearTable("backgrounds")
+	ts.ClearTable("spells")
+	ts.ClearTable("character_spells")
 	ts.SetupDefaultUsers()
 
 	// Create class
@@ -191,6 +193,18 @@ func TestCharacter_Get(t *testing.T) {
 	factories.NewCharacterDefense(ts.S.Db, character2Defense)
 	differentUserCharacterDefense := &m.CharacterDefense{CharacterID: differentUserCharacter.ID, DamageType: m.DamageTypeBludgeoning, DefenseType: m.DefenseTypeVulnerability}
 	factories.NewCharacterDefense(ts.S.Db, differentUserCharacterDefense)
+
+	// Create spells
+	spell := &m.Spell{}
+	factories.NewSpell(ts.S.Db, spell)
+	spell2 := &m.Spell{}
+	factories.NewSpell(ts.S.Db, spell2)
+
+	// Create character spell links
+	characterSpell := &m.CharacterSpell{CharacterID: character.ID, SpellID: spell.ID}
+	factories.NewCharacterSpell(ts.S.Db, characterSpell)
+	character2Spell := &m.CharacterSpell{CharacterID: character2.ID, SpellID: spell2.ID}
+	factories.NewCharacterSpell(ts.S.Db, character2Spell)
 
 	getRequest := func(id interface{}) helpers.Request {
 		return helpers.Request{
@@ -242,6 +256,7 @@ func TestCharacter_Get(t *testing.T) {
 					characterDefense.DamageType,
 					characterDefense.DefenseType,
 					fmt.Sprintf(`"name":"%v"`, background.Name),
+					fmt.Sprintf(`"name":"%v"`, spell.Name),
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, character2.Name),
@@ -252,6 +267,7 @@ func TestCharacter_Get(t *testing.T) {
 					character2Defense.DefenseType,
 					differentUserCharacterDefense.DamageType,
 					differentUserCharacterDefense.DefenseType,
+					fmt.Sprintf(`"name":"%v"`, spell2.Name),
 				},
 			},
 		},

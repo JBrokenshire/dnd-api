@@ -69,6 +69,8 @@ func (r *CharacterRepository) GetById(id interface{}, userId interface{}) *m.Cha
 	if character.BackgroundId != 0 {
 		r.Db.Where("id = ?", character.BackgroundId).Find(&character.Background)
 	}
+	// Load Spells
+	r.Db.Joins("JOIN character_spells ON character_spells.spell_id = spells.id").Where("character_spells.character_id = ?", character.ID).Find(&character.Spells)
 
 	return &character
 }

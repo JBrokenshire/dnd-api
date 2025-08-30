@@ -2113,6 +2113,12 @@ const docTemplate = `{
                 "skin": {
                     "type": "string"
                 },
+                "spells": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.SpellResponse"
+                    }
+                },
                 "strength": {
                     "description": "Ability Scores",
                     "type": "integer"
@@ -2368,6 +2374,50 @@ const docTemplate = `{
                 },
                 "user_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "responses.SpellResponse": {
+            "type": "object",
+            "properties": {
+                "can_upcast": {
+                    "type": "boolean"
+                },
+                "casting_time": {
+                    "type": "string"
+                },
+                "damage": {
+                    "type": "string"
+                },
+                "damage_type": {
+                    "type": "string"
+                },
+                "effect": {
+                    "type": "string"
+                },
+                "is_attack": {
+                    "type": "boolean"
+                },
+                "is_save": {
+                    "type": "boolean"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "range": {
+                    "type": "string"
+                },
+                "save_ability": {
+                    "type": "string"
+                },
+                "school": {
+                    "type": "string"
                 }
             }
         },

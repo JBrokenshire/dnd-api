@@ -16,7 +16,7 @@ func (s *Seeder) SetUsers() {
 	for _, user := range users {
 		err := s.DB.Where("id = ?", user.ID).FirstOrCreate(&user).Error
 		if err != nil {
-			log.Printf("Error creating user with id %v in seeder", user.ID)
+			log.Printf("Error creating user with id %v in seeder: %v", user.ID, err.Error())
 		}
 	}
 }

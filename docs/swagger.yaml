@@ -449,8 +449,21 @@ definitions:
         type: string
       short_description:
         type: string
+      spell_slots:
+        items:
+          $ref: '#/definitions/responses.ClassSpellSlotsResponse'
+        type: array
       spellcasting_ability:
         type: string
+    type: object
+  responses.ClassSpellSlotsResponse:
+    properties:
+      class_level:
+        type: integer
+      spell_level:
+        type: integer
+      spell_slots:
+        type: integer
     type: object
   responses.Data:
     properties:

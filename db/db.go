@@ -38,10 +38,16 @@ func Init() *gorm.DB {
 	db.DB().SetConnMaxLifetime(time.Hour)
 
 	seeder := seeders.NewSeeder(db)
-	fmt.Println("Seeding Users...")
 	seeder.SetUsers()
-	fmt.Println("Seeding Spells...")
+	seeder.SetRaces()
+	seeder.SetClasses()
+	seeder.SetSubclasses()
 	seeder.SetSpells()
+	seeder.SetClassSpellSlots()
+	seeder.SetBackgrounds()
+	seeder.SetCharacters()
+	seeder.SetCharacterProficientSkills()
+	seeder.SetCharacterSpells()
 
 	return db
 }

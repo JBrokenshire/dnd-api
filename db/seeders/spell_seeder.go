@@ -173,7 +173,7 @@ func (s *Seeder) SetSpells() {
 	for _, spell := range spells {
 		err := s.DB.Where("id = ?", spell.ID).FirstOrCreate(&spell).Error
 		if err != nil {
-			log.Printf("Error creating spell with id %v in seeder", spell.ID)
+			log.Printf("Error creating spell with id %v in seeder: %v", spell.ID, err.Error())
 		}
 	}
 }

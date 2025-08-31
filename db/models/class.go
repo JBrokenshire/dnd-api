@@ -1,5 +1,11 @@
 package models
 
+const (
+	SpellcastingAbilityIntelligence = "Intelligence"
+	SpellcastingAbilityWisdom       = "Wisdom"
+	SpellcastingAbilityCharisma     = "Charisma"
+)
+
 type Class struct {
 	ID                  uint    `gorm:"primary_key;auto_increment" json:"id"`
 	Name                string  `json:"name"`
@@ -9,6 +15,7 @@ type Class struct {
 	Saves               string  `json:"saves"`
 	SpellcastingAbility *string `json:"spellcasting_ability"`
 
-	Logo            File `json:"logo"`
-	BackgroundImage File `json:"background_image"`
+	Logo            File               `json:"logo"`
+	BackgroundImage File               `json:"background_image"`
+	SpellSlots      []*ClassSpellSlots `json:"spell_slots"`
 }

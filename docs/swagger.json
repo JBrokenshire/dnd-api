@@ -2178,8 +2178,28 @@
                 "short_description": {
                     "type": "string"
                 },
+                "spell_slots": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.ClassSpellSlotsResponse"
+                    }
+                },
                 "spellcasting_ability": {
                     "type": "string"
+                }
+            }
+        },
+        "responses.ClassSpellSlotsResponse": {
+            "type": "object",
+            "properties": {
+                "class_level": {
+                    "type": "integer"
+                },
+                "spell_level": {
+                    "type": "integer"
+                },
+                "spell_slots": {
+                    "type": "integer"
                 }
             }
         },

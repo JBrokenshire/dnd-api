@@ -121,6 +121,15 @@ func (s *Seeder) SetClasses() {
 			HitPointDieValue: 10,
 			Saves:            `["Dexterity","Intelligence"]`,
 		},
+		{
+			ID:                  14,
+			Name:                "Artificer",
+			ShortDescription:    "Masters of invention, artificers use ingenuity and magic to unlock extraordinary capabilities in objects. They see magic as a complex system waiting to be decoded and then harnessed in their spells and inventions. You can find everything you need to play one of these inventors in the next few sections.",
+			PrimaryAbility:      "Intelligence",
+			HitPointDieValue:    8,
+			Saves:               `["Constitution","Intelligence"]`,
+			SpellcastingAbility: utils.StrPointer(m.SpellcastingAbilityIntelligence),
+		},
 	}
 
 	for _, class := range classes {

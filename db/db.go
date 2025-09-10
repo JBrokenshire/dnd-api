@@ -42,6 +42,20 @@ func Init() *gorm.DB {
 	seeder.SetUsers()
 	fmt.Println("Seeding Spells...")
 	seeder.SetSpells()
+	fmt.Println("Seeding Races...")
+	seeder.SetRaces()
+	fmt.Println("Seeding Classes...")
+	seeder.SetClasses()
+	fmt.Println("Seeding Class Spell Levels...")
+	seeder.SetClassSpellLevels()
+	fmt.Println("Seeding Backgrounds...")
+	seeder.SetBackgrounds()
+	fmt.Println("Seeding Characters...")
+	seeder.SetCharacters()
+	fmt.Println("Seeding Character Proficient Skills...")
+	seeder.SetCharacterProficientSkills()
+	fmt.Println("Seeding Character Spells...")
+	seeder.SetCharacterSpells()
 
 	return db
 }

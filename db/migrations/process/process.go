@@ -36,5 +36,6 @@ func getMigrationsList() []store.Migratable {
 		&list.UpdateClassesAddSpellcasting{},
 		&list.CreateSpellsTable{},
 		&list.CreateCharacterSpellsTable{},
+		&list.CreateClassSpellLevelTable{},
 	}
 }

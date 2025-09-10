@@ -2185,8 +2185,25 @@ const docTemplate = `{
                 "short_description": {
                     "type": "string"
                 },
+                "spell_levels": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.ClassSpellLevelResponse"
+                    }
+                },
                 "spellcasting_ability": {
                     "type": "string"
+                }
+            }
+        },
+        "responses.ClassSpellLevelResponse": {
+            "type": "object",
+            "properties": {
+                "number_of_slots": {
+                    "type": "integer"
+                },
+                "spell_level": {
+                    "type": "integer"
                 }
             }
         },

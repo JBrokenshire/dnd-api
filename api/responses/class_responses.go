@@ -13,8 +13,9 @@ type ClassResponse struct {
 	Saves               string  `json:"saves"`
 	SpellcastingAbility *string `json:"spellcasting_ability"`
 
-	Logo            *FileResponse `json:"logo"`
-	BackgroundImage *FileResponse `json:"background_image"`
+	Logo            *FileResponse             `json:"logo"`
+	BackgroundImage *FileResponse             `json:"background_image"`
+	SpellLevels     []ClassSpellLevelResponse `json:"spell_levels"`
 }
 
 type ClassPaginatedResponse struct {
@@ -38,6 +39,9 @@ func NewClassResponse(class *m.Class) *ClassResponse {
 	}
 	if class.BackgroundImage.ID != 0 {
 		res.BackgroundImage = NewFileResponse(&class.BackgroundImage)
+	}
+	if len(class.SpellLevels) != 0 {
+		res.SpellLevels = NewCLassSpellLevelResponses(class.SpellLevels)
 	}
 
 	return res

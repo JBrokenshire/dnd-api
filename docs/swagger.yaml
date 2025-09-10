@@ -449,8 +449,19 @@ definitions:
         type: string
       short_description:
         type: string
+      spell_levels:
+        items:
+          $ref: '#/definitions/responses.ClassSpellLevelResponse'
+        type: array
       spellcasting_ability:
         type: string
+    type: object
+  responses.ClassSpellLevelResponse:
+    properties:
+      number_of_slots:
+        type: integer
+      spell_level:
+        type: integer
     type: object
   responses.Data:
     properties:

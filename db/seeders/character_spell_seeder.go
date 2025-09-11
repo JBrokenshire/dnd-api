@@ -77,6 +77,16 @@ func (s *Seeder) SetCharacterSpells() {
 			CharacterID: 1,
 			SpellID:     14,
 		},
+		{
+			ID:          15,
+			CharacterID: 2,
+			SpellID:     15,
+		},
+		{
+			ID:          16,
+			CharacterID: 2,
+			SpellID:     16,
+		},
 	}
 
 	for _, characterSpell := range characterSpells {

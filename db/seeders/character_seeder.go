@@ -57,6 +57,59 @@ Yet, in the quiet after the crowds fade, Axel’s doubts creep in. He wonders if
 
 He may not know happiness for himself yet. But if his music can carve it out of stone for others, then he’ll keep walking, keep singing, until the rhythm of the world brings that joy home to him as well.`,
 		},
+		{
+			ID:                         2,
+			UserId:                     1,
+			Name:                       `Kaelrith "Kael" Drakeshield`,
+			ClassId:                    2,
+			RaceId:                     2,
+			Level:                      6,
+			Pronouns:                   "He/Him",
+			BackgroundId:               2,
+			Alignment:                  "Lawful Good",
+			Gender:                     "Male",
+			Eyes:                       "Amber",
+			Size:                       "Medium",
+			Height:                     `6'6"`,
+			Hair:                       "A crown of curved horns",
+			Skin:                       "Brass/Gold-Brown",
+			Age:                        "26",
+			Weight:                     "270lb.",
+			Strength:                   20,
+			Dexterity:                  15,
+			Constitution:               20,
+			Intelligence:               6,
+			Wisdom:                     14,
+			Charisma:                   11,
+			StrengthSaveAdjustment:     1,
+			DexteritySaveAdjustment:    1,
+			ConstitutionSaveAdjustment: 1,
+			IntelligenceSaveAdjustment: 1,
+			WisdomSaveAdjustment:       1,
+			CharismaSaveAdjustment:     1,
+			CurrentHitPoints:           60,
+			MaxHitPoints:               72,
+			AdvancementType:            m.AdvancementTypeMilestone,
+			HitPointType:               m.HitPointTypeManual,
+			Senses:                     `["Blindsight 10ft."]`,
+			Proficiencies:              `{"armour":["Heavy Armour","Light Armour","Medium Armour","Shields"],"weapons":["Martial Weapons","Simple Weapons"],"tools":["Lute","Thieves' Tools"],"languages":["Common","Draconic"]}`,
+			PersonalityTraits:          `["The best way to get me to do something is to tell me I can't do it","I am always calm, no matter what the situation. I never raise my voice or let my emotions control me."]`,
+			Ideals:                     `["Freedom. Chains are meant to be broken, as are those who would forge them (Chaotic)"]`,
+			Bonds:                      `["I'm trying to pay off an old debt I owe to a generous benefactor"]`,
+			Flaws:                      `["If there's a plan I'll forget it. If I don't forget it, I'll ignore it."]`,
+			Organisations:              `["Inter-Isle Belonging of Fantastic Investigators - Marblethorn Unit"]`,
+			Allies:                     `["Idris","Vashta","Niko","Karma","Lycia","Theo","Edith","Eggy"]`,
+			Enemies:                    `[]`,
+			Backstory: `Kaelrith Drakeshield was born in the harsh, arid lands of the Draken Wastes, a barren region where only the strongest survived. From a young age, he was taught to fend for himself, honing his skills as a warrior under the tutelage of his clan's elders. The Draken Wastes were a lawless land, and Kael quickly learned the ways of combat, developing into a skilled bounty hunter by his late teens. His physical prowess and brass dragonborn resilience made him a feared and respected figure among the bounty hunting community.
+
+However, life as a bounty hunter was not without its complications. Kael's straightforward nature often got him into trouble, and he made more enemies than friends along the way. One such enemy was a notorious crime lord, Garvin the Ruthless, whom Kael had crossed during a high-stakes job. The confrontation left Kael with a considerable debt, as Garvin demanded retribution for the loss of his men and resources. Desperate and with few options, Kael found an unexpected benefactor in an eccentric wizard named Eldrin Valtoris.
+
+Eldrin saw potential in the young dragonborn and offered to pay off his debt in exchange for Kael's service and loyalty. Kael accepted, grateful for the wizard's generosity. Under Eldrin's guidance, Kael was introduced to the arcane arts, specifically the Echo Knight discipline. This allowed Kael to summon spectral echoes of himself in battle, an ability that greatly enhanced his combat effectiveness.
+
+After several years of service, Eldrin released Kael from his obligation, though Kael felt indebted to the wizard and vowed to repay him fully one day. Seeking a new purpose, Kael joined the Marblethorn Unit of the Inter-Isle Belonging of Fantastic Investigators (IIBFI) two years ago. The unit, known for tackling supernatural threats and complex investigations across the Isles, provided Kael with a new avenue to use his skills for a greater good.
+
+Though his intellect often lags behind his peers, Kael's unwavering determination and combat expertise have earned him a place of respect within the Marblethorn Unit. He continues to work tirelessly, hoping to one day repay Eldrin and honor the legacy of his clan. Kael's journey is one of redemption and loyalty, as he seeks to balance the scales of his past while forging a future as a protector and defender.`,
+		},
 	}
 
 	for _, character := range characters {

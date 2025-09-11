@@ -11,11 +11,19 @@ func (s *Seeder) SetClasses() {
 		{
 			ID:                  1,
 			Name:                "Bard",
-			ShortDescription:    "Bard",
+			ShortDescription:    "Bards are expert at inspiring others, soothing hurts, disheartening foes, and creating illusions.",
 			PrimaryAbility:      "Charisma",
 			HitPointDieValue:    8,
 			Saves:               `["Dexterity","Charisma"]`,
 			SpellcastingAbility: utils.StrPointer(m.SpellcastingAbilityCharisma),
+		},
+		{
+			ID:               2,
+			Name:             "Fighter",
+			ShortDescription: "Fighters all share an unparalleled prowess with weapons and armor, and are well acquainted with death, both meting it out and defying it.",
+			PrimaryAbility:   "Strength or Dexterity",
+			HitPointDieValue: 10,
+			Saves:            `["Strength", "Constitution"]`,
 		},
 	}
 

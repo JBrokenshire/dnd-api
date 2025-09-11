@@ -53,6 +53,15 @@ type CharacterResponse struct {
 	Senses        string `json:"senses"`
 	Proficiencies string `json:"proficiencies"`
 
+	PersonalityTraits string `json:"personality_traits"`
+	Ideals            string `json:"ideals"`
+	Bonds             string `json:"bonds"`
+	Flaws             string `json:"flaws"`
+	Organisations     string `json:"organisations"`
+	Allies            string `json:"allies"`
+	Enemies           string `json:"enemies"`
+	Backstory         string `json:"backstory"`
+
 	Class            ClassResponse                      `json:"class"`
 	Race             RaceResponse                       `json:"race"`
 	ProfilePicture   FileResponse                       `json:"profile_picture"`
@@ -127,6 +136,15 @@ func NewCharacterResponse(character *m.Character) *CharacterResponse {
 
 		Senses:        character.Senses,
 		Proficiencies: character.Proficiencies,
+
+		PersonalityTraits: character.PersonalityTraits,
+		Ideals:            character.Ideals,
+		Bonds:             character.Bonds,
+		Flaws:             character.Flaws,
+		Organisations:     character.Organisations,
+		Allies:            character.Allies,
+		Enemies:           character.Enemies,
+		Backstory:         character.Backstory,
 	}
 
 	if character.Class.ID != 0 {

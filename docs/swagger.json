@@ -2018,8 +2018,17 @@
                     "description": "Details",
                     "type": "string"
                 },
+                "allies": {
+                    "type": "string"
+                },
                 "background": {
                     "$ref": "#/definitions/responses.BackgroundResponse"
+                },
+                "backstory": {
+                    "type": "string"
+                },
+                "bonds": {
+                    "type": "string"
                 },
                 "charisma": {
                     "type": "integer"
@@ -2054,10 +2063,16 @@
                 "dexterity_save_adjustment": {
                     "type": "integer"
                 },
+                "enemies": {
+                    "type": "string"
+                },
                 "eyes": {
                     "type": "string"
                 },
                 "faith": {
+                    "type": "string"
+                },
+                "flaws": {
                     "type": "string"
                 },
                 "gender": {
@@ -2074,6 +2089,9 @@
                 },
                 "id": {
                     "type": "integer"
+                },
+                "ideals": {
+                    "type": "string"
                 },
                 "inspiration": {
                     "type": "boolean"
@@ -2097,6 +2115,12 @@
                     "type": "integer"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "organisations": {
+                    "type": "string"
+                },
+                "personality_traits": {
                     "type": "string"
                 },
                 "proficiencies": {

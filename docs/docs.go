@@ -2025,8 +2025,17 @@ const docTemplate = `{
                     "description": "Details",
                     "type": "string"
                 },
+                "allies": {
+                    "type": "string"
+                },
                 "background": {
                     "$ref": "#/definitions/responses.BackgroundResponse"
+                },
+                "backstory": {
+                    "type": "string"
+                },
+                "bonds": {
+                    "type": "string"
                 },
                 "charisma": {
                     "type": "integer"
@@ -2061,10 +2070,16 @@ const docTemplate = `{
                 "dexterity_save_adjustment": {
                     "type": "integer"
                 },
+                "enemies": {
+                    "type": "string"
+                },
                 "eyes": {
                     "type": "string"
                 },
                 "faith": {
+                    "type": "string"
+                },
+                "flaws": {
                     "type": "string"
                 },
                 "gender": {
@@ -2081,6 +2096,9 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
+                },
+                "ideals": {
+                    "type": "string"
                 },
                 "inspiration": {
                     "type": "boolean"
@@ -2104,6 +2122,12 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "organisations": {
+                    "type": "string"
+                },
+                "personality_traits": {
                     "type": "string"
                 },
                 "proficiencies": {

@@ -11,7 +11,7 @@ func (s *Seeder) SetBackgrounds() {
 			ID:          1,
 			Name:        "Nomadic Troubadour",
 			Feature:     "Song of Hospitality",
-			Description: "Something about getting a free bed and food in exchange for entertainment",
+			Description: "Wherever you wander, people are drawn to your performances. In most civilized places, you can secure food, shelter, or safe passage for yourself (and sometimes your companions) by offering music, storytelling, or other entertainment. Even in harsher wilds, your charm can open doors: a campfire song among strangers, a story told to fellow travelers, or a rhythm shared with other nomads. While this rarely earns you coin, it ensures that you are rarely without a place to rest.",
 		},
 	}
 

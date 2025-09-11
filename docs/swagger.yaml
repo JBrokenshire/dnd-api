@@ -342,8 +342,14 @@ definitions:
       alignment:
         description: Details
         type: string
+      allies:
+        type: string
       background:
         $ref: '#/definitions/responses.BackgroundResponse'
+      backstory:
+        type: string
+      bonds:
+        type: string
       charisma:
         type: integer
       charisma_save_adjustment:
@@ -366,9 +372,13 @@ definitions:
         type: integer
       dexterity_save_adjustment:
         type: integer
+      enemies:
+        type: string
       eyes:
         type: string
       faith:
+        type: string
+      flaws:
         type: string
       gender:
         type: string
@@ -380,6 +390,8 @@ definitions:
         type: string
       id:
         type: integer
+      ideals:
+        type: string
       inspiration:
         type: boolean
       intelligence:
@@ -395,6 +407,10 @@ definitions:
       max_hit_points:
         type: integer
       name:
+        type: string
+      organisations:
+        type: string
+      personality_traits:
         type: string
       proficiencies:
         type: string

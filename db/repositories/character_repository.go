@@ -73,6 +73,8 @@ func (r *CharacterRepository) GetById(id interface{}, userId interface{}) *m.Cha
 	r.Db.Joins("JOIN character_spells ON character_spells.spell_id = spells.id").Where("character_spells.character_id = ?", character.ID).Find(&character.Spells)
 	// Load Class Spell Levels
 	r.Db.Where("class_id = ?", character.Class.ID).Where("class_level = ?", character.Level).Find(&character.Class.SpellLevels)
+	// Load Inventory
+	r.Db.Preload("Item").Where("character_id = ?", character.ID).Find(&character.Inventory)
 
 	return &character
 }

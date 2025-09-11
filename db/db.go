@@ -50,12 +50,16 @@ func Init() *gorm.DB {
 	seeder.SetClassSpellLevels()
 	fmt.Println("Seeding Backgrounds...")
 	seeder.SetBackgrounds()
+	fmt.Println("Seeding Items...")
+	seeder.SetItems()
 	fmt.Println("Seeding Characters...")
 	seeder.SetCharacters()
 	fmt.Println("Seeding Character Proficient Skills...")
 	seeder.SetCharacterProficientSkills()
 	fmt.Println("Seeding Character Spells...")
 	seeder.SetCharacterSpells()
+	fmt.Println("Seeding Character Inventory Items...")
+	seeder.SetCharacterInventoryItems()
 
 	return db
 }

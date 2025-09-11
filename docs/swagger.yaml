@@ -305,6 +305,17 @@ definitions:
       defense_type:
         type: string
     type: object
+  responses.CharacterInventoryItemResponse:
+    properties:
+      equipped:
+        type: boolean
+      item:
+        $ref: '#/definitions/responses.ItemResponse'
+      location:
+        type: string
+      quantity:
+        type: integer
+    type: object
   responses.CharacterPaginatedResponse:
     properties:
       data:
@@ -375,6 +386,10 @@ definitions:
         type: integer
       intelligence_save_adjustment:
         type: integer
+      inventory:
+        items:
+          $ref: '#/definitions/responses.CharacterInventoryItemResponse'
+        type: array
       level:
         type: integer
       max_hit_points:
@@ -496,6 +511,23 @@ definitions:
         type: integer
       updated_at:
         type: string
+    type: object
+  responses.ItemResponse:
+    properties:
+      cost:
+        type: number
+      equippable:
+        type: boolean
+      name:
+        type: string
+      notes:
+        type: string
+      origin:
+        type: string
+      rarity:
+        type: string
+      weight:
+        type: number
     type: object
   responses.LoginResponse:
     properties:

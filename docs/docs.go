@@ -1969,6 +1969,23 @@ const docTemplate = `{
                 }
             }
         },
+        "responses.CharacterInventoryItemResponse": {
+            "type": "object",
+            "properties": {
+                "equipped": {
+                    "type": "boolean"
+                },
+                "item": {
+                    "$ref": "#/definitions/responses.ItemResponse"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
         "responses.CharacterPaginatedResponse": {
             "type": "object",
             "properties": {
@@ -2073,6 +2090,12 @@ const docTemplate = `{
                 },
                 "intelligence_save_adjustment": {
                     "type": "integer"
+                },
+                "inventory": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.CharacterInventoryItemResponse"
+                    }
                 },
                 "level": {
                     "type": "integer"
@@ -2256,6 +2279,32 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "responses.ItemResponse": {
+            "type": "object",
+            "properties": {
+                "cost": {
+                    "type": "number"
+                },
+                "equippable": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "origin": {
+                    "type": "string"
+                },
+                "rarity": {
+                    "type": "string"
+                },
+                "weight": {
+                    "type": "number"
                 }
             }
         },

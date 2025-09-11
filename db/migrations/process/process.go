@@ -37,5 +37,7 @@ func getMigrationsList() []store.Migratable {
 		&list.CreateSpellsTable{},
 		&list.CreateCharacterSpellsTable{},
 		&list.CreateClassSpellLevelTable{},
+		&list.CreateItemsTable{},
+		&list.CreateCharacterInventoryItemsTable{},
 	}
 }

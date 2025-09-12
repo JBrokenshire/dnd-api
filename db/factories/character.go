@@ -22,6 +22,12 @@ func fillCharacterDefaults(character *m.Character) {
 	if character.Name == "" {
 		character.Name = random.String(16)
 	}
+	if character.ClassId == 0 {
+		character.ClassId = 1
+	}
+	if character.RaceId == 0 {
+		character.RaceId = 1
+	}
 	if character.Level == 0 {
 		character.Level = 1
 	}

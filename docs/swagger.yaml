@@ -162,6 +162,11 @@ definitions:
         minimum: 0
         type: integer
     type: object
+  requests.UpdateCharacterInventoryItemRequest:
+    properties:
+      equipped:
+        type: boolean
+    type: object
   requests.UpdateCharacterRequest:
     properties:
       advancement_type:
@@ -309,6 +314,8 @@ definitions:
     properties:
       equipped:
         type: boolean
+      id:
+        type: integer
       item:
         $ref: '#/definitions/responses.ItemResponse'
       location:
@@ -999,6 +1006,51 @@ paths:
       summary: Update character inspiration
       tags:
       - Character Inspiration Actions
+  /characters/{id}/inventory-item/{inventoryItemId}:
+    put:
+      consumes:
+      - application/json
+      description: Update character inventory item
+      operationId: characters-update-inventory-item
+      parameters:
+      - description: Character ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Inventory Item ID
+        in: path
+        name: inventoryItemId
+        required: true
+        type: integer
+      - description: Inventory Item information
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.UpdateCharacterInventoryItemRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Update character inventory item
+      tags:
+      - Character Inventory Item Actions
   /characters/{id}/upload/profile-picture:
     post:
       consumes:

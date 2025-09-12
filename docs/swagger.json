@@ -470,6 +470,73 @@
                 }
             }
         },
+        "/characters/{id}/inventory-item/{inventoryItemId}": {
+            "put": {
+                "description": "Update character inventory item",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Character Inventory Item Actions"
+                ],
+                "summary": "Update character inventory item",
+                "operationId": "characters-update-inventory-item",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Character ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Inventory Item ID",
+                        "name": "inventoryItemId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Inventory Item information",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.UpdateCharacterInventoryItemRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/characters/{id}/upload/profile-picture": {
             "post": {
                 "description": "Upload character profile picture",
@@ -1775,6 +1842,14 @@
                 }
             }
         },
+        "requests.UpdateCharacterInventoryItemRequest": {
+            "type": "object",
+            "properties": {
+                "equipped": {
+                    "type": "boolean"
+                }
+            }
+        },
         "requests.UpdateCharacterRequest": {
             "type": "object",
             "required": [
@@ -1967,6 +2042,9 @@
             "properties": {
                 "equipped": {
                     "type": "boolean"
+                },
+                "id": {
+                    "type": "integer"
                 },
                 "item": {
                     "$ref": "#/definitions/responses.ItemResponse"

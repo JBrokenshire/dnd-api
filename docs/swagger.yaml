@@ -550,7 +550,7 @@ definitions:
     type: object
   responses.ItemResponse:
     properties:
-      armour;omitempty:
+      armour:
         $ref: '#/definitions/responses.ArmourResponse'
       cost:
         type: number

@@ -14,7 +14,7 @@ type ItemResponse struct {
 	Origin     string  `json:"origin"`
 	Type       string  `json:"type"`
 
-	Armour ArmourResponse `json:"armour;omitempty"`
+	Armour ArmourResponse `json:"armour"`
 }
 
 func NewItemResponse(item *m.Item) *ItemResponse {

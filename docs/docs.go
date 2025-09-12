@@ -2407,7 +2407,7 @@ const docTemplate = `{
         "responses.ItemResponse": {
             "type": "object",
             "properties": {
-                "armour;omitempty": {
+                "armour": {
                     "$ref": "#/definitions/responses.ArmourResponse"
                 },
                 "cost": {

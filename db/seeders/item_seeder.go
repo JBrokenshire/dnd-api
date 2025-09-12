@@ -2,6 +2,7 @@ package seeders
 
 import (
 	m "dnd-api/db/models"
+	"dnd-api/pkg/utils"
 	"log"
 )
 
@@ -131,24 +132,34 @@ func (s *Seeder) SetItems() {
 			Notes:  "Container",
 		},
 		{
-			ID:         14,
-			Name:       "Rock Watch",
-			Rarity:     m.RarityRare,
-			Origin:     "Wondrous Item",
-			Weight:     1,
-			Cost:       50,
-			Notes:      "1 Charge, Jewelry",
-			Equippable: true,
+			ID:                  14,
+			Name:                "Rock Watch",
+			Rarity:              m.RarityRare,
+			Origin:              "Wondrous Item",
+			Weight:              1,
+			Cost:                50,
+			Notes:               "1 Charge, Jewelry",
+			Equippable:          true,
+			InitiativeAdvantage: true,
 		},
 		{
-			ID:         15,
-			Name:       "Cloak of Protection",
-			Rarity:     m.RarityUncommon,
-			Origin:     "Wondrous Item",
-			Weight:     2,
-			Cost:       50,
-			Notes:      "Warding, Outerwear",
-			Equippable: true,
+			ID:                    15,
+			Name:                  "Cloak of Protection",
+			Rarity:                m.RarityUncommon,
+			Origin:                "Wondrous Item",
+			Weight:                2,
+			Cost:                  50,
+			Notes:                 "Warding, Outerwear",
+			Equippable:            true,
+			StrengthSaveBonus:     1,
+			DexteritySaveBonus:    1,
+			ConstitutionSaveBonus: 1,
+			IntelligenceSaveBonus: 1,
+			WisdomSaveBonus:       1,
+			CharismaSaveBonus:     1,
+			ArmourClassBonus:      1,
+			SavingThrowBonusType:  utils.StrPointer(m.SavingThrowBonusTypeAdd),
+			SavingThrowBonusText:  "1 on saves",
 		},
 		{
 			ID:         16,

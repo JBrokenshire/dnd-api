@@ -2410,11 +2410,44 @@ const docTemplate = `{
                 "armour": {
                     "$ref": "#/definitions/responses.ArmourResponse"
                 },
+                "armour_class_bonus": {
+                    "type": "integer"
+                },
+                "charisma_bonus": {
+                    "type": "integer"
+                },
+                "charisma_save_bonus": {
+                    "type": "integer"
+                },
+                "constitution_bonus": {
+                    "type": "integer"
+                },
+                "constitution_save_bonus": {
+                    "type": "integer"
+                },
                 "cost": {
                     "type": "number"
                 },
+                "dexterity_bonus": {
+                    "type": "integer"
+                },
+                "dexterity_save_bonus": {
+                    "type": "integer"
+                },
                 "equippable": {
                     "type": "boolean"
+                },
+                "initiative_advantage": {
+                    "type": "boolean"
+                },
+                "initiative_bonus": {
+                    "type": "integer"
+                },
+                "intelligence_bonus": {
+                    "type": "integer"
+                },
+                "intelligence_save_bonus": {
+                    "type": "integer"
                 },
                 "name": {
                     "type": "string"
@@ -2428,11 +2461,30 @@ const docTemplate = `{
                 "rarity": {
                     "type": "string"
                 },
+                "saving_throw_bonus_text": {
+                    "type": "string"
+                },
+                "saving_throw_bonus_type": {
+                    "type": "string"
+                },
+                "strength_bonus": {
+                    "description": "Bonuses",
+                    "type": "integer"
+                },
+                "strength_save_bonus": {
+                    "type": "integer"
+                },
                 "type": {
                     "type": "string"
                 },
                 "weight": {
                     "type": "number"
+                },
+                "wisdom_bonus": {
+                    "type": "integer"
+                },
+                "wisdom_save_bonus": {
+                    "type": "integer"
                 }
             }
         },

@@ -30,3 +30,6 @@ go.work.sum
 
 # Assets
 /assets/files/**
+
+# Swagger Docs
+/docs/*

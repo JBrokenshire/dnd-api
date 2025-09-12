@@ -1,9 +1,7 @@
 package models
 
 const (
-	SpellcastingAbilityIntelligence = "Intelligence"
-	SpellcastingAbilityWisdom       = "Wisdom"
-	SpellcastingAbilityCharisma     = "Charisma"
+	SpellcastingAbilityCharisma = "Charisma"
 )
 
 type Class struct {
@@ -17,5 +15,5 @@ type Class struct {
 
 	Logo            File               `json:"logo"`
 	BackgroundImage File               `json:"background_image"`
-	SpellSlots      []*ClassSpellSlots `json:"spell_slots"`
+	SpellLevels     []*ClassSpellLevel `json:"spell_levels"`
 }

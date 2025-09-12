@@ -140,6 +140,7 @@ func TestCharacter_List(t *testing.T) {
 
 func TestCharacter_Get(t *testing.T) {
 	ts.ClearTable("classes")
+	ts.ClearTable("class_spell_levels")
 	ts.ClearTable("races")
 	ts.ClearTable("characters")
 	ts.ClearTable("files")
@@ -148,17 +149,17 @@ func TestCharacter_Get(t *testing.T) {
 	ts.ClearTable("backgrounds")
 	ts.ClearTable("spells")
 	ts.ClearTable("character_spells")
-	ts.ClearTable("class_spell_slots")
 	ts.SetupDefaultUsers()
 
 	// Create class
 	class := &m.Class{}
 	factories.NewClass(ts.S.Db, class)
-	// Create class spell slots
-	spellSlots := &m.ClassSpellSlots{ClassId: class.ID, SpellSlots: 3}
-	factories.NewClassSpellSlots(ts.S.Db, spellSlots)
-	level2SpellSlots := &m.ClassSpellSlots{ClassId: class.ID, ClassLevel: 2, SpellSlots: 1}
-	factories.NewClassSpellSlots(ts.S.Db, level2SpellSlots)
+
+	// Create class spell levels
+	classSpellLevel := &m.ClassSpellLevel{ClassId: class.ID}
+	factories.NewClassSpellLevel(ts.S.Db, classSpellLevel)
+	classSPellLevel2 := &m.ClassSpellLevel{ClassId: class.ID, ClassLevel: 2, NumberOfSlots: 2}
+	factories.NewClassSpellLevel(ts.S.Db, classSPellLevel2)
 
 	// Create class images
 	backgroundImage := &m.File{Model: m.FileModelClassBackgroundImage, ModelId: class.ID}
@@ -263,7 +264,7 @@ func TestCharacter_Get(t *testing.T) {
 					characterDefense.DefenseType,
 					fmt.Sprintf(`"name":"%v"`, background.Name),
 					fmt.Sprintf(`"name":"%v"`, spell.Name),
-					`"spell_slots":3`,
+					`"number_of_slots":1`,
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, character2.Name),
@@ -275,7 +276,7 @@ func TestCharacter_Get(t *testing.T) {
 					differentUserCharacterDefense.DamageType,
 					differentUserCharacterDefense.DefenseType,
 					fmt.Sprintf(`"name":"%v"`, spell2.Name),
-					`"spell_slots":2`,
+					`"number_of_slots":2`,
 				},
 			},
 		},

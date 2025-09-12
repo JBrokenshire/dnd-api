@@ -6,7 +6,7 @@ import (
 )
 
 func (s *Seeder) SetCharacterSpells() {
-	characterSpells := []*m.CharacterSpell{
+	characterSpells := []m.CharacterSpell{
 		{
 			ID:          1,
 			CharacterID: 1,
@@ -77,12 +77,22 @@ func (s *Seeder) SetCharacterSpells() {
 			CharacterID: 1,
 			SpellID:     14,
 		},
+		{
+			ID:          15,
+			CharacterID: 2,
+			SpellID:     15,
+		},
+		{
+			ID:          16,
+			CharacterID: 2,
+			SpellID:     16,
+		},
 	}
 
-	for _, spell := range characterSpells {
-		err := s.DB.Where("id = ?", spell.ID).FirstOrCreate(&spell).Error
+	for _, characterSpell := range characterSpells {
+		err := s.DB.Where("id = ?", characterSpell.ID).FirstOrCreate(&characterSpell).Error
 		if err != nil {
-			log.Printf("Error creating spell with id %v in seeder: %v", spell.ID, err.Error())
+			log.Printf("Error creating character spell with id %v in seeder: %v", characterSpell.ID, err.Error())
 		}
 	}
 }

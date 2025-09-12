@@ -6,7 +6,7 @@ import (
 )
 
 func (s *Seeder) SetCharacterProficientSkills() {
-	characterProficientSkills := []*m.CharacterProficientSkill{
+	characterProficientSkills := []m.CharacterProficientSkill{
 		{
 			ID:              1,
 			CharacterID:     1,
@@ -29,7 +29,7 @@ func (s *Seeder) SetCharacterProficientSkills() {
 			ID:              4,
 			CharacterID:     1,
 			Skill:           m.SkillAthletics,
-			ProficiencyType: m.ProficiencyTypeProficiency,
+			ProficiencyType: m.ProficiencyTypeHalf,
 		},
 		{
 			ID:              5,
@@ -47,7 +47,7 @@ func (s *Seeder) SetCharacterProficientSkills() {
 			ID:              7,
 			CharacterID:     1,
 			Skill:           m.SkillInsight,
-			ProficiencyType: m.ProficiencyTypeProficiency,
+			ProficiencyType: m.ProficiencyTypeHalf,
 		},
 		{
 			ID:              8,
@@ -94,33 +94,57 @@ func (s *Seeder) SetCharacterProficientSkills() {
 		{
 			ID:              15,
 			CharacterID:     1,
-			Skill:           m.SkillReligion,
+			Skill:           m.SkillSleightOfHand,
 			ProficiencyType: m.ProficiencyTypeHalf,
 		},
 		{
 			ID:              16,
 			CharacterID:     1,
-			Skill:           m.SkillSleightOfHand,
+			Skill:           m.SkillStealth,
 			ProficiencyType: m.ProficiencyTypeHalf,
 		},
 		{
 			ID:              17,
 			CharacterID:     1,
-			Skill:           m.SkillStealth,
+			Skill:           m.SkillSurvival,
 			ProficiencyType: m.ProficiencyTypeProficiency,
 		},
 		{
 			ID:              18,
 			CharacterID:     1,
-			Skill:           m.SkillSurvival,
+			Skill:           m.SkillReligion,
+			ProficiencyType: m.ProficiencyTypeHalf,
+		},
+		{
+			ID:              19,
+			CharacterID:     2,
+			Skill:           m.SkillInsight,
+			ProficiencyType: m.ProficiencyTypeProficiency,
+		},
+		{
+			ID:              20,
+			CharacterID:     2,
+			Skill:           m.SkillIntimidation,
+			ProficiencyType: m.ProficiencyTypeProficiency,
+		},
+		{
+			ID:              21,
+			CharacterID:     2,
+			Skill:           m.SkillPerception,
+			ProficiencyType: m.ProficiencyTypeProficiency,
+		},
+		{
+			ID:              22,
+			CharacterID:     2,
+			Skill:           m.SkillStealth,
 			ProficiencyType: m.ProficiencyTypeProficiency,
 		},
 	}
 
-	for _, profSkill := range characterProficientSkills {
-		err := s.DB.Where("id = ?", profSkill.ID).FirstOrCreate(&profSkill).Error
+	for _, characterProficientSkill := range characterProficientSkills {
+		err := s.DB.Where("id = ?", characterProficientSkill.ID).FirstOrCreate(&characterProficientSkill).Error
 		if err != nil {
-			log.Printf("Error creating profSkill with id %v in seeder: %v", profSkill.ID, err.Error())
+			log.Printf("Error creating character proficient skill with id %v in seeder: %v", characterProficientSkill.ID, err.Error())
 		}
 	}
 }

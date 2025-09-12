@@ -1969,6 +1969,23 @@ const docTemplate = `{
                 }
             }
         },
+        "responses.CharacterInventoryItemResponse": {
+            "type": "object",
+            "properties": {
+                "equipped": {
+                    "type": "boolean"
+                },
+                "item": {
+                    "$ref": "#/definitions/responses.ItemResponse"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
         "responses.CharacterPaginatedResponse": {
             "type": "object",
             "properties": {
@@ -2008,8 +2025,17 @@ const docTemplate = `{
                     "description": "Details",
                     "type": "string"
                 },
+                "allies": {
+                    "type": "string"
+                },
                 "background": {
                     "$ref": "#/definitions/responses.BackgroundResponse"
+                },
+                "backstory": {
+                    "type": "string"
+                },
+                "bonds": {
+                    "type": "string"
                 },
                 "charisma": {
                     "type": "integer"
@@ -2044,10 +2070,16 @@ const docTemplate = `{
                 "dexterity_save_adjustment": {
                     "type": "integer"
                 },
+                "enemies": {
+                    "type": "string"
+                },
                 "eyes": {
                     "type": "string"
                 },
                 "faith": {
+                    "type": "string"
+                },
+                "flaws": {
                     "type": "string"
                 },
                 "gender": {
@@ -2065,6 +2097,9 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "ideals": {
+                    "type": "string"
+                },
                 "inspiration": {
                     "type": "boolean"
                 },
@@ -2074,6 +2109,12 @@ const docTemplate = `{
                 "intelligence_save_adjustment": {
                     "type": "integer"
                 },
+                "inventory": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.CharacterInventoryItemResponse"
+                    }
+                },
                 "level": {
                     "type": "integer"
                 },
@@ -2081,6 +2122,12 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "organisations": {
+                    "type": "string"
+                },
+                "personality_traits": {
                     "type": "string"
                 },
                 "proficiencies": {
@@ -2185,10 +2232,10 @@ const docTemplate = `{
                 "short_description": {
                     "type": "string"
                 },
-                "spell_slots": {
+                "spell_levels": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/responses.ClassSpellSlotsResponse"
+                        "$ref": "#/definitions/responses.ClassSpellLevelResponse"
                     }
                 },
                 "spellcasting_ability": {
@@ -2196,16 +2243,13 @@ const docTemplate = `{
                 }
             }
         },
-        "responses.ClassSpellSlotsResponse": {
+        "responses.ClassSpellLevelResponse": {
             "type": "object",
             "properties": {
-                "class_level": {
+                "number_of_slots": {
                     "type": "integer"
                 },
                 "spell_level": {
-                    "type": "integer"
-                },
-                "spell_slots": {
                     "type": "integer"
                 }
             }
@@ -2259,6 +2303,32 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "responses.ItemResponse": {
+            "type": "object",
+            "properties": {
+                "cost": {
+                    "type": "number"
+                },
+                "equippable": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "origin": {
+                    "type": "string"
+                },
+                "rarity": {
+                    "type": "string"
+                },
+                "weight": {
+                    "type": "number"
                 }
             }
         },

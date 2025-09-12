@@ -15,7 +15,7 @@ type ClassResponse struct {
 
 	Logo            *FileResponse             `json:"logo"`
 	BackgroundImage *FileResponse             `json:"background_image"`
-	SpellSlots      []ClassSpellSlotsResponse `json:"spell_slots"`
+	SpellLevels     []ClassSpellLevelResponse `json:"spell_levels"`
 }
 
 type ClassPaginatedResponse struct {
@@ -40,8 +40,8 @@ func NewClassResponse(class *m.Class) *ClassResponse {
 	if class.BackgroundImage.ID != 0 {
 		res.BackgroundImage = NewFileResponse(&class.BackgroundImage)
 	}
-	if len(class.SpellSlots) > 0 {
-		res.SpellSlots = NewClassSpellSlotsResponses(class.SpellSlots)
+	if len(class.SpellLevels) != 0 {
+		res.SpellLevels = NewCLassSpellLevelResponses(class.SpellLevels)
 	}
 
 	return res

@@ -69,6 +69,15 @@ type Character struct {
 	Senses        string `json:"senses"`
 	Proficiencies string `json:"proficiencies"`
 
+	PersonalityTraits string `json:"personality_traits"`
+	Ideals            string `json:"ideals"`
+	Bonds             string `json:"bonds"`
+	Flaws             string `json:"flaws"`
+	Organisations     string `json:"organisations"`
+	Allies            string `json:"allies"`
+	Enemies           string `json:"enemies"`
+	Backstory         string `json:"backstory"`
+
 	Class            Class                       `json:"class"`
 	Race             Race                        `json:"race"`
 	ProfilePicture   File                        `json:"profile_picture"`
@@ -76,4 +85,5 @@ type Character struct {
 	Defenses         []*CharacterDefense         `json:"defenses"`
 	Background       Background                  `json:"background"`
 	Spells           []*Spell                    `json:"spells"`
+	Inventory        []*CharacterInventoryItem   `json:"inventory"`
 }

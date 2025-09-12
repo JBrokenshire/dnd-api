@@ -168,6 +168,27 @@ func (s *Seeder) SetSpells() {
 			Effect:      "Control",
 			Notes:       "D: 1m, 40ft. Cube, V/S/M",
 		},
+		{
+			ID:          15,
+			Name:        "Booming Blade",
+			School:      m.MagicSchoolEvocation,
+			Level:       0,
+			CastingTime: "1A",
+			Distance:    "Self",
+			Damage:      utils.StrPointer("1d8"),
+			DamageType:  utils.StrPointer(m.DamageTypeThunder),
+			Notes:       "D: 1Rnd, 5ft. Sphere, S/M",
+		},
+		{
+			ID:          16,
+			Name:        "Fog Cloud",
+			School:      m.MagicSchoolConjuration,
+			Level:       1,
+			CastingTime: "1A",
+			Distance:    "120 ft.",
+			Effect:      "Control",
+			Notes:       "D: 1h, 20ft. Sphere, V/S",
+		},
 	}
 
 	for _, spell := range spells {

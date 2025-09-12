@@ -140,6 +140,7 @@ func TestCharacter_List(t *testing.T) {
 
 func TestCharacter_Get(t *testing.T) {
 	ts.ClearTable("classes")
+	ts.ClearTable("class_spell_levels")
 	ts.ClearTable("races")
 	ts.ClearTable("characters")
 	ts.ClearTable("files")
@@ -153,6 +154,12 @@ func TestCharacter_Get(t *testing.T) {
 	// Create class
 	class := &m.Class{}
 	factories.NewClass(ts.S.Db, class)
+
+	// Create class spell levels
+	classSpellLevel := &m.ClassSpellLevel{ClassId: class.ID}
+	factories.NewClassSpellLevel(ts.S.Db, classSpellLevel)
+	classSPellLevel2 := &m.ClassSpellLevel{ClassId: class.ID, ClassLevel: 2, NumberOfSlots: 2}
+	factories.NewClassSpellLevel(ts.S.Db, classSPellLevel2)
 
 	// Create class images
 	backgroundImage := &m.File{Model: m.FileModelClassBackgroundImage, ModelId: class.ID}
@@ -257,6 +264,7 @@ func TestCharacter_Get(t *testing.T) {
 					characterDefense.DefenseType,
 					fmt.Sprintf(`"name":"%v"`, background.Name),
 					fmt.Sprintf(`"name":"%v"`, spell.Name),
+					`"number_of_slots":1`,
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, character2.Name),
@@ -268,6 +276,7 @@ func TestCharacter_Get(t *testing.T) {
 					differentUserCharacterDefense.DamageType,
 					differentUserCharacterDefense.DefenseType,
 					fmt.Sprintf(`"name":"%v"`, spell2.Name),
+					`"number_of_slots":2`,
 				},
 			},
 		},
@@ -1125,11 +1134,6 @@ func TestCharacter_UploadProfilePicture(t *testing.T) {
 	fileStoreMock := mocks.NewFileStoreMock()
 	ts.S.Dependencies.SetFileStore(fileStoreMock)
 
-	setup := func(test *helpers.TestCase) {
-		ts.ClearTable("files")
-		fileStoreMock.Reset()
-	}
-
 	// Create classes
 	class := &m.Class{}
 	factories.NewClass(ts.S.Db, class)
@@ -1141,11 +1145,18 @@ func TestCharacter_UploadProfilePicture(t *testing.T) {
 	// Create characters
 	character := &m.Character{ClassId: class.ID, RaceId: race.ID}
 	factories.NewCharacter(ts.S.Db, character)
+	existingProfileCharacter := &m.Character{ClassId: class.ID, RaceId: race.ID}
+	factories.NewCharacter(ts.S.Db, existingProfileCharacter)
 	differentUserCharacter := &m.Character{ClassId: class.ID, RaceId: race.ID, UserId: 1000}
 	factories.NewCharacter(ts.S.Db, differentUserCharacter)
 
+	// Create files - Added to DB in Setup
+	existingProfilePicture := &m.File{Model: m.FileModelCharacterProfilePicture, ModelId: existingProfileCharacter.ID}
+	factories.NewFile(ts.S.Db, existingProfilePicture)
+
 	// PNG file
 	pngBody, pngMw := createMultipartFile(t, "file", "../assets/example.png")
+	png2Body, png2Mw := createMultipartFile(t, "file", "../assets/example.png")
 	// JPG file
 	jpgBody, jpgMw := createMultipartFile(t, "file", "../assets/example.jpg")
 	// JPEG file
@@ -1154,6 +1165,13 @@ func TestCharacter_UploadProfilePicture(t *testing.T) {
 	webpBody, webpMw := createMultipartFile(t, "file", "../assets/example.webp")
 	// PDF file
 	pdfBody, pdfMw := createMultipartFile(t, "file", "../assets/example.pdf")
+
+	setup := func(test *helpers.TestCase) {
+		ts.ClearTable("files")
+		fileStoreMock.Reset()
+
+		factories.NewFile(ts.S.Db, existingProfilePicture)
+	}
 
 	getRequest := func(id interface{}) helpers.Request {
 		return helpers.Request{
@@ -1305,6 +1323,48 @@ func TestCharacter_UploadProfilePicture(t *testing.T) {
 					assert.Equal(t, 1, len(fileStoreMock.SaveCalls))
 					assert.Contains(t, fileStoreMock.SaveCalls[0].Path, fmt.Sprintf("characters/%v", character.ID))
 					assert.Contains(t, fileStoreMock.SaveCalls[0].FileName, ".webp")
+				},
+			},
+		},
+		{
+			Name:               "Can delete existing profile picture",
+			Setup:              setup,
+			Request:            getRequest(existingProfileCharacter.ID),
+			RequestReader:      png2Body,
+			RequestContentType: png2Mw.FormDataContentType(),
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "File uploaded",
+				DatabaseChecks: []*helpers.DatabaseCheck{
+					{
+						Name: "File was uploaded",
+						Model: m.File{
+							Model:   m.FileModelCharacterProfilePicture,
+							ModelId: existingProfileCharacter.ID,
+						},
+						CountExpected: 1,
+					},
+					{
+						Name: "Existing picture was deleted",
+						Model: m.File{
+							ID:           existingProfilePicture.ID,
+							Model:        m.FileModelCharacterProfilePicture,
+							ModelId:      existingProfileCharacter.ID,
+							FileLocation: existingProfilePicture.FileLocation,
+							Filename:     existingProfilePicture.Filename,
+						},
+						CountExpected: 0,
+					},
+				},
+				ExpectedCallBack: func(res *httptest.ResponseRecorder) {
+					// Ensure file store was called correctly
+					assert.Equal(t, 1, len(fileStoreMock.SaveCalls))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].Path, fmt.Sprintf("characters/%v", existingProfileCharacter.ID))
+					assert.Contains(t, fileStoreMock.SaveCalls[0].FileName, ".png")
+
+					// Ensure existing file was deleted
+					assert.Equal(t, 1, len(fileStoreMock.DeleteCalls))
+					assert.Contains(t, fileStoreMock.DeleteCalls[0], existingProfilePicture.FileLocation)
 				},
 			},
 		},

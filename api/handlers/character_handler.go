@@ -300,6 +300,23 @@ func (h *CharacterHandler) UploadProfilePicture(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusNotFound, "Character not found")
 	}
 
+	// Delete Existing
+	if character.ProfilePicture.ID != 0 {
+		// Delete from file store
+		err := h.server.Dependencies.GetFileStore().Delete(fmt.Sprintf("%v/%v", character.ProfilePicture.FileLocation, character.ProfilePicture.Filename))
+		if err != nil {
+			log.Printf("Error deleting existing profile picture from file store: %v", err)
+		}
+
+		// Delete from DB
+		err = h.server.Repos.File.Delete(character.ProfilePicture)
+		if err != nil {
+			log.Printf("Error deleting existing file from database: %v", err)
+			return responses.ErrorResponse(c, http.StatusInternalServerError, "Error deleting existing file")
+		}
+
+	}
+
 	// Check the file mimetype - We only want to accept images
 	fileName, fileMimeType, err := h.server.Dependencies.GetFileService().ReadFileInfo(c)
 	if err != nil {

@@ -98,7 +98,7 @@ He may not know happiness for himself yet. But if his music can carve it out of 
 			Bonds:                      `["I'm trying to pay off an old debt I owe to a generous benefactor"]`,
 			Flaws:                      `["If there's a plan I'll forget it. If I don't forget it, I'll ignore it."]`,
 			Organisations:              `["Inter-Isle Belonging of Fantastic Investigators - Marblethorn Unit"]`,
-			Allies:                     `["Idris","Vashta","Niko","Karma","Lycia","Theo","Edith","Eggy"]`,
+			Allies:                     `["Eldrin","Idris","Vashta","Niko","Karma","Lycia","Theo","Edith","Eggy"]`,
 			Enemies:                    `[]`,
 			Backstory: `Kaelrith Drakeshield was born in the harsh, arid lands of the Draken Wastes, a barren region where only the strongest survived. From a young age, he was taught to fend for himself, honing his skills as a warrior under the tutelage of his clan's elders. The Draken Wastes were a lawless land, and Kael quickly learned the ways of combat, developing into a skilled bounty hunter by his late teens. His physical prowess and brass dragonborn resilience made him a feared and respected figure among the bounty hunting community.
 

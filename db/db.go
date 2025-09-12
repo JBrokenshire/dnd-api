@@ -48,6 +48,8 @@ func Init() *gorm.DB {
 	seeder.SetClasses()
 	fmt.Println("Seeding Class Spell Levels...")
 	seeder.SetClassSpellLevels()
+	fmt.Println("Seeding Subclasses...")
+	seeder.SetSubclasses()
 	fmt.Println("Seeding Backgrounds...")
 	seeder.SetBackgrounds()
 	fmt.Println("Seeding Items...")

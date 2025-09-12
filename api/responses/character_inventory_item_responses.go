@@ -3,6 +3,7 @@ package responses
 import m "dnd-api/db/models"
 
 type CharacterInventoryItemResponse struct {
+	ID       uint   `json:"id"`
 	Location string `json:"location"`
 	Quantity int    `json:"quantity"`
 	Equipped *bool  `json:"equipped"`
@@ -12,6 +13,7 @@ type CharacterInventoryItemResponse struct {
 
 func NewCharacterInventoryItemResponse(item *m.CharacterInventoryItem) *CharacterInventoryItemResponse {
 	res := &CharacterInventoryItemResponse{
+		ID:       item.ID,
 		Location: item.Location,
 		Quantity: item.Quantity,
 		Equipped: item.Equipped,

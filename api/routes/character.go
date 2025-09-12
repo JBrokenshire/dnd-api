@@ -9,6 +9,7 @@ func characterRoutes(server *api.Server) {
 	characterHandler := handlers.NewCharacterHandler(server)
 	inspirationHandler := handlers.NewCharacterInspirationHandler(server)
 	healthHandler := handlers.NewCharacterHealthHandler(server)
+	inventoryItemHandler := handlers.NewCharacterInventoryItemHandler(server)
 
 	character := restrictedRouteGroup(server, "/characters")
 
@@ -24,4 +25,7 @@ func characterRoutes(server *api.Server) {
 
 	// Health
 	character.PUT("/:id/health", healthHandler.Update)
+
+	// Inventory Items
+	character.PUT("/:characterID/inventory-item/:inventoryItemID", inventoryItemHandler.Update)
 }

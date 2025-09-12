@@ -8,6 +8,12 @@ const (
 	RarityLegendary = "Legendary"
 )
 
+const (
+	ItemTypeArmour = "armour"
+	ItemTypeWeapon = "weapon"
+	ItemTypeItem   = "item"
+)
+
 type Item struct {
 	ID         uint `gorm:"primary_key;auto_increment"`
 	Name       string
@@ -17,4 +23,7 @@ type Item struct {
 	Cost       float32
 	Equippable bool
 	Notes      string
+	Type       string
+
+	Armour Armour
 }

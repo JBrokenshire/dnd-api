@@ -16,6 +16,7 @@ func (s *Seeder) SetItems() {
 			Cost:       2,
 			Equippable: true,
 			Notes:      "Simple, Finesse, Light, Thrown, Nick, Range (20/60)",
+			Type:       m.ItemTypeWeapon,
 		},
 		{
 			ID:         2,
@@ -26,6 +27,7 @@ func (s *Seeder) SetItems() {
 			Cost:       200,
 			Equippable: true,
 			Notes:      "Martial, Finesse, Vex",
+			Type:       m.ItemTypeWeapon,
 		},
 		{
 			ID:         3,
@@ -36,6 +38,7 @@ func (s *Seeder) SetItems() {
 			Cost:       10,
 			Equippable: true,
 			Notes:      "AC 11",
+			Type:       m.ItemTypeArmour,
 		},
 		{
 			ID:     4,
@@ -156,6 +159,7 @@ func (s *Seeder) SetItems() {
 			Cost:       75,
 			Notes:      "AC 16, STR 13, Stealth Disadv.",
 			Equippable: true,
+			Type:       m.ItemTypeArmour,
 		},
 		{
 			ID:     17,
@@ -175,6 +179,7 @@ func (s *Seeder) SetItems() {
 			Cost:       30,
 			Equippable: true,
 			Notes:      "Martial, Heavy, Two-Handed, Cleave",
+			Type:       m.ItemTypeWeapon,
 		},
 		{
 			ID:         19,
@@ -185,6 +190,7 @@ func (s *Seeder) SetItems() {
 			Cost:       5,
 			Equippable: true,
 			Notes:      "Simple, Light, Thrown, Vex, Range (20/60)",
+			Type:       m.ItemTypeWeapon,
 		},
 		{
 			ID:     20,
@@ -204,6 +210,7 @@ func (s *Seeder) SetItems() {
 			Cost:       15,
 			Equippable: true,
 			Notes:      "Martial, Sap",
+			Type:       m.ItemTypeWeapon,
 		},
 		{
 			ID:     22,

@@ -294,6 +294,19 @@ definitions:
     - name
     - short_description
     type: object
+  responses.ArmourResponse:
+    properties:
+      base_ac:
+        type: integer
+      max_dex_modifier:
+        type: integer
+      stealth_disadvantage:
+        type: boolean
+      str_requirement:
+        type: integer
+      type:
+        type: string
+    type: object
   responses.BackgroundResponse:
     properties:
       description:
@@ -537,6 +550,8 @@ definitions:
     type: object
   responses.ItemResponse:
     properties:
+      armour;omitempty:
+        $ref: '#/definitions/responses.ArmourResponse'
       cost:
         type: number
       equippable:
@@ -548,6 +563,8 @@ definitions:
       origin:
         type: string
       rarity:
+        type: string
+      type:
         type: string
       weight:
         type: number

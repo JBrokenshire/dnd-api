@@ -20,6 +20,7 @@ func NewCharacterInventoryItemRepository(db *gorm.DB) *CharacterInventoryItemRep
 func (r *CharacterInventoryItemRepository) GetById(characterID, inventoryItemId interface{}) *m.CharacterInventoryItem {
 	var characterInventoryItem m.CharacterInventoryItem
 	r.Db.
+		Preload("Item").
 		Where("id = ?", inventoryItemId).
 		Where("character_id = ?", characterID).
 		First(&characterInventoryItem)

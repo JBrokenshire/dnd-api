@@ -12,10 +12,13 @@ type ItemResponse struct {
 	Weight     float32 `json:"weight"`
 	Equippable bool    `json:"equippable"`
 	Origin     string  `json:"origin"`
+	Type       string  `json:"type"`
+
+	Armour ArmourResponse `json:"armour;omitempty"`
 }
 
 func NewItemResponse(item *m.Item) *ItemResponse {
-	return &ItemResponse{
+	res := &ItemResponse{
 		Name:       item.Name,
 		Rarity:     item.Rarity,
 		Notes:      item.Notes,
@@ -23,13 +26,12 @@ func NewItemResponse(item *m.Item) *ItemResponse {
 		Weight:     item.Weight,
 		Equippable: item.Equippable,
 		Origin:     item.Origin,
+		Type:       item.Type,
 	}
-}
 
-func NewItemResponses(items []*m.Item) []ItemResponse {
-	var res []ItemResponse
-	for _, item := range items {
-		res = append(res, *NewItemResponse(item))
+	if item.Type == m.ItemTypeArmour {
+		res.Armour = *NewArmourResponse(&item.Armour)
 	}
+
 	return res
 }

@@ -59,11 +59,24 @@ func (h *CharacterInventoryItemHandler) Update(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusNotFound, "Inventory item not found")
 	}
 
+	if inventoryItem.Item.Type == models.ItemTypeArmour && request.Equipped == true {
+		for _, item := range character.Inventory {
+			if item.Item.Type == models.ItemTypeArmour && item.Equipped != nil && *item.Equipped {
+				item.Equipped = utils.BoolPointer(false)
+				err := h.server.Repos.CharacterInventoryItem.Update(item)
+				if err != nil {
+					log.Printf("Error unequipping existing armour: %v", err)
+					return responses.ErrorResponse(c, http.StatusInternalServerError, "Error updating character inventory")
+				}
+			}
+		}
+	}
+
 	inventoryItem.Equipped = utils.BoolPointer(request.Equipped)
 	err := h.server.Repos.CharacterInventoryItem.Update(inventoryItem)
 	if err != nil {
-		log.Printf("Error updating character health: %v", err)
-		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error updating character health")
+		log.Printf("Error updating character inventory: %v", err)
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error updating character inventory")
 	}
 
 	return responses.MessageResponse(c, http.StatusOK, "Character inventory item updated")

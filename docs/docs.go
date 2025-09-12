@@ -2019,6 +2019,26 @@ const docTemplate = `{
                 }
             }
         },
+        "responses.ArmourResponse": {
+            "type": "object",
+            "properties": {
+                "base_ac": {
+                    "type": "integer"
+                },
+                "max_dex_modifier": {
+                    "type": "integer"
+                },
+                "stealth_disadvantage": {
+                    "type": "boolean"
+                },
+                "str_requirement": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
         "responses.BackgroundResponse": {
             "type": "object",
             "properties": {
@@ -2387,6 +2407,9 @@ const docTemplate = `{
         "responses.ItemResponse": {
             "type": "object",
             "properties": {
+                "armour;omitempty": {
+                    "$ref": "#/definitions/responses.ArmourResponse"
+                },
                 "cost": {
                     "type": "number"
                 },
@@ -2403,6 +2426,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "rarity": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 },
                 "weight": {

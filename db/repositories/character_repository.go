@@ -75,6 +75,11 @@ func (r *CharacterRepository) GetById(id interface{}, userId interface{}) *m.Cha
 	r.Db.Where("class_id = ?", character.Class.ID).Where("class_level = ?", character.Level).Find(&character.Class.SpellLevels)
 	// Load Inventory
 	r.Db.Preload("Item").Where("character_id = ?", character.ID).Find(&character.Inventory)
+	for _, item := range character.Inventory {
+		if item.Item.Type == m.ItemTypeArmour {
+			r.Db.Where("item_id = ?", item.Item.ID).First(&item.Item.Armour)
+		}
+	}
 
 	return &character
 }

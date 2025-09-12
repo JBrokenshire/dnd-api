@@ -14,6 +14,8 @@ import (
 func TestCharacterInventoryItemUpdate(t *testing.T) {
 	ts.ClearTable("characters")
 	ts.ClearTable("character_inventory_items")
+	ts.ClearTable("items")
+	ts.SetupDefaultUsers()
 
 	// Create characters
 	character := &m.Character{}
@@ -23,13 +25,25 @@ func TestCharacterInventoryItemUpdate(t *testing.T) {
 	differentUserCharacter := &m.Character{UserId: 1000}
 	factories.NewCharacter(ts.S.Db, differentUserCharacter)
 
+	// Create items
+	item := &m.Item{}
+	factories.NewItem(ts.S.Db, item)
+	armourItem := &m.Item{Type: m.ItemTypeArmour}
+	factories.NewItem(ts.S.Db, armourItem)
+	armourItem2 := &m.Item{Type: m.ItemTypeArmour}
+	factories.NewItem(ts.S.Db, armourItem2)
+
 	// Create character inventory items
-	characterInventoryItem := &m.CharacterInventoryItem{CharacterId: character.ID}
+	characterInventoryItem := &m.CharacterInventoryItem{CharacterId: character.ID, ItemId: item.ID}
 	factories.NewCharacterInventoryItem(ts.S.Db, characterInventoryItem)
-	character2InventoryItem := &m.CharacterInventoryItem{CharacterId: character2.ID}
+	character2InventoryItem := &m.CharacterInventoryItem{CharacterId: character2.ID, ItemId: item.ID}
 	factories.NewCharacterInventoryItem(ts.S.Db, character2InventoryItem)
-	differentUserCharacterInventoryItem := &m.CharacterInventoryItem{CharacterId: differentUserCharacter.ID}
+	differentUserCharacterInventoryItem := &m.CharacterInventoryItem{CharacterId: differentUserCharacter.ID, ItemId: item.ID}
 	factories.NewCharacterInventoryItem(ts.S.Db, differentUserCharacterInventoryItem)
+	characterEquippedArmourInventoryItem := &m.CharacterInventoryItem{CharacterId: character.ID, ItemId: armourItem.ID, Equipped: utils.BoolPointer(true)}
+	factories.NewCharacterInventoryItem(ts.S.Db, characterEquippedArmourInventoryItem)
+	characterUnequippedArmourInventoryItem := &m.CharacterInventoryItem{CharacterId: character.ID, ItemId: armourItem2.ID, Equipped: utils.BoolPointer(false)}
+	factories.NewCharacterInventoryItem(ts.S.Db, characterUnequippedArmourInventoryItem)
 
 	getRequest := func(characterId, inventoryItemId interface{}) helpers.Request {
 		return helpers.Request{
@@ -89,6 +103,33 @@ func TestCharacterInventoryItemUpdate(t *testing.T) {
 						Equipped: utils.BoolPointer(true),
 					},
 					CountExpected: 1,
+				},
+			},
+		},
+		{
+			Name:        "Can unequip armour when equipping new armour",
+			Request:     getRequest(character.ID, characterUnequippedArmourInventoryItem.ID),
+			RequestBody: requests.UpdateCharacterInventoryItemRequest{Equipped: true},
+			Expected: helpers.ExpectedResponse{
+				StatusCode: http.StatusOK,
+				BodyPart:   "Character inventory item updated",
+				DatabaseChecks: []*helpers.DatabaseCheck{
+					{
+						Name: "New armour was equipped",
+						Model: m.CharacterInventoryItem{
+							ID:       characterUnequippedArmourInventoryItem.ID,
+							Equipped: utils.BoolPointer(true),
+						},
+						CountExpected: 1,
+					},
+					{
+						Name: "Old armour was unequipped",
+						Model: m.CharacterInventoryItem{
+							ID:       characterEquippedArmourInventoryItem.ID,
+							Equipped: utils.BoolPointer(false),
+						},
+						CountExpected: 1,
+					},
 				},
 			},
 		},

@@ -149,6 +149,9 @@ func TestCharacter_Get(t *testing.T) {
 	ts.ClearTable("backgrounds")
 	ts.ClearTable("spells")
 	ts.ClearTable("character_spells")
+	ts.ClearTable("items")
+	ts.ClearTable("armours")
+	ts.ClearTable("character_inventory_items")
 	ts.SetupDefaultUsers()
 
 	// Create class
@@ -213,6 +216,22 @@ func TestCharacter_Get(t *testing.T) {
 	character2Spell := &m.CharacterSpell{CharacterID: character2.ID, SpellID: spell2.ID}
 	factories.NewCharacterSpell(ts.S.Db, character2Spell)
 
+	// Create items
+	item := &m.Item{}
+	factories.NewItem(ts.S.Db, item)
+	armourItem := &m.Item{Type: m.ItemTypeArmour}
+	factories.NewItem(ts.S.Db, armourItem)
+
+	// Create armour
+	armour := &m.Armour{ItemId: armourItem.ID, BaseAC: 12}
+	factories.NewArmour(ts.S.Db, armour)
+
+	// Create character inventory items
+	characterInventoryItem := &m.CharacterInventoryItem{CharacterId: character.ID, ItemId: item.ID}
+	factories.NewCharacterInventoryItem(ts.S.Db, characterInventoryItem)
+	characterArmourInventoryItem := &m.CharacterInventoryItem{CharacterId: character.ID, ItemId: armourItem.ID}
+	factories.NewCharacterInventoryItem(ts.S.Db, characterArmourInventoryItem)
+
 	getRequest := func(id interface{}) helpers.Request {
 		return helpers.Request{
 			Method: http.MethodGet,
@@ -265,6 +284,9 @@ func TestCharacter_Get(t *testing.T) {
 					fmt.Sprintf(`"name":"%v"`, background.Name),
 					fmt.Sprintf(`"name":"%v"`, spell.Name),
 					`"number_of_slots":1`,
+					fmt.Sprintf(`"name":"%v"`, item.Name),
+					fmt.Sprintf(`"name":"%v"`, armourItem.Name),
+					`"base_ac":12`,
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, character2.Name),

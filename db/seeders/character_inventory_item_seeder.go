@@ -14,6 +14,7 @@ func (s *Seeder) SetCharacterInventoryItems() {
 			ItemId:      1,
 			Location:    "Equipment",
 			Equipped:    utils.BoolPointer(false),
+			Quantity:    1,
 		},
 		{
 			ID:          2,
@@ -21,6 +22,7 @@ func (s *Seeder) SetCharacterInventoryItems() {
 			ItemId:      1,
 			Location:    "Equipment",
 			Equipped:    utils.BoolPointer(false),
+			Quantity:    1,
 		},
 		{
 			ID:          3,
@@ -28,6 +30,7 @@ func (s *Seeder) SetCharacterInventoryItems() {
 			ItemId:      2,
 			Location:    "Equipment",
 			Equipped:    utils.BoolPointer(true),
+			Quantity:    1,
 		},
 		{
 			ID:          4,
@@ -35,30 +38,35 @@ func (s *Seeder) SetCharacterInventoryItems() {
 			ItemId:      3,
 			Location:    "Equipment",
 			Equipped:    utils.BoolPointer(true),
+			Quantity:    1,
 		},
 		{
 			ID:          5,
 			CharacterId: 1,
 			ItemId:      4,
 			Location:    "Equipment",
+			Quantity:    1,
 		},
 		{
 			ID:          6,
 			CharacterId: 1,
 			ItemId:      5,
 			Location:    "Backpack",
+			Quantity:    1,
 		},
 		{
 			ID:          7,
 			CharacterId: 1,
 			ItemId:      6,
 			Location:    "Backpack",
+			Quantity:    1,
 		},
 		{
 			ID:          8,
 			CharacterId: 1,
 			ItemId:      7,
 			Location:    "Backpack",
+			Quantity:    1,
 		},
 		{
 			ID:          9,
@@ -72,6 +80,7 @@ func (s *Seeder) SetCharacterInventoryItems() {
 			CharacterId: 1,
 			ItemId:      9,
 			Location:    "Backpack",
+			Quantity:    1,
 		},
 		{
 			ID:          11,
@@ -92,6 +101,7 @@ func (s *Seeder) SetCharacterInventoryItems() {
 			CharacterId: 1,
 			ItemId:      12,
 			Location:    "Backpack",
+			Quantity:    1,
 		},
 		{
 			ID:          14,

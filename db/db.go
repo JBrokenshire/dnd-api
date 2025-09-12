@@ -62,6 +62,8 @@ func Init() *gorm.DB {
 	seeder.SetCharacterSpells()
 	fmt.Println("Seeding Character Inventory Items...")
 	seeder.SetCharacterInventoryItems()
+	fmt.Println("Seeding Character Defenses...")
+	seeder.SetCharacterDefenses()
 
 	return db
 }

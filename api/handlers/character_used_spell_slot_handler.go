@@ -29,6 +29,7 @@ func NewCharacterUsedSpellSlotHandler(server *api.Server) *CharacterUsedSpellSlo
 // @Accept json
 // @Produce json
 // @Param id path int true "Character ID"
+// @Param spellLevel path int true "Spell Level"
 // @Param params body requests.UpdateCharacterUsedSpellSlotRequest true "Character used spell slot information"
 // @Success 200 {object} responses.CharacterResponse
 // @Failure 400 {object} responses.Error

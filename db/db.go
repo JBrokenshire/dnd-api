@@ -44,6 +44,14 @@ func Init() *gorm.DB {
 	seeder.SetSpells()
 	fmt.Println("Seeding Races...")
 	seeder.SetRaces()
+	fmt.Println("Seeding Traits...")
+	seeder.SetTraits()
+	fmt.Println("Seeding Race Traits...")
+	seeder.SetRaceTraits()
+	fmt.Println("Seeding Trait Spells...")
+	seeder.SetTraitSpells()
+	fmt.Println("Seeding Trait Options...")
+	seeder.SetTraitOptions()
 	fmt.Println("Seeding Classes...")
 	seeder.SetClasses()
 	fmt.Println("Seeding Class Spell Levels...")
@@ -66,6 +74,8 @@ func Init() *gorm.DB {
 	seeder.SetCharacterInventoryItems()
 	fmt.Println("Seeding Character Defenses...")
 	seeder.SetCharacterDefenses()
+	fmt.Println("Seeding Character Selected Race Trait Options...")
+	seeder.SetCharacterSelectedRaceTraitOptions()
 
 	return db
 }

@@ -22,13 +22,13 @@ const (
 type Item struct {
 	ID         uint `gorm:"primary_key;auto_increment"`
 	Name       string
+	Type       string
 	Rarity     string
 	Origin     string
 	Weight     float32
 	Cost       float32
 	Equippable bool
 	Notes      string
-	Type       string
 
 	// Bonuses
 	StrengthBonus         int

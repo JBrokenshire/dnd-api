@@ -8,5 +8,6 @@ type Race struct {
 	Size             string `json:"size"`
 	BaseSpeed        int    `json:"base_speed"`
 
-	Logo File `json:"logo"`
+	Logo   File     `json:"logo"`
+	Traits []*Trait `json:"traits"`
 }

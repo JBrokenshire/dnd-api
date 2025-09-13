@@ -51,5 +51,7 @@ func (r *RaceRepository) GetById(id interface{}) *m.Race {
 
 	// Load image
 	r.Db.Where("model = ?", m.FileModelRaceLogo).Where("model_id = ?", race.ID).Take(&race.Logo)
+	// Load traits
+	r.Db.Joins("JOIN race_traits ON race_traits.trait_id = traits.id").Where("race_id = ?", race.ID).Find(&race.Traits)
 	return &race
 }

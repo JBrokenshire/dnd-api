@@ -104,6 +104,53 @@ After several years of service, Eldrin released Kael from his obligation, though
 
 Though his intellect often lags behind his peers, Kael's unwavering determination and combat expertise have earned him a place of respect within the Marblethorn Unit. He continues to work tirelessly, hoping to one day repay Eldrin and honor the legacy of his clan. Kael's journey is one of redemption and loyalty, as he seeks to balance the scales of his past while forging a future as a protector and defender.`,
 		},
+		{
+			ID:                3,
+			UserId:            1,
+			Name:              "Faelan Haversham",
+			ClassId:           3,
+			RaceId:            3,
+			Level:             3,
+			Pronouns:          "He/Him",
+			BackgroundId:      3,
+			Alignment:         "Lawful Good",
+			Gender:            "Male",
+			Eyes:              "Green",
+			Size:              "Small",
+			Height:            `3' 2"'`,
+			Hair:              "Tousled Brown",
+			Skin:              "White",
+			Age:               "23",
+			Weight:            "45lb.",
+			Strength:          12,
+			Dexterity:         16,
+			Constitution:      14,
+			Intelligence:      10,
+			Wisdom:            15,
+			Charisma:          8,
+			CurrentHitPoints:  28,
+			MaxHitPoints:      28,
+			AdvancementType:   m.AdvancementTypeMilestone,
+			HitPointType:      m.HitPointTypeManual,
+			Senses:            "[]",
+			Proficiencies:     `{"armour":["Light Armour","Medium Armour","Shields"], "weapons":["Martial Weapons","Simple Weapons"], "tools":["Alchemist's Supplies","Viol"], "languages":["Common","Gnomish","Halfling"]}`,
+			PersonalityTraits: `["I feel far more comfortable around animals than people.","I have a lesson for every situation, drawn from observing nature."]`,
+			Ideals:            `["Nature. The natural world is more important than all the constructs of civilisation. (Neutral)"]`,
+			Bonds:             `["An injury to the unspoiled wilderness of my home is an injury to me."]`,
+			Flaws:             `["I am too enamored of ale, wine, and other intoxicants."]`,
+			Backstory: `Faelan Haversham, a Stout Halfling of Acosis, was born into a family deeply rooted in the lumber and food trade that sustained their isolated community. The Havershams were known for their resilience and resourcefulness in the face of the harsh conditions surrounding Acosis, relying on a careful balance of agriculture and forestry to meet the needs of their people. Faelan's father, Thorian Haversham, was a skilled woodsman who oversaw the logging operations, while his mother, Elowen Haversham, managed the agricultural aspects, ensuring the community had enough sustenance.
+
+Growing up in the shadow of the constant threat of Arreksis raids, Faelan developed a strong sense of duty towards the safety and prosperity of Acosis. He learned the art of survival in the depths of the forests where trade access was impossible. Faelan's childhood was marked by stories of the Mortonhelm disaster, a cautionary tale shared by elders to emphasise the dangers of unchecked magical forces.
+
+One day, as Faelan explored the dense forests of Acosis, he stumbled upon a hidden glade where an ancient and mystical gem lay nestled among the roots of an ancient tree. The gem radiated a peculiar energy that captivated Faelan's senses. Intrigued and fueled by a desire to understand the gem's origins and purpose, he embarked on a journey beyond the borders of Acosis. 
+
+Making his way to Myrinport, the bustling trade hub of Fortenua, Faelan sought out scholars and mages who could shed light on the mysterious gem. He was instructed to head to the famed Crenchai Isle, known for its strong magical presence and abundance of temples. He was assured that the priests and scholars of the Isle could answer his questions. 
+
+He was set to head out from Myrinport dock and travel by boat to Crenchai Isle that evening. However, fate had other plans for him. As he navigated the crowded streets of Myrinport, the city's alarm bells suddenly pierced the air, and a frantic voice called out, "All to the square! All to the square!" With a mix of curiosity and concern, Faelan joined the gathering crowd, his hand resting on the gem he kept close. 
+
+In the midst of the commotion, a mysterious figure touched Faelan's shoulder. Before he could react, a surge of energy coursed through him, and the world blurred as he lost consciousness…
+`,
+		},
 	}
 
 	for _, character := range characters {

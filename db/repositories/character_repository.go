@@ -28,6 +28,7 @@ func (r *CharacterRepository) GetCharacters(c echo.Context, userId interface{}, 
 		Scopes(paginateFunc).
 		Scopes(scopes...).
 		Where("user_id = ?", userId).
+		Order("name asc").
 		Find(&characters)
 
 	// Load on images
@@ -81,6 +82,17 @@ func (r *CharacterRepository) GetById(id interface{}, userId interface{}) *m.Cha
 		if item.Item.Type == m.ItemTypeArmour {
 			r.Db.Where("item_id = ?", item.Item.ID).First(&item.Item.Armour)
 		}
+	}
+
+	// Load Race Traits
+	r.Db.Joins("JOIN race_traits on race_traits.trait_id = traits.id").Where("race_id = ?", character.Race.ID).Find(&character.Race.Traits)
+	for _, trait := range character.Race.Traits {
+		r.Db.Preload("Spell").Where("trait_id = ?", trait.ID).Find(&trait.TraitSpells)
+		r.Db.
+			Joins("JOIN character_selected_race_trait_options ON character_selected_race_trait_options.trait_option_id = trait_options.id").
+			Where("character_selected_race_trait_options.character_id = ?", character.ID).
+			Where("trait_options.trait_id = ?", trait.ID).
+			Find(&trait.Options)
 	}
 
 	return &character

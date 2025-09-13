@@ -10,8 +10,14 @@ func (s *Seeder) SetCharacterDefenses() {
 		{
 			ID:          1,
 			CharacterID: 2,
-			DefenseType: m.DefenseTypeResistance,
 			DamageType:  m.DamageTypeFire,
+			DefenseType: m.DefenseTypeResistance,
+		},
+		{
+			ID:          2,
+			CharacterID: 3,
+			DamageType:  m.DamageTypePoison,
+			DefenseType: m.DefenseTypeResistance,
 		},
 	}
 

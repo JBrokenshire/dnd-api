@@ -115,6 +115,8 @@ func TestRace_List(t *testing.T) {
 func TestRace_Get(t *testing.T) {
 	ts.ClearTable("races")
 	ts.ClearTable("files")
+	ts.ClearTable("traits")
+	ts.ClearTable("race_traits")
 	ts.SetupDefaultUsers()
 
 	// Create races
@@ -126,6 +128,18 @@ func TestRace_Get(t *testing.T) {
 	// Create images
 	logo := &m.File{Model: m.FileModelRaceLogo, ModelId: race.ID}
 	factories.NewFile(ts.S.Db, logo)
+
+	// Create traits
+	trait := &m.Trait{}
+	factories.NewTrait(ts.S.Db, trait)
+	trait2 := &m.Trait{}
+	factories.NewTrait(ts.S.Db, trait2)
+
+	// Create race traits
+	raceTrait := &m.RaceTrait{RaceId: race.ID, TraitId: trait.ID}
+	factories.NewRaceTrait(ts.S.Db, raceTrait)
+	race2Trait := &m.RaceTrait{RaceId: race2.ID, TraitId: trait2.ID}
+	factories.NewRaceTrait(ts.S.Db, race2Trait)
 
 	getRequest := func(id interface{}) helpers.Request {
 		return helpers.Request{
@@ -162,9 +176,11 @@ func TestRace_Get(t *testing.T) {
 				BodyParts: []string{
 					fmt.Sprintf(`"name":"%v"`, race.Name),
 					fmt.Sprintf(`"filename":"%v"`, logo.Filename),
+					fmt.Sprintf(`"name":"%v"`, trait.Name),
 				},
 				BodyPartsMissing: []string{
 					fmt.Sprintf(`"name":"%v"`, race2.Name),
+					fmt.Sprintf(`"name":"%v"`, trait2.Name),
 				},
 			},
 		},

@@ -43,5 +43,10 @@ func getMigrationsList() []store.Migratable {
 		&list.UpdateItemsAddType{},
 		&list.UpdateItemsAddBonuses{},
 		&list.CreateCharacterUsedSpellSlotsTable{},
+		&list.CreateTraitsTable{},
+		&list.CreateRaceTraitsTable{},
+		&list.CreateTraitSpellsTable{},
+		&list.CreateTraitOptionsTable{},
+		&list.CreateCharacterSelectedRaceTraitOptionsTable{},
 	}
 }

@@ -10,7 +10,8 @@ type RaceResponse struct {
 	Size             string `json:"size"`
 	BaseSpeed        int    `json:"base_speed"`
 
-	Logo *FileResponse `json:"logo"`
+	Logo   *FileResponse   `json:"logo"`
+	Traits []TraitResponse `json:"traits"`
 }
 
 type RacePaginatedResponse struct {
@@ -27,9 +28,11 @@ func NewRaceResponse(race *m.Race) *RaceResponse {
 		Size:             race.Size,
 		BaseSpeed:        race.BaseSpeed,
 	}
-
 	if race.Logo.ID != 0 {
 		res.Logo = NewFileResponse(&race.Logo)
+	}
+	if len(race.Traits) > 0 {
+		res.Traits = NewTraitResponses(race.Traits)
 	}
 
 	return res

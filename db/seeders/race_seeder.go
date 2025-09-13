@@ -23,6 +23,14 @@ func (s *Seeder) SetRaces() {
 			Size:             "Medium (about 5-6 feet tall)",
 			BaseSpeed:        30,
 		},
+		{
+			ID:               3,
+			Name:             "Stout Halfling",
+			ShortDescription: "The diminutive halflings survive in a world full of larger creatures by avoiding notice or, barring that, avoiding offense.\n\nAs a stout halfling, you’re hardier than average and have some resistance to poison. Some say that stouts have dwarven blood. In the Forgotten Realms, these halflings are called stronghearts, and they’re most common in the south.",
+			CreatureType:     "Humanoid",
+			Size:             "Small (about 3 feet tall)",
+			BaseSpeed:        25,
+		},
 	}
 
 	for _, race := range races {

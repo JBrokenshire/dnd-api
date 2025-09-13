@@ -21,6 +21,11 @@ func (s *Seeder) SetArmour() {
 			MaxDexModifier:      utils.IntPointer(0),
 			StealthDisadvantage: true,
 		},
+		{
+			ItemId: 37,
+			BaseAC: 12,
+			Type:   m.ArmourTypeLight,
+		},
 	}
 
 	for _, armour := range armours {

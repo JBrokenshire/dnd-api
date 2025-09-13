@@ -25,6 +25,14 @@ func (s *Seeder) SetClasses() {
 			HitPointDieValue: 10,
 			Saves:            `["Strength", "Constitution"]`,
 		},
+		{
+			ID:               3,
+			Name:             "Blood Hunter",
+			ShortDescription: "Willing to suffer whatever it takes to achieve victory, these adept warriors have forged themselves into a potent force dedicated to protecting the innocent.",
+			PrimaryAbility:   "Strength or Dexterity, Intelligence or Wisdom",
+			HitPointDieValue: 10,
+			Saves:            `["Dexterity","Intelligence"]`,
+		},
 	}
 
 	for _, class := range classes {

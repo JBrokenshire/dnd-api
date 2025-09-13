@@ -71,6 +71,8 @@ func (r *CharacterRepository) GetById(id interface{}, userId interface{}) *m.Cha
 	}
 	// Load Spells
 	r.Db.Joins("JOIN character_spells ON character_spells.spell_id = spells.id").Where("character_spells.character_id = ?", character.ID).Find(&character.Spells)
+	// Load Used Spell Slots
+	r.Db.Where("character_id = ?", character.ID).Find(&character.UsedSpellSlots)
 	// Load Class Spell Levels
 	r.Db.Where("class_id = ?", character.Class.ID).Where("class_level = ?", character.Level).Find(&character.Class.SpellLevels)
 	// Load Inventory

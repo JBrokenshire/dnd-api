@@ -42,5 +42,6 @@ func getMigrationsList() []store.Migratable {
 		&list.CreateArmoursTable{},
 		&list.UpdateItemsAddType{},
 		&list.UpdateItemsAddBonuses{},
+		&list.CreateCharacterUsedSpellSlotsTable{},
 	}
 }

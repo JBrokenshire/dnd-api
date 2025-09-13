@@ -77,5 +77,6 @@ type Character struct {
 	Defenses         []*CharacterDefense         `json:"defenses"`
 	Background       Background                  `json:"background"`
 	Spells           []*Spell                    `json:"spells"`
+	UsedSpellSlots   []*CharacterUsedSpellSlot   `json:"used_spell_slots"`
 	Inventory        []*CharacterInventoryItem   `json:"inventory"`
 }

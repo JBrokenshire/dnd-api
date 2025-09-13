@@ -61,6 +61,7 @@ type CharacterResponse struct {
 	Defenses         []CharacterDefenseResponse         `json:"defenses"`
 	Background       BackgroundResponse                 `json:"background"`
 	Spells           []SpellResponse                    `json:"spells"`
+	UsedSpellSlots   []CharacterUsedSpellSlotResponse   `json:"used_spell_slots"`
 	Inventory        []CharacterInventoryItemResponse   `json:"inventory"`
 }
 
@@ -152,6 +153,9 @@ func NewCharacterResponse(character *m.Character) *CharacterResponse {
 	}
 	if len(character.Spells) > 0 {
 		res.Spells = NewSpellResponses(character.Spells)
+	}
+	if len(character.UsedSpellSlots) > 0 {
+		res.UsedSpellSlots = NewCharacterUsedSpellSlotResponses(character.UsedSpellSlots)
 	}
 	if len(character.Inventory) > 0 {
 		res.Inventory = NewCharacterInventoryItemResponses(character.Inventory)

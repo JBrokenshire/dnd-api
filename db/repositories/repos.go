@@ -13,6 +13,7 @@ type Repos struct {
 	File                   *FileRepository
 	Character              *CharacterRepository
 	CharacterInventoryItem *CharacterInventoryItemRepository
+	CharacterUsedSpellSlot *CharacterUsedSpellSlotRepository
 }
 
 func NewRepos(db *gorm.DB) *Repos {
@@ -25,5 +26,6 @@ func NewRepos(db *gorm.DB) *Repos {
 		File:                   NewFileRepository(db),
 		Character:              NewCharacterRepository(db),
 		CharacterInventoryItem: NewCharacterInventoryItemRepository(db),
+		CharacterUsedSpellSlot: NewCharacterUsedSpellSlotRepository(db),
 	}
 }

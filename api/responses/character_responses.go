@@ -33,14 +33,6 @@ type CharacterResponse struct {
 	Wisdom       uint `json:"wisdom"`
 	Charisma     uint `json:"charisma"`
 
-	// Saving Throw Adjustments
-	StrengthSaveAdjustment     int `json:"strength_save_adjustment"`
-	DexteritySaveAdjustment    int `json:"dexterity_save_adjustment"`
-	ConstitutionSaveAdjustment int `json:"constitution_save_adjustment"`
-	IntelligenceSaveAdjustment int `json:"intelligence_save_adjustment"`
-	WisdomSaveAdjustment       int `json:"wisdom_save_adjustment"`
-	CharismaSaveAdjustment     int `json:"charisma_save_adjustment"`
-
 	Inspiration      bool `json:"inspiration"`
 	CurrentHitPoints uint `json:"current_hit_points"`
 	MaxHitPoints     uint `json:"max_hit_points"`
@@ -118,13 +110,6 @@ func NewCharacterResponse(character *m.Character) *CharacterResponse {
 		Intelligence: character.Intelligence,
 		Wisdom:       character.Wisdom,
 		Charisma:     character.Charisma,
-
-		StrengthSaveAdjustment:     character.StrengthSaveAdjustment,
-		DexteritySaveAdjustment:    character.DexteritySaveAdjustment,
-		ConstitutionSaveAdjustment: character.ConstitutionSaveAdjustment,
-		IntelligenceSaveAdjustment: character.IntelligenceSaveAdjustment,
-		WisdomSaveAdjustment:       character.WisdomSaveAdjustment,
-		CharismaSaveAdjustment:     character.CharismaSaveAdjustment,
 
 		Inspiration:      character.Inspiration,
 		CurrentHitPoints: character.CurrentHitPoints,

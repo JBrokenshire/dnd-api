@@ -18,5 +18,5 @@ RUN chmod +x /wait
 CMD  swag init -g cmd/api/api.go \
   && swagger validate docs/swagger.yaml \
   && /wait \
-  && go run db/migrations/entry.go --verbose \
+  && go run db/migrations/entry.go \
   && CompileDaemon --build="go build -o /app/cmd/api/api /app/cmd/api/api.go"  --command="/app/cmd/api/api" --color

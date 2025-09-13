@@ -15,7 +15,7 @@ func init() {
 }
 
 func main() {
-	confirmRequired := os.Args[1] == "--confirm"
+	confirmRequired := os.Args[0] == "--confirm"
 	if confirmRequired == false {
 		process.Run()
 		return

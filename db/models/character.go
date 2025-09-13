@@ -49,14 +49,6 @@ type Character struct {
 	Wisdom       uint `json:"wisdom"`
 	Charisma     uint `json:"charisma"`
 
-	// Saving Throw Adjustments
-	StrengthSaveAdjustment     int `json:"strength_save_adjustment"`
-	DexteritySaveAdjustment    int `json:"dexterity_save_adjustment"`
-	ConstitutionSaveAdjustment int `json:"constitution_save_adjustment"`
-	IntelligenceSaveAdjustment int `json:"intelligence_save_adjustment"`
-	WisdomSaveAdjustment       int `json:"wisdom_save_adjustment"`
-	CharismaSaveAdjustment     int `json:"charisma_save_adjustment"`
-
 	Inspiration      bool `json:"inspiration"`
 	CurrentHitPoints uint `json:"current_hit_points"`
 	MaxHitPoints     uint `json:"max_hit_points"`

@@ -48,5 +48,9 @@ func getMigrationsList() []store.Migratable {
 		&list.CreateTraitSpellsTable{},
 		&list.CreateTraitOptionsTable{},
 		&list.CreateCharacterSelectedRaceTraitOptionsTable{},
+		&list.CreateClassFeaturesTable{},
+		&list.CreateClassFeatureOptionsTable{},
+		&list.CreateCharacterSelectedClassFeatureOptionsTable{},
+		&list.UpdateSpellsEffectType{},
 	}
 }

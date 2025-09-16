@@ -95,5 +95,14 @@ func (r *CharacterRepository) GetById(id interface{}, userId interface{}) *m.Cha
 			Find(&trait.Options)
 	}
 
+	r.Db.Where("class_id = ?", character.Class.ID).Where("level <= ?", character.Level).Order("priority").Find(&character.Class.Features)
+	for _, feature := range character.Class.Features {
+		r.Db.
+			Joins("JOIN character_selected_class_feature_options ON character_selected_class_feature_options.class_feature_option_id = class_feature_options.id").
+			Where("character_selected_class_feature_options.character_id = ?", character.ID).
+			Where("class_feature_options.class_feature_id = ?", feature.ID).
+			Find(&feature.Options)
+	}
+
 	return &character
 }

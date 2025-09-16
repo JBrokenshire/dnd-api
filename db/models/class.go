@@ -16,4 +16,5 @@ type Class struct {
 	Logo            File               `json:"logo"`
 	BackgroundImage File               `json:"background_image"`
 	SpellLevels     []*ClassSpellLevel `json:"spell_levels"`
+	Features        []*ClassFeature    `json:"features"`
 }

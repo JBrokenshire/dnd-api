@@ -169,6 +169,18 @@ func (s *Seeder) SetCharacterProficientSkills() {
 			Skill:           m.SkillSurvival,
 			ProficiencyType: m.ProficiencyTypeProficiency,
 		},
+		{
+			ID:              28,
+			CharacterID:     1,
+			Skill:           m.SkillAcrobatics,
+			ProficiencyType: m.ProficiencyTypeProficiency,
+		},
+		{
+			ID:              29,
+			CharacterID:     1,
+			Skill:           m.SkillDeception,
+			ProficiencyType: m.ProficiencyTypeProficiency,
+		},
 	}
 
 	for _, characterProficientSkill := range characterProficientSkills {

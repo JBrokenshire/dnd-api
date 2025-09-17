@@ -214,6 +214,19 @@ func (s *Seeder) SetSpells() {
 			Effect:      "Control",
 			Notes:       "V",
 		},
+		{
+			ID:          19,
+			Name:        "Vicious Mockery",
+			School:      "Enchantment",
+			CastingTime: "1A",
+			Distance:    "60 ft.",
+			IsSave:      true,
+			SaveAbility: utils.StrPointer("WIS"),
+			Effect:      "Damage",
+			Damage:      utils.StrPointer("2d6"),
+			DamageType:  utils.StrPointer(m.DamageTypePsychic),
+			Notes:       "V",
+		},
 	}
 
 	for _, spell := range spells {

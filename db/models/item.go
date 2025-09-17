@@ -50,4 +50,5 @@ type Item struct {
 	ArmourClassBonus      int
 
 	Armour Armour
+	Weapon Weapon
 }

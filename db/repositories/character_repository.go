@@ -82,6 +82,9 @@ func (r *CharacterRepository) GetById(id interface{}, userId interface{}) *m.Cha
 		if item.Item.Type == m.ItemTypeArmour {
 			r.Db.Where("item_id = ?", item.Item.ID).First(&item.Item.Armour)
 		}
+		if item.Item.Type == m.ItemTypeWeapon {
+			r.Db.Where("item_id = ?", item.Item.ID).First(&item.Item.Weapon)
+		}
 	}
 
 	// Load Race Traits

@@ -52,5 +52,7 @@ func getMigrationsList() []store.Migratable {
 		&list.CreateClassFeatureOptionsTable{},
 		&list.CreateCharacterSelectedClassFeatureOptionsTable{},
 		&list.UpdateSpellsEffectType{},
+		&list.CreateWeaponsTable{},
+		&list.UpdateCharactersAddAttacksPerAction{},
 	}
 }

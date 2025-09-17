@@ -15,7 +15,7 @@ func (s *Seeder) SetCharacterSpells() {
 		{
 			ID:          2,
 			CharacterID: 1,
-			SpellID:     2,
+			SpellID:     19,
 		},
 		{
 			ID:          3,

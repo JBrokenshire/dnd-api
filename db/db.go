@@ -68,6 +68,8 @@ func Init() *gorm.DB {
 	seeder.SetItems()
 	fmt.Println("Seeding Armour...")
 	seeder.SetArmour()
+	fmt.Println("Seeding Weapons...")
+	seeder.SetWeapons()
 	fmt.Println("Seeding Characters...")
 	seeder.SetCharacters()
 	fmt.Println("Seeding Character Proficient Skills...")

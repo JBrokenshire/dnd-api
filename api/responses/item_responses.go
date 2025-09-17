@@ -34,6 +34,7 @@ type ItemResponse struct {
 	ArmourClassBonus      int     `json:"armour_class_bonus"`
 
 	Armour ArmourResponse `json:"armour"`
+	Weapon WeaponResponse `json:"weapon"`
 }
 
 func NewItemResponse(item *m.Item) *ItemResponse {
@@ -68,6 +69,9 @@ func NewItemResponse(item *m.Item) *ItemResponse {
 
 	if item.Type == m.ItemTypeArmour {
 		res.Armour = *NewArmourResponse(&item.Armour)
+	}
+	if item.Type == m.ItemTypeWeapon {
+		res.Weapon = *NewWeaponResponse(&item.Weapon)
 	}
 
 	return res

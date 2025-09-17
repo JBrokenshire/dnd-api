@@ -37,6 +37,7 @@ type CharacterResponse struct {
 	CurrentHitPoints uint `json:"current_hit_points"`
 	MaxHitPoints     uint `json:"max_hit_points"`
 	TempHitPoints    uint `json:"temp_hit_points"`
+	AttacksPerAction int  `json:"attacks_per_action"`
 
 	// Settings
 	AdvancementType string `json:"advancement_type"`
@@ -116,6 +117,7 @@ func NewCharacterResponse(character *m.Character) *CharacterResponse {
 		CurrentHitPoints: character.CurrentHitPoints,
 		MaxHitPoints:     character.MaxHitPoints,
 		TempHitPoints:    character.TempHitPoints,
+		AttacksPerAction: character.AttacksPerAction,
 
 		AdvancementType: character.AdvancementType,
 		HitPointType:    character.HitPointType,
